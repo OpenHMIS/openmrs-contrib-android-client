@@ -1,147 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <LinearLayout
-        android:id="@+id/details_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical"
-        android:padding="@dimen/patient_card_margin">
-
-
-        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:stretchColumns="*">
-
-            <TableRow>
-
-                <TextView
-                    android:gravity="left"
-                    android:text="@string/label_given_name"
-                    android:textColor="@color/openmrs_color_grey"
-                    android:textSize="@dimen/h1_label" />
-
-                <TextView
-                    android:gravity="left"
-                    android:text="@string/label_middle_name"
-                    android:textColor="@color/openmrs_color_grey"
-                    android:textSize="@dimen/h1_label" />
-
-                <TextView
-                    android:gravity="left"
-                    android:text="@string/label_family_name"
-                    android:textColor="@color/openmrs_color_grey"
-                    android:textSize="@dimen/h1_label" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:id="@+id/given_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:text="@string/label_given_name"
-                    android:textColor="@color/openmrs_color_green"
-                    android:textSize="@dimen/h1" />
-
-                <TextView
-                    android:id="@+id/middle_name"
-                    android:gravity="left"
-                    android:text="@string/label_middle_name"
-                    android:textColor="@color/openmrs_color_green"
-                    android:textSize="@dimen/h1" />
-
-                <TextView
-                    android:id="@+id/family_name"
-                    android:gravity="left"
-                    android:text="@string/label_family_name"
-                    android:textColor="@color/openmrs_color_green"
-                    android:textSize="@dimen/h1" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:gravity="left"
-                    android:text="@string/label_gender"
-                    android:textColor="@color/openmrs_color_grey"
-                    android:textSize="@dimen/h1_label" />
-
-
-                <TextView
-                    android:gravity="left"
-                    android:text="@string/label_age"
-                    android:textColor="@color/openmrs_color_grey"
-                    android:textSize="@dimen/h1_label" />
-            </TableRow>
-
-            <TableRow>
-
-                <ImageView
-                    android:id="@+id/genderIcon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="left"
-                    android:layout_margin="0dp"
-                    android:padding="0dp"
-                    android:scaleType="fitStart" />
-
-
-                <TextView
-                    android:id="@+id/age"
-                    android:gravity="left"
-                    android:text="@string/label_age"
-                    android:textColor="@color/openmrs_color_green"
-                    android:textSize="@dimen/h1" />
-
-
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:gravity="left"
-                    android:text="@string/label_id"
-                    android:textColor="@color/openmrs_color_grey"
-                    android:textSize="@dimen/h1_label" />
-
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:id="@+id/patient_id"
-                    android:gravity="left"
-                    android:text="@string/label_id"
-                    android:textColor="@color/openmrs_color_green"
-                    android:textSize="@dimen/h1" />
-
-                <ImageView
-                    android:id="@+id/activeVisitIcon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="right"
-                    android:layout_margin="0dp"
-                    android:layout_span="2"
-                    android:gravity="right"
-                    android:padding="0dp"
-                    android:scaleType="fitEnd"
-                    android:src="@drawable/ic_active_visit"
-                    android:visibility="gone" />
-
-            </TableRow>
-
-        </TableLayout>
-
-
-    </LinearLayout>
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/patient_card_margin">
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -163,7 +25,7 @@
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@color/openmrs_color_green"
                 app:tabIndicatorHeight="8dp"
-                app:tabMode="scrollable"
+                app:tabMode="fixed"
                 app:tabSelectedTextColor="@color/color_white"
                 app:tabTextColor="@color/color_light_grey" />
         </android.support.design.widget.AppBarLayout>
@@ -175,84 +37,6 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </android.support.design.widget.CoordinatorLayout>
-
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/floatingActionMenu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        fab:menu_fab_label="Close"
-        fab:menu_labels_ellipsize="end"
-        fab:menu_labels_singleLine="true"
-        fab:menu_labels_style="@style/MenuLabelsStyle">
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/start_visit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_start_visit"
-            android:visibility="gone"
-            fab:fab_label="@string/label_start_visit"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/visit_tasks"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_start_visit"
-            android:visibility="gone"
-            fab:fab_label="@string/label_visit_tasks"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/end_visit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_start_visit"
-            android:visibility="gone"
-            fab:fab_label="@string/label_end_visit"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/visit_note"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_start_visit"
-            android:visibility="gone"
-            fab:fab_label="@string/label_visit_note"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/admit_inpatient"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_start_visit"
-            android:visibility="gone"
-            fab:fab_label="@string/label_admit_inpatient"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/capture_vitals"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_start_visit"
-            android:visibility="gone"
-            fab:fab_label="@string/label_capture_vitals"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/create_past_visit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_past_visit"
-            app:fab_label="@string/label_create_past_visit"
-            fab:fab_size="mini" />
-
-    </com.github.clans.fab.FloatingActionMenu>
 
 
 </RelativeLayout>

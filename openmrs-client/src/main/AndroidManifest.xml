@@ -1,31 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="org.openmrs.mobile"
-    android:versionCode="1"
-    android:versionName="1.0.1">
+    package="org.openmrs.mobile">
 
-    <uses-sdk tools:overrideLibrary="com.github.clans.fab" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
 
     <application
+        android:name=".application.OpenMRS"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        android:roundIcon="@drawable/ic_launcher"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.Dashboard">
+        <activity
+            android:name=".activities.findpatientrecord.FindPatientRecordActivity"
+            android:label="@string/app_name"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.ACBaseActivity" />
         <activity
-            android:name=".activities.Login"
-            android:configChanges="keyboardHidden|screenSize" />
+            android:name=".activities.activevisits.ActiveVisitsActivity"
+            android:noHistory="true" />
         <activity
-            android:name=".activities.Settings"
-            android:configChanges="keyboardHidden|screenSize" />
+            android:name=".activities.capturevitals.CaptureVitalsActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".activities.registerpatient.RegisterPatientActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".activities.patientlists.PatientListsActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".activities.visittasks.VisitTasksActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".activities.settings.SettingsActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".activities.patientdashboard.PatientDashboardActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".activities.login.LoginActivity"
+            android:configChanges="keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:noHistory="true" />
     </application>
 
 </manifest>

@@ -123,7 +123,7 @@
     <string name="dialog_button_ok">OK</string>
     <string name="dialog_button_confirm">Confirm</string>
     <string name="dialog_button_register_new">Register new</string>
-    <!-- Settings activity -->
+    <!-- SettingsActivity activity -->
     <string name="settings_logs">Logs</string>
     <string name="settings_about">About</string>
     <!-- FindPatients activity -->
@@ -137,7 +137,7 @@
     <string name="select_all_downloadable_data">Select all</string>
     <string name="download_selected_patient_data">Download Patient Data</string>
     <string name="download_multiple">Download Multiple</string>
-    <!-- Dashboard Activity -->
+    <!-- FindPatient Activity -->
     <string name="dashboard_search_icon_label">Find Patients</string>
     <string name="dashboard_registry_icon_label">Register Patient</string>
     <string name="dashboard_visits_icon_label">Active Visits</string>
@@ -145,7 +145,7 @@
 
     <!-- find_synced_patients_row layout-->
     <string name="find_patients_row_checkbox_download_label">Download</string>
-    <!-- Patient Dashboard Activity -->
+    <!-- Patient FindPatient Activity -->
     <string name="action_synchronize_patients">Synchronizing patient</string>
     <string name="action_update_patient_data">Update Patient</string>
     <string name="synchronize_patient_successful">Successfully synchronized patient data.</string>
@@ -308,6 +308,7 @@
     <string name="label_country">Country</string>
     <string name="label_postal_code">Postal Code</string>
     <string name="label_save">Save</string>
+    <string name="label_previous_visits">Previous Visits</string>
 
     <string name="label_tasks">Tasks</string>
     <string name="label_complete">Complete</string>
@@ -324,5 +325,8 @@
     <string name="pref_user_name">Set username</string>
     <string name="pref_user_name_summary">Set your username</string>
     <string name="pref_update_setting">Update Settings</string>
+
+    <string name="snackbar_edit">EDIT</string>
+    <string name="invalid_login_or_password_message">Invalid login or password, please try again.</string>
 
 </resources>

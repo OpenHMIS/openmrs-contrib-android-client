@@ -14,6 +14,7 @@ tests/*.iml
 .gradle/
 .idea/
 local.properties
+gradle.properties
 tests/bin/*
 bin/*
 tests/gen/*
@@ -42,3 +43,5 @@ modules/odk.collect/android/*
 *.project
 *.classpath
 .settings/
+
+/openmrs-client/src/main/java/org/openmrs/mobile/ConsoleLogger.java

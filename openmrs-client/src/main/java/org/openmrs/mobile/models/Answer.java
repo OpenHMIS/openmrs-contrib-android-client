@@ -54,7 +54,7 @@ public class Answer implements Serializable, Parcelable {
         this.label = in.readString();
     }
 
-    public static final Parcelable.Creator<Answer> CREATOR = new Parcelable.Creator<Answer>() {
+    public static final Creator<Answer> CREATOR = new Creator<Answer>() {
         @Override
         public Answer createFromParcel(Parcel source) {
             return new Answer(source);

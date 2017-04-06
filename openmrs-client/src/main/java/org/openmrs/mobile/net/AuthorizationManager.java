@@ -17,6 +17,7 @@ package org.openmrs.mobile.net;
 import android.content.Intent;
 
 //import org.openmrs.mobile.activities.login.LoginActivity;
+import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -38,8 +39,8 @@ public class AuthorizationManager {
     }
 
     public void moveToLoginActivity() {
-       // Intent intent = new Intent(mOpenMRS.getApplicationContext(), LoginActivity.class);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-       // mOpenMRS.getApplicationContext().startActivity(intent);
+        Intent intent = new Intent(mOpenMRS.getApplicationContext(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        mOpenMRS.getApplicationContext().startActivity(intent);
     }
 }

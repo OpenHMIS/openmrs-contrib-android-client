@@ -64,7 +64,7 @@ public class SelectOneField implements Serializable, Parcelable {
         in.readList(this.answerList, Answer.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<SelectOneField> CREATOR = new Parcelable.Creator<SelectOneField>() {
+    public static final Creator<SelectOneField> CREATOR = new Creator<SelectOneField>() {
         @Override
         public SelectOneField createFromParcel(Parcel source) {
             return new SelectOneField(source);

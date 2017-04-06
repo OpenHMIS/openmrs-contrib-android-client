@@ -107,17 +107,17 @@ public interface RestApi {
 
     @GET("visit")
     Call<Results<Visit>> findVisitsByPatientUUID(@Query("patient") String patientUUID,
-                                        @Query("v") String representation);
+                                                 @Query("v") String representation);
 
     @GET("visittype")
     Call<Results<VisitType>> getVisitType();
 
     @GET("encounter")
     Call<Results<Encounter>> getLastVitals(@Query("patient") String patientUUID,
-                                  @Query("encounterType") String encounterType,
-                                  @Query("v") String representation,
-                                  @Query("limit") int limit,
-                                  @Query("order") String order);
+                                           @Query("encounterType") String encounterType,
+                                           @Query("v") String representation,
+                                           @Query("limit") int limit,
+                                           @Query("order") String order);
 
     @POST("patient/{uuid}")
     Call<Patient> updatePatient(@Body Patient patient, @Path("uuid") String uuid,

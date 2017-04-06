@@ -15,6 +15,8 @@
 package org.openmrs.mobile.utilities;
 
 import android.graphics.Typeface;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -68,6 +70,10 @@ public final class FontsUtil {
             v = group.getChildAt(i);
             if (v instanceof TextView || v instanceof EditText || v instanceof Button) {
                 setTypeface((TextView) v);
+            } else if (v instanceof TextInputLayout) {
+                //setTypeface((TextInputLayout) v);
+            } else if (v instanceof AppCompatButton) {
+                setTypeface((AppCompatButton) v);
             } else if (v instanceof ViewGroup) {
                 setFont((ViewGroup) v);
             }
@@ -98,7 +104,7 @@ public final class FontsUtil {
     private static void setTypeface(TextView textView) {
         if (textView != null) {
             if (textView.getTypeface() != null && textView.getTypeface().isBold()
-                                              && textView.getTypeface().isItalic()) {
+                    && textView.getTypeface().isItalic()) {
                 textView.setTypeface(getOpenTypeface(OpenFonts.OPEN_SANS_BOLD_ITALIC));
             } else if (textView.getTypeface() != null && textView.getTypeface().isItalic()) {
                 textView.setTypeface(getOpenTypeface(OpenFonts.OPEN_SANS_ITALIC));

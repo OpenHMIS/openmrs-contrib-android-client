@@ -18,6 +18,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 
 import com.activeandroid.ActiveAndroid;
@@ -54,7 +55,13 @@ public class OpenMRS extends Application {
         super.onCreate();
         instance = this;
         if (mExternalDirectoryPath == null) {
-            mExternalDirectoryPath = this.getExternalFilesDir(null).toString();
+            //mExternalDirectoryPath = this.getExternalFilesDir(null).toString();
+            String state = Environment.getExternalStorageState();
+            if (Environment.MEDIA_MOUNTED.equals(state)) {
+                mExternalDirectoryPath = getExternalFilesDir(null).toString();
+            } else {
+                mExternalDirectoryPath = getFilesDir().toString();
+            }
         }
         mLogger = new OpenMRSLogger();
         generateKey();

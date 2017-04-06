@@ -7,7 +7,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
 
         <TextView
             android:id="@+id/visit_date"
@@ -22,11 +24,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:background="@color/color_primary"
-            android:textColor="@color/color_white"
+            android:background="@drawable/visit_status_rounded_corner"
             android:ellipsize="end"
             android:maxLines="1"
-            android:padding="@dimen/tag_padding" />
+            android:padding="@dimen/tag_padding"
+            android:textColor="@color/color_white" />
     </LinearLayout>
 
     <View

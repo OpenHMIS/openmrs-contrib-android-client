@@ -25,7 +25,7 @@ public class ObservationTable extends Table<Observation> {
      * Number of columns without ID column
      * use as a param to
      *
-     * @see org.openmrs.mobile.databases.tables.Table#values(int)
+     * @see Table#values(int)
      */
     private static final int INSERT_COLUMNS_COUNT = 9;
 
@@ -80,7 +80,7 @@ public class ObservationTable extends Table<Observation> {
     @Override
     public void delete(long tableObjectID) {
         DBOpenHelper openHelper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
-        String where = String.format("%s = ?", ObservationTable.Column.ID);
+        String where = String.format("%s = ?", Column.ID);
         String[] whereArgs = new String[]{String.valueOf(tableObjectID)};
 
         openHelper.getWritableDatabase().delete(TABLE_NAME, where, whereArgs);

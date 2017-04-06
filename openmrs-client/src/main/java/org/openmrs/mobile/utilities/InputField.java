@@ -84,7 +84,7 @@ public class InputField implements Serializable, Parcelable {
         this.isRed = (in.readInt()==1);
     }
 
-    public static final Parcelable.Creator<InputField> CREATOR = new Parcelable.Creator<InputField>() {
+    public static final Creator<InputField> CREATOR = new Creator<InputField>() {
         @Override
         public InputField createFromParcel(Parcel source) {
             return new InputField(source);

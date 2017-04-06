@@ -26,7 +26,7 @@ public class Vitals extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        patient = (Patient) getArguments().getSerializable(ApplicationConstants.Tags.PATIENT_DATA);
+        patient = (Patient) getArguments().getSerializable(ApplicationConstants.Tags.PATIENT_ID);
         View view = inflater.inflate(R.layout.fragment_vitals, container, false);
         vitalHeight = (TextView) view.findViewById(R.id.vital_height);
         vitalWeight = (TextView) view.findViewById(R.id.vital_weight);

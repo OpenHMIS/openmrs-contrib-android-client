@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navItemFindPatient"
+            android:id="@+id/navItemFindPatientRecord"
             android:icon="@drawable/ic_nav_find_patient"
             android:title="@string/nav_find_patient" />
         <item
@@ -16,7 +16,7 @@
             android:title="@string/nav_capture_vitals" />
 
         <item
-            android:id="@+id/navItemregisterPatient"
+            android:id="@+id/navItemRegisterPatient"
             android:icon="@drawable/ic_nav_register_patient"
             android:title="@string/nav_register_patient" />
         <item

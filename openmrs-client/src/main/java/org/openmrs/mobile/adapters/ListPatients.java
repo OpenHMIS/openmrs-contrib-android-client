@@ -1,9 +1,7 @@
 package org.openmrs.mobile.adapters;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +11,7 @@ import android.widget.TextView;
 
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.fragments.PatientDetails;
-import org.openmrs.mobile.interfaces.PassPatientData;
+import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.sampledata.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -26,13 +23,13 @@ public class ListPatients extends RecyclerView.Adapter<ListPatients.PatientViewH
     public static class PatientViewHolder extends RecyclerView.ViewHolder {
 
 
-        public TextView given_name;
-        public TextView middle_name;
-        public TextView family_name;
-        public TextView age;
-        public TextView id;
-        public ImageView gender;
-        public ImageView active_visit;
+        private TextView given_name;
+        private TextView middle_name;
+        private TextView family_name;
+        private TextView age;
+        private TextView id;
+        private ImageView gender;
+        private ImageView active_visit;
 
         public PatientViewHolder(View itemView) {
             super(itemView);
@@ -47,13 +44,11 @@ public class ListPatients extends RecyclerView.Adapter<ListPatients.PatientViewH
     }
 
     private List<Patient> patients;
-    private Activity activity;
-    private PassPatientData dataPasser;
+    private Context context;
 
-    public ListPatients(Activity activity, List<Patient> patients) {
-        this.activity = activity;
+    public ListPatients(Context context, List<Patient> patients) {
+        this.context = context;
         this.patients = patients;
-       // this.dataPasser = (PassPatientData) activity;
     }
 
     @Override
@@ -68,37 +63,25 @@ public class ListPatients extends RecyclerView.Adapter<ListPatients.PatientViewH
     }
 
     @Override
-    public void onBindViewHolder(final PatientViewHolder holder, final int position) {
-        holder.given_name.setText(patients.get(position).given_name);
-        holder.middle_name.setText(patients.get(position).middle_name);
-        holder.family_name.setText(patients.get(position).family_name);
-        holder.age.setText(String.valueOf(patients.get(position).age));
-        holder.id.setText(patients.get(position).id);
-        holder.gender.setImageResource(String.valueOf(patients.get(position).gender).toLowerCase().equals("m") ? R.drawable.ic_male : R.drawable.ic_female);
-        if (patients.get(position).active_visit == 1) {
+    public void onBindViewHolder(final PatientViewHolder holder, int position) {
+        holder.given_name.setText(patients.get(holder.getAdapterPosition()).given_name);
+        holder.middle_name.setText(patients.get(holder.getAdapterPosition()).middle_name);
+        holder.family_name.setText(patients.get(holder.getAdapterPosition()).family_name);
+        holder.age.setText(String.valueOf(patients.get(holder.getAdapterPosition()).age));
+        holder.id.setText(patients.get(holder.getAdapterPosition()).id);
+        holder.gender.setImageResource(String.valueOf(patients.get(holder.getAdapterPosition()).gender).toLowerCase().equals("m") ? R.drawable.ic_male : R.drawable.ic_female);
+        if (patients.get(holder.getAdapterPosition()).active_visit == 1) {
             holder.active_visit.setVisibility(View.VISIBLE);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    Fragment fragment = PatientDetails.class.newInstance();
-                    //dataPasser.onPatientDataPass(patients.get(position));
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(ApplicationConstants.Tags.PATIENT_DATA, patients.get(position));
-                    fragment.setArguments(bundle);
-                    ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction().setCustomAnimations(
-                            R.anim.slide_in_left, R.anim.slide_out_right,
-                            R.anim.pop_enter, R.anim.pop_exit).replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
-
-
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-
+                Intent intent = new Intent(context, PatientDashboardActivity.class);
+                //intent.putExtra(ApplicationConstants.Tags.PATIENT_ID, patients.get(position));
+                intent.putExtra(ApplicationConstants.Tags.PATIENT_ID, patients.get(holder.getAdapterPosition()).id);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
             }
         });
     }

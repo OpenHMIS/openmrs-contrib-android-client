@@ -195,7 +195,9 @@ public class VisitDAO {
                         visit.setUuid(cursor.getString(visitUUID_CI));
                         visit.setId(cursor.getLong(visitID_CI));
                         visit.setVisitType(new VisitType(cursor.getString(visitType_CI)));
-                        visit.setLocation(LocationDAO.findLocationByName(cursor.getString(visitPlace_CI)));
+
+                        //visit.setLocation(LocationDAO.findLocationByName(cursor.getString(visitPlace_CI)));
+
                         visit.setStartDatetime(cursor.getString(visitStart_CI));
                         visit.setStopDatetime(cursor.getString(visitStop_CI));
                         visit.setEncounters(new EncounterDAO().findEncountersByVisitID(visit.getId()));
@@ -233,7 +235,9 @@ public class VisitDAO {
                         visit.setUuid(cursor.getString(visitUUID_CI));
                         visit.setId(cursor.getLong(visitID_CI));
                         visit.setVisitType(new VisitType(cursor.getString(visitType_CI)));
-                        visit.setLocation(LocationDAO.findLocationByName(cursor.getString(visitPlace_CI)));
+
+                        //visit.setLocation(LocationDAO.findLocationByName(cursor.getString(visitPlace_CI)));
+
                         visit.setStartDatetime(cursor.getString(visitStart_CI));
                         visit.setStopDatetime(cursor.getString(visitStop_CI));
                         visit.setEncounters(new EncounterDAO().findEncountersByVisitID(visitID));
@@ -293,7 +297,9 @@ public class VisitDAO {
                         visit.setUuid(cursor.getString(visitUUID_CI));
                         visit.setId(cursor.getLong(visitID_CI));
                         visit.setVisitType(new VisitType(cursor.getString(visitType_CI)));
-                        visit.setLocation(LocationDAO.findLocationByName(cursor.getString(visitPlace_CI)));
+
+                        //visit.setLocation(LocationDAO.findLocationByName(cursor.getString(visitPlace_CI)));
+
                         visit.setStartDatetime(cursor.getString(visitStart_CI));
                         visit.setStopDatetime(cursor.getString(visitStop_CI));
                         visit.setEncounters(new EncounterDAO().findEncountersByVisitID(visit.getId()));

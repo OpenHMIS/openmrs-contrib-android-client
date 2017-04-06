@@ -2,12 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/patient_card_margin">
+    android:orientation="vertical"
+    android:padding="0dp">
+
+    <TextView
+        android:id="@+id/previous_visits_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/patient_card_margin"
+        android:layout_weight="0"
+        android:background="@color/color_primary"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="@dimen/tag_padding"
+        android:text="@string/label_previous_visits"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/h1" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recent_visits_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="40dp"
+        android:paddingLeft="@dimen/patient_card_margin"
+        android:paddingRight="@dimen/patient_card_margin"
+        android:paddingTop="@dimen/patient_card_margin">
 
     </android.support.v7.widget.RecyclerView>
 </LinearLayout>

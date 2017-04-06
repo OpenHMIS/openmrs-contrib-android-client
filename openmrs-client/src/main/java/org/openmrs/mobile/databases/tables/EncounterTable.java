@@ -25,7 +25,7 @@ public class EncounterTable extends Table<Encounter> {
      * Number of columns without ID column
      * use as a param to
      *
-     * @see org.openmrs.mobile.databases.tables.Table#values(int)
+     * @see Table#values(int)
      */
     private static final int INSERT_COLUMNS_COUNT = 7;
 
