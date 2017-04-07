@@ -129,6 +129,8 @@ dependencies {
             'org.powermock:powermock-api-mockito:1.6.6',
             'org.powermock:powermock-module-junit4:1.6.6'
     )
+
+    compile 'com.android.support:support-annotations:24.2.0'
 }
 
 play {

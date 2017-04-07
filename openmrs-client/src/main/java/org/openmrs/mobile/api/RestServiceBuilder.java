@@ -36,7 +36,7 @@ public class RestServiceBuilder {
 
     protected static final OpenMRS mOpenMRS = OpenMRS.getInstance();
 
-    private static String API_BASE_URL = mOpenMRS.getServerUrl()+ ApplicationConstants.API.REST_ENDPOINT;
+    private static String API_BASE_URL = mOpenMRS.getServerUrl()+ ApplicationConstants.API.REST_ENDPOINT_V1;
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
@@ -97,7 +97,7 @@ public class RestServiceBuilder {
     }
 
     public static void changeBaseUrl(String newServerUrl){
-        API_BASE_URL = newServerUrl + ApplicationConstants.API.REST_ENDPOINT;
+        API_BASE_URL = newServerUrl + ApplicationConstants.API.REST_ENDPOINT_V1;
 
         builder = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)

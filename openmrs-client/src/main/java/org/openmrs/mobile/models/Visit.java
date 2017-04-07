@@ -18,12 +18,9 @@ import com.google.gson.annotations.Expose;
 
 import java.util.List;
 
-public class Visit extends Resource {
+public class Visit extends BaseOpenmrsEntity {
 
     private Long id;
-
-    @Expose
-    private Patient patient;
 
     @Expose
     private VisitType visitType;
@@ -46,14 +43,6 @@ public class Visit extends Resource {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public void setPatient(Patient patient) {
-        this.patient = patient;
     }
 
     public VisitType getVisitType() {
