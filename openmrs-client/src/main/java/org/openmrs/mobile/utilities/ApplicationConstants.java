@@ -27,16 +27,14 @@ public abstract class ApplicationConstants {
     public static final String VISIT_TYPE_UUID = "visit_type_uuid";
     public static final String LAST_SESSION_TOKEN = "last_session_id";
     public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-    public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.27:8080/openmrs/";
-
+    public static final String DEFAULT_OPEN_MRS_URL = "http://sandbox.openhmisafrica.org/openmrs/";
 
     public abstract static class OpenMRSSharedPreferenceNames {
         public static final String SHARED_PREFERENCES_NAME = "shared_preferences";
     }
 
     public abstract static class API {
-        public static final String REST_ENDPOINT_V1 = "ws/rest/v1";
-        public static final String REST_ENDPOINT_V2 = "/ws/rest/v2";
+        public static final String REST_ENDPOINT = "/ws/rest/v1/";
         public static final String FULL = "full";
     }
 
