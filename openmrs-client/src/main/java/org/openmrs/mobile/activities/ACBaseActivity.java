@@ -41,6 +41,7 @@ import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
 import org.openmrs.mobile.activities.login.LoginActivity;
+import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.patientlists.PatientListsActivity;
 import org.openmrs.mobile.activities.settings.SettingsActivity;
 import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
@@ -95,7 +96,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.basic_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_basic, menu);
         return true;
     }
 
@@ -250,6 +251,9 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
     private void openActivity(int selectedId) {
         drawer.closeDrawer(GravityCompat.START);
         switch (selectedId) {
+            case R.id.test_dash:
+                startActivity(new Intent(this, PatientDashboardActivity.class));
+                break;
             case R.id.navItemFindPatientRecord:
                 startActivity(new Intent(this, FindPatientRecordActivity.class));
                 break;

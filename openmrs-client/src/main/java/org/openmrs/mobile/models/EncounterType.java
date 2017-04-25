@@ -43,7 +43,7 @@ public class EncounterType extends Model implements Serializable {
     public static final String DISCHARGE = "Discharge";
     public static final String ADMISSION = "Admission";
 
-    public EncounterType() {}
+    //public EncounterType() {}
 
     public EncounterType(String display) {
         this.setDisplay(display);

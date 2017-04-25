@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.patientdashboard.TabsPageView;
+//import org.openmrs.mobile.activities.patientdashboard.TabsPageView;
 
 
 public class VisitTasks extends Fragment {
@@ -36,7 +36,7 @@ public class VisitTasks extends Fragment {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        TabsPageView adapter = new TabsPageView(getActivity().getSupportFragmentManager());
+        /*TabsPageView adapter = new TabsPageView(getActivity().getSupportFragmentManager());
 
         Bundle bundle = new Bundle();
         //bundle.putSerializable(ApplicationConstants.Tags.PATIENT_DATA, patient);
@@ -49,6 +49,6 @@ public class VisitTasks extends Fragment {
         tasksComplete.setArguments(bundle);
         adapter.addFragment(tasksComplete, getResources().getString(R.string.label_complete));
 
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(adapter);*/
     }
 }

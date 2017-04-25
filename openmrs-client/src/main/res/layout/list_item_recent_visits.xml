@@ -28,7 +28,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:padding="@dimen/tag_padding"
-            android:textColor="@color/color_white" />
+            android:textColor="@color/white" />
     </LinearLayout>
 
     <View

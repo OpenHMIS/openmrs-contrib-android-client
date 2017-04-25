@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.patientdashboard.ListDiagnoses;
+//import org.openmrs.mobile.activities.patientdashboard.ListDiagnoses;
 import org.openmrs.mobile.sampledata.DiagnosesData;
 import org.openmrs.mobile.sampledata.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -46,7 +46,7 @@ public class Diagnoses extends Fragment {
     }
 
     private void initializeAdapter() {
-        ListDiagnoses listDiagnoses = new ListDiagnoses(diagnosesList);
-        diagnosesView.setAdapter(listDiagnoses);
+       // ListDiagnoses listDiagnoses = new ListDiagnoses(diagnosesList);
+       // diagnosesView.setAdapter(listDiagnoses);
     }
 }

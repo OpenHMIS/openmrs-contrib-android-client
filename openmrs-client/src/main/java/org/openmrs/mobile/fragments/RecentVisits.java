@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.patientdashboard.ListRecentVisits;
+//import org.openmrs.mobile.activities.patientdashboard.ListRecentVisits;
 import org.openmrs.mobile.sampledata.Patient;
 import org.openmrs.mobile.sampledata.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -48,7 +48,7 @@ public class RecentVisits extends Fragment {
     }
 
     private void initializeAdapter() {
-        ListRecentVisits listRecentVisits = new ListRecentVisits(getActivity(), visitList);
-        visitsView.setAdapter(listRecentVisits);
+        //ListRecentVisits listRecentVisits = new ListRecentVisits(getActivity(), visitList);
+        //visitsView.setAdapter(listRecentVisits);
     }
 }
