@@ -28,18 +28,16 @@ import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.utilities.ConsoleLogger;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.Calendar;
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardContract.Presenter> implements PatientDashboardContract.View {
 
@@ -69,7 +67,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
         initViewFields();
 
-        mPresenter.fetchPatientData("34ae9d4b-8afb-4da1-b7d2-8e459429aabe");
+        String uuid = "918c8b50-30a9-4c80-b5d5-32d0d725ac78";//"34ae9d4b-8afb-4da1-b7d2-8e459429aabe"jer
+        mPresenter.fetchPatientData(uuid);
         FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
 
         initializeListeners();
@@ -86,17 +85,27 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     System.out.println("===========================");
-                    System.out.println("I have lost focus");
+                    System.out.println("I have lost focus. Now executing");
 
-                    for (int i = 0; i < mainVisit.getEncounters().size(); i++) {
-                        Encounter e = mainVisit.getEncounters().get(i);
+                    if (mainVisit != null) {
 
-                        System.out.println(e.getEncounterType());
-                        
-                        //System.out.println(e.setEncounterType(u));
+                        System.out.println("Inside visit");
+
+                        // List<Encounter> encounters = mainVisit.getEncounters();
+                        if (mainVisit.getEncounters().size() == 0) {
+                            //create encounters
+                        } else {
+                            Encounter encounter = mainVisit.getEncounters().get(0);
+                            ConsoleLogger.dump(encounter);
+
+
+                        }
+
+                        for (Encounter en : mainVisit.getEncounters()) {
+                            //System.out.println(en.getEncounterType().getDisplay());
+                        }
                     }
                     System.out.println("===========================");
-
                     //mPresenter.saveVisit(mainVisit);
                 }
             }

@@ -54,8 +54,10 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
         patientDataService.getByUUID(patientId, new DataService.GetSingleCallback<Patient>() {
             @Override
             public void onCompleted(Patient patient) {
-                patientDashboardView.updateUI(patient);
-                fetchVisits(patient);
+                if (patient != null) {
+                    patientDashboardView.updateUI(patient);
+                    fetchVisits(patient);
+                }
             }
 
             @Override
