@@ -4,6 +4,7 @@ import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Visit;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -31,7 +32,7 @@ public interface VisitRestService {
 
     @POST(RestConstants.UPDATE)
     Call<Visit> update(@Path(value = "restPath", encoded = true) String restPath,
-                       @Path("uuid") String uuid, Visit entity);
+                       @Path("uuid") String uuid, @Body Visit entity);
 
     @DELETE(RestConstants.PURGE)
     Call<Visit> purge(@Path(value = "restPath", encoded = true) String restPath,

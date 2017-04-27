@@ -56,9 +56,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.patientdashboard.VisitNoteActivity"
-            android:label="@string/visit_note" />
 
     </application>
 

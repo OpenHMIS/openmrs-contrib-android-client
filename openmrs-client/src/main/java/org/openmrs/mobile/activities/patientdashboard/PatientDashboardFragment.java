@@ -14,13 +14,13 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +28,7 @@ import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Visit;
@@ -42,7 +43,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardContract.Presenter> implements PatientDashboardContract.View {
 
-    private View rootView;
+    private View fragmentView;
     private TextView given_name;
     private TextView middle_name;
     private TextView family_name;
@@ -52,6 +53,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     private ImageView activeVisitIcon;
     private TextView more_label;
     private TextView visit_details;
+    private View floatingActionMenu;
+    private EditText visit_note;
+    private Visit mainVisit;
 
     public static PatientDashboardFragment newInstance() {
         return new PatientDashboardFragment();
@@ -59,33 +63,50 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
+        floatingActionMenu = getActivity().findViewById(R.id.floatingActionMenu);
+        floatingActionMenu.setVisibility(View.VISIBLE);
+
         initViewFields();
+
         mPresenter.fetchPatientData("34ae9d4b-8afb-4da1-b7d2-8e459429aabe");
         FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
 
         initializeListeners();
 
-        return rootView;
+        return fragmentView;
     }
 
     private void initializeListeners() {
-        rootView.findViewById(R.id.loadVisitNoteEditor)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(getActivity(), VisitNoteActivity.class);
-                        startActivity(intent);
+        more_label = (TextView) fragmentView.findViewById(R.id.more_label);
+        visit_details = (TextView) fragmentView.findViewById(R.id.visit_details);
+        visit_note = (EditText) fragmentView.findViewById(R.id.visit_note);
+        visit_note.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    System.out.println("===========================");
+                    System.out.println("I have lost focus");
+
+                    for (int i = 0; i < mainVisit.getEncounters().size(); i++) {
+                        Encounter e = mainVisit.getEncounters().get(i);
+
+                        System.out.println(e.getEncounterType());
+                        
+                        //System.out.println(e.setEncounterType(u));
                     }
-                });
-        more_label = (TextView) rootView.findViewById(R.id.more_label);
-        visit_details = (TextView) rootView.findViewById(R.id.visit_details);
+                    System.out.println("===========================");
+
+                    //mPresenter.saveVisit(mainVisit);
+                }
+            }
+        });
     }
 
 
     @Override
     public void showSnack(String text) {
-        Snackbar.make(rootView, text, Snackbar.LENGTH_LONG).setAction(getString(R.string.action), null).show();
+        Snackbar.make(fragmentView, text, Snackbar.LENGTH_LONG).setAction(getString(R.string.action), null).show();
     }
 
     @Override
@@ -108,9 +129,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
             String string = "";
             String start_date_time = "";
             String stop_date_time = "";
-            Visit visit = visits.get(0);
-            stop_date_time = visit.getStopDatetime();
-            start_date_time = visit.getStartDatetime();
+            mainVisit = visits.get(0);
+            stop_date_time = mainVisit.getStopDatetime();
+            start_date_time = mainVisit.getStartDatetime();
 
 
             if (!StringUtils.notNull(stop_date_time)) {
@@ -120,11 +141,11 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
             }
             visit_details.setText(string);
 
-            if (visit.getEncounters().size() > 0) {
-                List<Encounter> encounters = visit.getEncounters();
+            if (mainVisit.getEncounters().size() > 0) {
+                List<Encounter> encounters = mainVisit.getEncounters();
 
                 System.out.println("===========================");
-                System.out.println(visit.getEncounters().size());
+                System.out.println(mainVisit.getEncounters().size());
                 System.out.println("===========================");
             }
         }
@@ -136,13 +157,13 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     }
 
     private void initViewFields() {
-        given_name = (TextView) rootView.findViewById(R.id.given_name);
-        middle_name = (TextView) rootView.findViewById(R.id.middle_name);
-        family_name = (TextView) rootView.findViewById(R.id.family_name);
-        genderIcon = (ImageView) rootView.findViewById(R.id.genderIcon);
-        age = (TextView) rootView.findViewById(R.id.age);
-        patient_id = (TextView) rootView.findViewById(R.id.patient_id);
-        activeVisitIcon = (ImageView) rootView.findViewById(R.id.activeVisitIcon);
+        given_name = (TextView) fragmentView.findViewById(R.id.given_name);
+        middle_name = (TextView) fragmentView.findViewById(R.id.middle_name);
+        family_name = (TextView) fragmentView.findViewById(R.id.family_name);
+        genderIcon = (ImageView) fragmentView.findViewById(R.id.genderIcon);
+        age = (TextView) fragmentView.findViewById(R.id.age);
+        patient_id = (TextView) fragmentView.findViewById(R.id.patient_id);
+        activeVisitIcon = (ImageView) fragmentView.findViewById(R.id.activeVisitIcon);
     }
 
     private String calculateAge(int year, int month, int day) {

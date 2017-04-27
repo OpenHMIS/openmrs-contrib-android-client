@@ -204,6 +204,7 @@
     <string name="visit_note">Visit Note</string>
     <string name="add_a_note">Add a note</string>
     <string name="label_more">More</string>
+    <string name="label_patient_id">Patient ID</string>
 
     <!-- Capture Vitals activity -->
     <string name="action_delete_patient">Delete Patient</string>

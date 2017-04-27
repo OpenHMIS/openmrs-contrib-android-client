@@ -34,6 +34,8 @@ public interface PatientDashboardContract {
 
     interface Presenter extends BasePresenterContract {
         void fetchPatientData(final String patientId);
+
+        void saveVisit(Visit visit);
     }
 
 }

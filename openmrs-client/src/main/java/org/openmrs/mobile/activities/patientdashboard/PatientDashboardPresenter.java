@@ -54,7 +54,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
         patientDataService.getByUUID(patientId, new DataService.GetSingleCallback<Patient>() {
             @Override
             public void onCompleted(Patient patient) {
-                checkNotNull(patient);
                 patientDashboardView.updateUI(patient);
                 fetchVisits(patient);
             }
@@ -71,6 +70,30 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
         });
 
 
+    }
+
+    @Override
+    public void saveVisit(Visit visit) {
+        System.out.println("===========================");
+        System.out.println("Save start");
+        System.out.println("===========================");
+        DataService.GetSingleCallback<Visit> callback = new DataService.GetSingleCallback<Visit>() {
+            @Override
+            public void onCompleted(Visit entity) {
+                System.out.println("===========================");
+                System.out.println("Visit Saved: " + entity);
+                System.out.println("===========================");
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                System.out.println("===========================");
+                System.out.println("Error: ");
+                System.out.println(t.getLocalizedMessage());
+                System.out.println("===========================");
+            }
+        };
+        visitDataService.update(visit, callback);
     }
 
     private void fetchVisits(Patient patient) {
