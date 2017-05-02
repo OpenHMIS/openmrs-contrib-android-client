@@ -9,12 +9,9 @@ import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
-import java.util.List;
-
 import retrofit2.Call;
 
-public class VisitDataService extends BaseEntityDataService<Visit, VisitRestService>
-        implements EntityDataService<Visit> {
+public class VisitDataService extends BaseEntityDataService<Visit, VisitRestService> implements EntityDataService<Visit> {
     @Override
     protected Class<VisitRestService> getRestServiceClass() {
         return VisitRestService.class;

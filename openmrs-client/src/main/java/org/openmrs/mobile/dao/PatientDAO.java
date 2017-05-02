@@ -75,7 +75,7 @@ public class PatientDAO {
         Patient patient = new Patient();
         Person person = new Person();
 
-        patient.setId(cursor.getLong(cursor.getColumnIndex(PatientTable.Column.ID)));
+        /*patient.setId(cursor.getLong(cursor.getColumnIndex(PatientTable.Column.ID)));
         patient.setDisplay(cursor.getString(cursor.getColumnIndex(PatientTable.Column.DISPLAY)));
         patient.setUuid(cursor.getString(cursor.getColumnIndex(PatientTable.Column.UUID)));
         patient.setEncounters(cursor.getString(cursor.getColumnIndex(PatientTable.Column.ENCOUNTERS)));
@@ -98,7 +98,7 @@ public class PatientDAO {
             person.setPhoto(byteArrayToBitmap(photoByteArray));
         person.getAddresses().add(cursorToAddress(cursor));
 
-        patient.setPerson(person);
+        patient.setPerson(person);*/
         return patient;
     }
 

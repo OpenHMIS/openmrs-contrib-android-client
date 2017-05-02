@@ -109,4 +109,7 @@ public final class DateUtils {
         return dateAsString;
     }
 
+    public static String now(String format) {
+        return new SimpleDateFormat(format).format(new Date());
+    }
 }

@@ -27,17 +27,30 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.api.EncounterService;
+import org.openmrs.mobile.api.RestApi;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.EncounterType;
+import org.openmrs.mobile.models.Encountercreate;
+import org.openmrs.mobile.models.Location;
+import org.openmrs.mobile.models.Obscreate;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
+import org.openmrs.mobile.models.Resource;
+import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ConsoleLogger;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardContract.Presenter> implements PatientDashboardContract.View {
 
@@ -54,6 +67,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     private View floatingActionMenu;
     private EditText visit_note;
     private Visit mainVisit;
+    private Patient patient;
+
 
     public static PatientDashboardFragment newInstance() {
         return new PatientDashboardFragment();
@@ -67,8 +82,10 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
         initViewFields();
 
-        String uuid = "918c8b50-30a9-4c80-b5d5-32d0d725ac78";//"34ae9d4b-8afb-4da1-b7d2-8e459429aabe"jer
+        String uuid = "6fd9b701-6abb-4e70-aa4a-c4b298972249";//"39ef7d80-ace3-4ec2-afd0-6d79892cf785";// "525b6a59-9b62-4fe8-ac64-242acef3dffa";//"34ae9d4b-8afb-4da1-b7d2-8e459429aabe"jer
+
         mPresenter.fetchPatientData(uuid);
+
         FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
 
         initializeListeners();
@@ -80,36 +97,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         more_label = (TextView) fragmentView.findViewById(R.id.more_label);
         visit_details = (TextView) fragmentView.findViewById(R.id.visit_details);
         visit_note = (EditText) fragmentView.findViewById(R.id.visit_note);
-        visit_note.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    System.out.println("===========================");
-                    System.out.println("I have lost focus. Now executing");
-
-                    if (mainVisit != null) {
-
-                        System.out.println("Inside visit");
-
-                        // List<Encounter> encounters = mainVisit.getEncounters();
-                        if (mainVisit.getEncounters().size() == 0) {
-                            //create encounters
-                        } else {
-                            Encounter encounter = mainVisit.getEncounters().get(0);
-                            ConsoleLogger.dump(encounter);
-
-
-                        }
-
-                        for (Encounter en : mainVisit.getEncounters()) {
-                            //System.out.println(en.getEncounterType().getDisplay());
-                        }
-                    }
-                    System.out.println("===========================");
-                    //mPresenter.saveVisit(mainVisit);
-                }
-            }
-        });
     }
 
 
@@ -120,6 +107,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
     @Override
     public void updateUI(Patient patient) {
+        this.patient = patient;
         Person person = patient.getPerson();
         given_name.setText(person.getName().getGivenName());
         middle_name.setText(person.getName().getMiddleName());
@@ -128,6 +116,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         DateTime date = DateUtils.convertTimeString(person.getBirthdate());
         age.setText(calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
         patient_id.setText(patient.getIdentifier().getIdentifier());
+
+        mPresenter.fetchVisits(patient);
     }
 
     @Override
@@ -150,19 +140,39 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
             }
             visit_details.setText(string);
 
-            if (mainVisit.getEncounters().size() > 0) {
+            /*if (mainVisit.getEncounters().size() > 0) {
                 List<Encounter> encounters = mainVisit.getEncounters();
-
                 System.out.println("===========================");
                 System.out.println(mainVisit.getEncounters().size());
                 System.out.println("===========================");
+            }*/
+
+            if (mainVisit != null) {
+                ConsoleLogger.dump("Inside visit");
+                if (mainVisit.getEncounters().size() == 0) {
+                    /*****
+                     *
+                     * Create new encounter
+                     *
+                     */
+                } else {
+                    ConsoleLogger.dump("Visit has " + mainVisit.getEncounters().size() + " encounters");
+                    List<Encounter> en = mainVisit.getEncounters();
+                    for (Encounter encounter : mainVisit.getEncounters()) {
+                        if (encounter.getEncounterType().getDisplay().equals(EncounterType.VISIT_NOTE)) {
+                            for (Observation obs : encounter.getObservations()) {
+                                ConsoleLogger.dump(obs);
+                            }
+                        }
+                    }
+
+                }
+
             }
-        }
-
-        for (int index = 1; index < visits.size(); index++) {
-            Visit visit = visits.get(index);
 
         }
+
+
     }
 
     private void initViewFields() {

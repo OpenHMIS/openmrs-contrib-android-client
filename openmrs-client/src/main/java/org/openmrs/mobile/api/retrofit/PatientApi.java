@@ -110,7 +110,7 @@ public class PatientApi extends RetrofitApi {
 
                                         new PatientDAO().updatePatient(patient.getId(), patient);
                                         if(!patient.getEncounters().equals(""))
-                                            addEncounters(patient);
+                                           // addEncounters(patient);
 
                                         deferred.resolve(patient);
 
@@ -306,7 +306,7 @@ public class PatientApi extends RetrofitApi {
         return deferredObject.promise();
     }
 
-    private void addEncounters(Patient patient) {
+    /*private void addEncounters(Patient patient) {
         String enc=patient.getEncounters();
         List<Long> list = new ArrayList<>();
         for (String s : enc.split(","))
@@ -323,7 +323,7 @@ public class PatientApi extends RetrofitApi {
             encountercreate.save();
             new EncounterService().addEncounter(encountercreate);
         }
-    }
+    }*/
 
     private SimplePromise<String> getIdGenPatientIdentifier() {
         final SimpleDeferredObject<String> deferred = new SimpleDeferredObject<>();

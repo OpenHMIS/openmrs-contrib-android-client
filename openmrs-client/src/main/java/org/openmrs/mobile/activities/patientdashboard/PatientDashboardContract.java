@@ -16,11 +16,14 @@ package org.openmrs.mobile.activities.patientdashboard;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
+import org.openmrs.mobile.dao.LocationDAO;
+import org.openmrs.mobile.models.Encountercreate;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PatientDashboardContract {
 
@@ -36,6 +39,13 @@ public interface PatientDashboardContract {
         void fetchPatientData(final String patientId);
 
         void saveVisit(Visit visit);
+
+        Map<String, String> getCurrentLoggedInUserInfo();
+
+        LocationDAO getLocationDAO();
+        void createEncounter(Encountercreate encounter);
+
+        void fetchVisits(Patient patient);
     }
 
 }

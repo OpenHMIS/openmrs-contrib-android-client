@@ -27,7 +27,7 @@ public abstract class ApplicationConstants {
     public static final String VISIT_TYPE_UUID = "visit_type_uuid";
     public static final String LAST_SESSION_TOKEN = "last_session_id";
     public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-    public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.56.1:8080/openmrs/";
+    public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.30:8080/openmrs/";
 
 
     public abstract static class OpenMRSSharedPreferenceNames {
@@ -99,6 +99,7 @@ public abstract class ApplicationConstants {
 
     public abstract static class EncounterTypes {
         public static final String VITALS = "67a71486-1a54-468f-ac3e-7091a9a79584";
+        public static final String VISIT_NOTE_FORM_UUID = "c75f120a-04ec-11e3-8780-2b40bef9a44b";
         public static String[] ENCOUNTER_TYPES_DISPLAYS = {EncounterType.VITALS, EncounterType.ADMISSION, EncounterType.DISCHARGE, EncounterType.VISIT_NOTE};
     }
 

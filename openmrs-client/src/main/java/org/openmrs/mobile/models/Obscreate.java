@@ -18,7 +18,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 @Table(name = "obscreate")
-public class Obscreate extends Model implements Serializable {
+public class Obscreate extends Resource implements Serializable {
 
     @SerializedName("person")
     @Expose
