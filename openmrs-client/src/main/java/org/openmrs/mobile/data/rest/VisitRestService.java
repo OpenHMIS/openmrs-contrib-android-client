@@ -49,4 +49,16 @@ public interface VisitRestService {
                                       @Query("v") String representation,
                                       @Query("limit") int limit,
                                       @Query("startIndex") int startIndex);
+
+    @GET(RestConstants.REST_PATH)
+    Call<Results<Visit>> getByEncounter(@Path(value = "restPath", encoded = true) String restPath,
+                                        @Query("encounter") String encounterUuid,
+                                        @Query("v") String representation);
+
+    @GET(RestConstants.REST_PATH)
+    Call<Results<Visit>> getByEncounter(@Path(value = "restPath", encoded = true) String restPath,
+                                        @Query("encounter") String encounterUuid,
+                                        @Query("v") String representation,
+                                        @Query("limit") int limit,
+                                        @Query("startIndex") int startIndex);
 }

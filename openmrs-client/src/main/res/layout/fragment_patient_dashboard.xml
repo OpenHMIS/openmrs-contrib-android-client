@@ -245,33 +245,35 @@
             card_view:contentPadding="10dp">
 
             <LinearLayout
+                android:id="@+id/visit_note_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/patient_card_margin"
                 android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/visit_note"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_margin="@dimen/patient_card_margin"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:gravity="start"
-                    android:hint="@string/add_a_note"
-                    android:padding="3dip"
-                    android:textAlignment="gravity" />
+                <!-- <EditText
+                     android:id="@+id/visit_note"
+                     android:layout_width="match_parent"
+                     android:layout_height="0dp"
+                     android:layout_margin="@dimen/patient_card_margin"
+                     android:layout_weight="1"
+                     android:background="@android:color/transparent"
+                     android:gravity="start"
+                     android:hint="@string/add_a_note"
+                     android:padding="3dip"
+                     android:textAlignment="gravity" />
 
-                <EditText
-                    android:id="@+id/visit_noted"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_margin="@dimen/patient_card_margin"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:gravity="start"
-                    android:hint="@string/add_a_note"
-                    android:padding="3dip"
-                    android:textAlignment="gravity" />
+                 <EditText
+                     android:id="@+id/visit_noted"
+                     android:layout_width="match_parent"
+                     android:layout_height="0dp"
+                     android:layout_margin="@dimen/patient_card_margin"
+                     android:layout_weight="1"
+                     android:background="@android:color/transparent"
+                     android:gravity="start"
+                     android:hint="@string/add_a_note"
+                     android:padding="3dip"
+                     android:textAlignment="gravity" /> -->
             </LinearLayout>
 
 

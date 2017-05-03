@@ -27,36 +27,47 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
     @SerializedName("obsDatetime")
     @Expose
     private String obsDatetime;
-    @SerializedName("accessionNumber")
-    @Expose
-    private int accessionNumber;
+
+    //@SerializedName("accessionNumber")
+    //o@Expose
+    private String accessionNumber;
+
     @SerializedName("obsGroup")
     @Expose
     private Observation obsGroup;
+
     @SerializedName("valueCodedName")
     @Expose
     private String valueCodedName;
+
     @SerializedName("comment")
     @Expose
     private String comment;
+
     @SerializedName("location")
     @Expose
     private Resource location=null;
+
     @SerializedName("encounter")
     @Expose
     private Encounter encounter=null;
+
     @SerializedName("voided")
     @Expose
     private Boolean voided;
+
     @SerializedName("formFieldPath")
     @Expose
     private String formFieldPath;
+
     @SerializedName("formFieldNamespace")
     @Expose
     private String formFieldNamespace;
+
     @SerializedName("resourceVersion")
     @Expose
     private String resourceVersion;
+
 
     private Long id;
     private Long encounterID;
@@ -127,7 +138,7 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
      * @return
      *     The accessionNumber
      */
-    public int getAccessionNumber() {
+    public String getAccessionNumber() {
         return accessionNumber;
     }
 
@@ -136,7 +147,7 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
      * @param accessionNumber
      *     The accessionNumber
      */
-    public void setAccessionNumber(int accessionNumber) {
+    public void setAccessionNumber(String accessionNumber) {
         this.accessionNumber = accessionNumber;
     }
 

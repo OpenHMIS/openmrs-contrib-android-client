@@ -11,11 +11,9 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-/**
- * Created by bandahealth on 5/2/17.
- */
 
-public class ObservationService extends BaseEntityDataService<Observation, ObservationRestService> implements EntityDataService<Observation> {
+public class ObservationDataService extends BaseEntityDataService<Observation, ObservationRestService> implements EntityDataService<Observation> {
+
     @Override
     protected Call<Results<Observation>> _restGetByPatient(String restPath, PagingInfo pagingInfo, String patientUuid, String representation) {
         if (isPagingValid(pagingInfo)) {
@@ -23,6 +21,16 @@ public class ObservationService extends BaseEntityDataService<Observation, Obser
                     pagingInfo.getLimit(), pagingInfo.getStartIndex());
         } else {
             return restService.getByPatient(restPath, patientUuid, representation);
+        }
+    }
+
+    @Override
+    protected Call<Results<Observation>> _restGetByEncounter(String restPath, PagingInfo pagingInfo, String pncounterUuid, String representation) {
+        if (isPagingValid(pagingInfo)) {
+            return restService.getByEncounter(restPath, pncounterUuid, representation,
+                    pagingInfo.getLimit(), pagingInfo.getStartIndex());
+        } else {
+            return restService.getByEncounter(restPath, pncounterUuid, representation);
         }
     }
 
@@ -69,4 +77,5 @@ public class ObservationService extends BaseEntityDataService<Observation, Obser
     protected Call<Observation> _restPurge(String restPath, String uuid) {
         return restService.purge(restPath, uuid);
     }
+
 }

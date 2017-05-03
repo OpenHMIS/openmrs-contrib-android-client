@@ -14,43 +14,41 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
-import org.openmrs.mobile.api.EncounterService;
-import org.openmrs.mobile.api.RestApi;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
-import org.openmrs.mobile.models.Encountercreate;
-import org.openmrs.mobile.models.Location;
-import org.openmrs.mobile.models.Obscreate;
+import org.openmrs.mobile.models.Link;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
-import org.openmrs.mobile.models.Resource;
-import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
-import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ConsoleLogger;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardContract.Presenter> implements PatientDashboardContract.View {
 
@@ -65,7 +63,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     private TextView more_label;
     private TextView visit_details;
     private View floatingActionMenu;
-    private EditText visit_note;
     private Visit mainVisit;
     private Patient patient;
 
@@ -82,7 +79,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
         initViewFields();
 
-        String uuid = "6fd9b701-6abb-4e70-aa4a-c4b298972249";//"39ef7d80-ace3-4ec2-afd0-6d79892cf785";// "525b6a59-9b62-4fe8-ac64-242acef3dffa";//"34ae9d4b-8afb-4da1-b7d2-8e459429aabe"jer
+        String uuid = "d7c79ec0-0355-4e2f-8f73-bb788c55799e";
+
 
         mPresenter.fetchPatientData(uuid);
 
@@ -96,7 +94,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     private void initializeListeners() {
         more_label = (TextView) fragmentView.findViewById(R.id.more_label);
         visit_details = (TextView) fragmentView.findViewById(R.id.visit_details);
-        visit_note = (EditText) fragmentView.findViewById(R.id.visit_note);
     }
 
 
@@ -106,22 +103,24 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     }
 
     @Override
-    public void updateUI(Patient patient) {
-        this.patient = patient;
-        Person person = patient.getPerson();
-        given_name.setText(person.getName().getGivenName());
-        middle_name.setText(person.getName().getMiddleName());
-        family_name.setText(person.getName().getFamilyName());
-        genderIcon.setImageResource(String.valueOf(person.getGender()).toLowerCase().equals("m") ? R.drawable.ic_male : R.drawable.ic_female);
-        DateTime date = DateUtils.convertTimeString(person.getBirthdate());
-        age.setText(calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
-        patient_id.setText(patient.getIdentifier().getIdentifier());
+    public void updateContactCard(Patient patient) {
+        if (patient != null) {
+            this.patient = patient;
+            Person person = patient.getPerson();
+            given_name.setText(person.getName().getGivenName());
+            middle_name.setText(person.getName().getMiddleName());
+            family_name.setText(person.getName().getFamilyName());
+            genderIcon.setImageResource(String.valueOf(person.getGender()).toLowerCase().equals("m") ? R.drawable.ic_male : R.drawable.ic_female);
+            DateTime date = DateUtils.convertTimeString(person.getBirthdate());
+            age.setText(calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
+            patient_id.setText(patient.getIdentifier().getIdentifier());
 
-        mPresenter.fetchVisits(patient);
+            mPresenter.fetchVisits(patient);
+        }
     }
 
     @Override
-    public void updateUI(List<Visit> visits) {
+    public void updateVisitsCard(List<Visit> visits) {
 
         if (visits.size() >= 1) {
 
@@ -140,15 +139,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
             }
             visit_details.setText(string);
 
-            /*if (mainVisit.getEncounters().size() > 0) {
-                List<Encounter> encounters = mainVisit.getEncounters();
-                System.out.println("===========================");
-                System.out.println(mainVisit.getEncounters().size());
-                System.out.println("===========================");
-            }*/
-
             if (mainVisit != null) {
-                ConsoleLogger.dump("Inside visit");
+                ConsoleLogger.dump("Inside  main visit UUID: " + mainVisit.getUuid());
                 if (mainVisit.getEncounters().size() == 0) {
                     /*****
                      *
@@ -156,13 +148,12 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
                      *
                      */
                 } else {
-                    ConsoleLogger.dump("Visit has " + mainVisit.getEncounters().size() + " encounters");
-                    List<Encounter> en = mainVisit.getEncounters();
                     for (Encounter encounter : mainVisit.getEncounters()) {
-                        if (encounter.getEncounterType().getDisplay().equals(EncounterType.VISIT_NOTE)) {
-                            for (Observation obs : encounter.getObservations()) {
-                                ConsoleLogger.dump(obs);
-                            }
+                        switch (encounter.getEncounterType().getDisplay()) {
+                            case EncounterType.VISIT_NOTE:
+                                ConsoleLogger.dump("Inside encounter UUID: " + encounter.getUuid());
+                                mPresenter.fetchEncounterObservations(encounter);
+                                break;
                         }
                     }
 
@@ -173,6 +164,55 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         }
 
 
+    }
+
+    @Override
+    public void updateVisitNote(Observation observation) {
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
+        layoutParams.setMargins(10, 10, 10, 10);
+        layoutParams.gravity = Gravity.TOP;
+
+
+        TextInputEditText visit_note = new TextInputEditText(getContext());
+        visit_note.setLayoutParams(layoutParams);
+        visit_note.setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.transparent));
+        visit_note.setHint(getString(R.string.add_a_note));
+        visit_note.setPadding(3, 3, 3, 3);
+        visit_note.setGravity(Gravity.LEFT);
+        visit_note.setText(observation.getDiagnosisNote());
+
+
+        visit_note.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable string) {
+
+                ConsoleLogger.dump("Text has changed");
+
+                observation.setDiagnosisNote(string.toString());
+
+                mPresenter.saveObservation(observation);
+
+            }
+        });
+
+        TextInputLayout textInputLayout = new TextInputLayout(getContext());
+        textInputLayout.setLayoutParams(new TextInputLayout.LayoutParams(TextInputLayout.LayoutParams.MATCH_PARENT, TextInputLayout.LayoutParams.WRAP_CONTENT));
+
+        textInputLayout.addView(visit_note);
+
+        View visit_note_container = fragmentView.findViewById(R.id.visit_note_container);
+        ((LinearLayout) visit_note_container).addView(textInputLayout);
     }
 
     private void initViewFields() {

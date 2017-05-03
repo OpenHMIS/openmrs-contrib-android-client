@@ -19,16 +19,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Encounter extends Resource implements Serializable{
+public class Encounter extends BaseOpenmrsEntity implements Serializable {
 
     private Long id;
 
     @SerializedName("encounterDatetime")
     @Expose
     private String encounterDatetime;
-    @SerializedName("patient")
+
+    /*@SerializedName("patient")
     @Expose
-    private Patient patient;
+    private Patient patient;*/
     @SerializedName("location")
     @Expose
     private Resource location;
@@ -85,45 +86,35 @@ public class Encounter extends Resource implements Serializable{
     }
 
     /**
-     *
-     * @return
-     *     The uuid
+     * @return The uuid
      */
     public String getUuid() {
         return uuid;
     }
 
     /**
-     *
-     * @param uuid
-     *     The uuid
+     * @param uuid The uuid
      */
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
     /**
-     *
-     * @return
-     *     The display
+     * @return The display
      */
     public String getDisplay() {
         return display;
     }
 
     /**
-     *
-     * @param display
-     *     The display
+     * @param display The display
      */
     public void setDisplay(String display) {
         this.display = display;
     }
 
     /**
-     *
-     * @return
-     *     The encounterDatetime
+     * @return The encounterDatetime
      */
     public Long getEncounterDatetime() {
         return DateUtils.convertTime(encounterDatetime);
@@ -131,9 +122,7 @@ public class Encounter extends Resource implements Serializable{
 
 
     /**
-     *
-     * @param encounterDatetime
-     *     The encounterDatetime
+     * @param encounterDatetime The encounterDatetime
      */
     public void setEncounterDatetime(String encounterDatetime) {
         this.encounterDatetime = encounterDatetime;
@@ -144,59 +133,49 @@ public class Encounter extends Resource implements Serializable{
      * @return
      *     The patient
      */
-    public Patient getPatient() {
+    /*public Patient getPatient() {
         return patient;
-    }
+    }*/
 
     /**
      *
      * @param patient
      *     The patient
      */
-    public void setPatient(Patient patient) {
+    /*public void setPatient(Patient patient) {
         this.patient = patient;
-    }
+    }*/
 
     /**
-     *
-     * @return
-     *     The location
+     * @return The location
      */
     public Resource getLocation() {
         return location;
     }
 
     /**
-     *
-     * @param location
-     *     The location
+     * @param location The location
      */
     public void setLocation(Resource location) {
         this.location = location;
     }
 
     /**
-     *
-     * @return
-     *     The form
+     * @return The form
      */
     public Form getForm() {
         return form;
     }
 
     /**
-     *
-     * @param form
-     *     The form
+     * @param form The form
      */
     public void setForm(Form form) {
         this.form = form;
     }
 
     /**
-     *
-     * @return
-     *     The encounterTypeToken
+     * @return The encounterTypeToken
      */
     public EncounterType getEncounterType() {
         return encounterType;
@@ -208,131 +187,105 @@ public class Encounter extends Resource implements Serializable{
     }
 
     /**
-     * 
-     * @return
-     *     The obs
+     * @return The obs
      */
     public List<Observation> getObservations() {
         return observations;
     }
 
     /**
-     * 
-     *     The obs
+     * The obs
      */
     public void setObservations(List<Observation> observations) {
         this.observations = observations;
     }
+
     /**
-     * 
-     * @return
-     *     The orders
+     * @return The orders
      */
     public List<Object> getOrders() {
         return orders;
     }
 
     /**
-     * 
-     * @param orders
-     *     The orders
+     * @param orders The orders
      */
     public void setOrders(List<Object> orders) {
         this.orders = orders;
     }
 
     /**
-     * 
-     * @return
-     *     The voided
+     * @return The voided
      */
     public Boolean getVoided() {
         return voided;
     }
 
     /**
-     * 
-     * @param voided
-     *     The voided
+     * @param voided The voided
      */
     public void setVoided(Boolean voided) {
         this.voided = voided;
     }
 
     /**
-     * 
-     * @return
-     *     The visit
+     * @return The visit
      */
     public Visit getVisit() {
         return visit;
     }
 
     /**
-     *
-     * @param visit
-     *     The visit
+     * @param visit The visit
      */
     public void setVisit(Visit visit) {
         this.visit = visit;
     }
 
     /**
-     * 
-     * @return
-     *     The encounterProviders
+     * @return The encounterProviders
      */
     public List<Resource> getEncounterProviders() {
         return encounterProviders;
     }
 
     /**
-     * 
-     * @param encounterProviders
-     *     The encounterProviders
+     * @param encounterProviders The encounterProviders
      */
     public void setEncounterProviders(List<Resource> encounterProviders) {
         this.encounterProviders = encounterProviders;
     }
 
     /**
-     * 
-     * @return
-     *     The links
+     * @return The links
      */
     public List<Link> getLinks() {
         return links;
     }
 
     /**
-     * 
-     * @param links
-     *     The links
+     * @param links The links
      */
     public void setLinks(List<Link> links) {
         this.links = links;
     }
 
     /**
-     * 
-     * @return
-     *     The resourceVersion
+     * @return The resourceVersion
      */
     public String getResourceVersion() {
         return resourceVersion;
     }
 
     /**
-     * 
-     * @param resourceVersion
-     *     The resourceVersion
+     * @param resourceVersion The resourceVersion
      */
     public void setResourceVersion(String resourceVersion) {
         this.resourceVersion = resourceVersion;
     }
 
-    public String getFormUuid(){
-        if(form != null)
+    public String getFormUuid() {
+        if (form != null)
             return form.getUuid();
         else
             return null;
