@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -27,7 +26,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,7 +35,6 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
-import org.openmrs.mobile.models.Link;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
@@ -79,7 +76,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
         initViewFields();
 
-        String uuid = "d7c79ec0-0355-4e2f-8f73-bb788c55799e";
+        String uuid = "6fd9b701-6abb-4e70-aa4a-c4b298972249";
 
 
         mPresenter.fetchPatientData(uuid);
@@ -196,11 +193,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
             @Override
             public void afterTextChanged(Editable string) {
-
-                ConsoleLogger.dump("Text has changed");
-
-                observation.setDiagnosisNote(string.toString());
-
+                observation.setValue(string.toString());
+                observation.setPerson(patient.getPerson());
                 mPresenter.saveObservation(observation);
 
             }

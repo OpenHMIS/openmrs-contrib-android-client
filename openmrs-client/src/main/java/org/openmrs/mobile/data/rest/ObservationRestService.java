@@ -29,7 +29,7 @@ public interface ObservationRestService {
                                       @Query("startIndex") int startIndex);
 
     @POST(RestConstants.CREATE)
-    Call<Observation> create(@Path(value = "restPath", encoded = true) String restPath, Observation entity);
+    Call<Observation> create(@Path(value = "restPath", encoded = true) String restPath, @Body Observation entity);
 
     @POST(RestConstants.UPDATE)
     Call<Observation> update(@Path(value = "restPath", encoded = true) String restPath,
@@ -62,5 +62,7 @@ public interface ObservationRestService {
                                               @Query("v") String representation,
                                               @Query("limit") int limit,
                                               @Query("startIndex") int startIndex);
+
+
 
 }

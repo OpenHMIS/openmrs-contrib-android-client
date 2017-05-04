@@ -14,6 +14,8 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
+import com.google.gson.Gson;
+
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.dao.LocationDAO;
@@ -29,7 +31,9 @@ import org.openmrs.mobile.models.Encountercreate;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ConsoleLogger;
+import org.openmrs.mobile.utilities.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,62 +140,39 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
     @Override
     public void fetchEncounterObservations(Encounter encounter) {
 
-        //ConsoleLogger.dump("Succeeded");
-
-        EncounterDataService encounterDataService = new EncounterDataService();
-
-        encounterDataService.getByUUID(encounter.getUuid(), new DataService.GetSingleCallback<Encounter>() {
+        observationDataService.getByEncounter(encounter, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Observation>() {
             @Override
-            public void onCompleted(Encounter entity) {
-                ConsoleLogger.dump("Succeeded");
-
-                ConsoleLogger.dump("Attempting to save encounter: " + entity.getUuid());
-
-                encounter.setDisplay("Note Visit 05/03/2017");
-
-                entity.setObservations(new ArrayList<Observation>());
-
-                encounterDataService.update(entity, new DataService.GetSingleCallback<Encounter>() {
-                    @Override
-                    public void onCompleted(Encounter entity) {
-                        ConsoleLogger.dump("Succeeded");
-                        ConsoleLogger.dump("Saved encounter: " + entity.getUuid());
-                        ConsoleLogger.dump("Saved encounter: " + entity.getLinks().get(0).getUri());
+            public void onCompleted(List<Observation> observations) {
+                for (Observation observation : observations) {
+                    if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote().equals(ApplicationConstants.EMPTY_STRING)) {
+                        patientDashboardView.updateVisitNote(observation);
                     }
-
-                    @Override
-                    public void onError(Throwable t) {
-                        ConsoleLogger.dump("Failed");
-                        t.printStackTrace();
-                    }
-                });
+                }
             }
 
             @Override
             public void onError(Throwable t) {
-                ConsoleLogger.dump("Failed");
+                patientDashboardView.showSnack("Error fetching observations");
                 t.printStackTrace();
             }
         });
+    }
 
-        /*encounterDataService.update(encounter, new DataService.GetSingleCallback<Encounter>() {
+    @Override
+    public void saveObservation(Observation observation) {
+        Observation obs = new Observation();
+        obs.setConcept(observation.getConcept());
+        obs.setPerson(observation.getPerson());
+        obs.setObsDatetime(DateUtils.now(DateUtils.OPEN_MRS_REQUEST_FORMAT));
+        obs.setValue(observation.getValue());
+        ConsoleLogger.dump("OBS ID: " + observation.getUuid());
+        ConsoleLogger.dumpToJson(obs);
+
+        observationDataService.update(observation, new DataService.GetSingleCallback<Observation>() {
             @Override
-            public void onCompleted(Encounter entity) {
-                ConsoleLogger.dump("Succeeded");
-                ConsoleLogger.dump(entity);
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                ConsoleLogger.dump("Failed");
-                t.printStackTrace();
-            }
-        });*/
-
-        /*observationDataService.getByEncounter(encounter, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Observation>() {
-            @Override
-            public void onCompleted(List<Observation> observations) {
-
+            public void onCompleted(Observation entity) {
+                ConsoleLogger.dump("Observation save completed");
+                ConsoleLogger.dumpToJson(entity);
             }
 
             @Override
@@ -200,8 +181,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
                 t.printStackTrace();
                 patientDashboardView.showSnack("Error occured: Unable to reach searver");
             }
-        });*/
-
+        });
     }
 
     @Override
@@ -219,24 +199,4 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
     }
 
-    @Override
-    public void saveObservation(Observation observation) {
-        observation.setVoided(true);
-        ConsoleLogger.dump(observation.getVoided());
-
-        observationDataService.update(observation, new DataService.GetSingleCallback<Observation>() {
-            @Override
-            public void onCompleted(Observation entity) {
-                ConsoleLogger.dump("Observation save completed");
-                ConsoleLogger.dump(entity);
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                ConsoleLogger.dump("error occured");
-                t.printStackTrace();
-                patientDashboardView.showSnack("Error occured: Unable to reach searver");
-            }
-        });
-    }
 }

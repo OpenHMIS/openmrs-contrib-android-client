@@ -29,7 +29,7 @@ public interface EncounterRestService {
                                     @Query("startIndex") int startIndex);
 
     @POST(RestConstants.CREATE)
-    Call<Encounter> create(@Path(value = "restPath", encoded = true) String restPath, Encounter entity);
+    Call<Encounter> create(@Path(value = "restPath", encoded = true) String restPath, @Body Encounter entity);
 
     @POST(RestConstants.UPDATE)
     Call<Encounter> update(@Path(value = "restPath", encoded = true) String restPath,

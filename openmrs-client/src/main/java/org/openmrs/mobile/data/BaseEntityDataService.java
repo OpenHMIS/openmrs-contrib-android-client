@@ -35,14 +35,14 @@ public abstract class BaseEntityDataService<E extends BaseOpenmrsEntity, S> exte
     }
 
 
-    public void getByEncounter(@NonNull Encounter patient, boolean includeInactive,
+    public void getByEncounter(@NonNull Encounter encounter, boolean includeInactive,
                                @Nullable PagingInfo pagingInfo,
                                @NonNull GetMultipleCallback<E> callback) {
-        checkNotNull(patient);
+        checkNotNull(encounter);
         checkNotNull(callback);
 
         executeMultipleCallback(callback, pagingInfo,
-                () -> _restGetByEncounter(buildRestRequestPath(), pagingInfo, patient.getUuid(), RestConstants.Representations.FULL));
+                () -> _restGetByEncounter(buildRestRequestPath(), pagingInfo, encounter.getUuid(), RestConstants.Representations.FULL));
     }
 
 }

@@ -28,7 +28,7 @@ public interface VisitRestService {
                                 @Query("startIndex") int startIndex);
 
     @POST(RestConstants.CREATE)
-    Call<Visit> create(@Path(value = "restPath", encoded = true) String restPath, Visit entity);
+    Call<Visit> create(@Path(value = "restPath", encoded = true) String restPath, @Body Visit entity);
 
     @POST(RestConstants.UPDATE)
     Call<Visit> update(@Path(value = "restPath", encoded = true) String restPath,

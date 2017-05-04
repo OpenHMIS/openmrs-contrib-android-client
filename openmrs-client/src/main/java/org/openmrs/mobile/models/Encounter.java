@@ -26,10 +26,6 @@ public class Encounter extends BaseOpenmrsEntity implements Serializable {
     @SerializedName("encounterDatetime")
     @Expose
     private String encounterDatetime;
-
-    /*@SerializedName("patient")
-    @Expose
-    private Patient patient;*/
     @SerializedName("location")
     @Expose
     private Resource location;

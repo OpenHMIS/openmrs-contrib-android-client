@@ -4,6 +4,7 @@ import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Results;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -17,7 +18,7 @@ public interface PatientRestService  {
                             @Query("v") String representation);
 
     @POST(RestConstants.CREATE)
-    Call<Patient> create(@Path(value = "restPath", encoded = true) String restPath, Patient entity);
+    Call<Patient> create(@Path(value = "restPath", encoded = true) String restPath, @Body Patient entity);
 
     @POST(RestConstants.UPDATE)
     Call<Patient> update(@Path(value = "restPath", encoded = true) String restPath,
