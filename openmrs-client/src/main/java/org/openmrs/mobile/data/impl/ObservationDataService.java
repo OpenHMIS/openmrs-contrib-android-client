@@ -1,15 +1,21 @@
 package org.openmrs.mobile.data.impl;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import org.openmrs.mobile.data.BaseEntityDataService;
 import org.openmrs.mobile.data.EntityDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.rest.ObservationRestService;
 import org.openmrs.mobile.data.rest.RestConstants;
+import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 
 public class ObservationDataService extends BaseEntityDataService<Observation, ObservationRestService> implements EntityDataService<Observation> {
@@ -24,7 +30,7 @@ public class ObservationDataService extends BaseEntityDataService<Observation, O
         }
     }
 
-    @Override
+
     protected Call<Results<Observation>> _restGetByEncounter(String restPath, PagingInfo pagingInfo, String pncounterUuid, String representation) {
         if (isPagingValid(pagingInfo)) {
             return restService.getByEncounter(restPath, pncounterUuid, representation,
@@ -78,4 +84,14 @@ public class ObservationDataService extends BaseEntityDataService<Observation, O
         return restService.purge(restPath, uuid);
     }
 
+    public void getByEncounter(@NonNull Encounter encounter, boolean includeInactive,
+                               @Nullable PagingInfo pagingInfo,
+                               @NonNull GetMultipleCallback<Observation> callback) {
+        checkNotNull(encounter);
+        checkNotNull(callback);
+
+        executeMultipleCallback(callback, pagingInfo,
+                () -> _restGetByEncounter(buildRestRequestPath(), pagingInfo, encounter.getUuid(), RestConstants.Representations.FULL));
+    }
 }
+

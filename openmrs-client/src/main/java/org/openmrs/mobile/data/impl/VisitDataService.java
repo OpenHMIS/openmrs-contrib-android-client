@@ -69,16 +69,6 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitRestServ
         }
     }
 
-    @Override
-    protected Call<Results<Visit>> _restGetByEncounter(String restPath, PagingInfo pagingInfo, String patientUuid, String representation) {
-        if (isPagingValid(pagingInfo)) {
-            return restService.getByEncounter(restPath, patientUuid, representation,
-                    pagingInfo.getLimit(), pagingInfo.getStartIndex());
-        } else {
-            return restService.getByEncounter(restPath, patientUuid, representation);
-        }
-    }
-
     // End Retrofit Workaround
 }
 

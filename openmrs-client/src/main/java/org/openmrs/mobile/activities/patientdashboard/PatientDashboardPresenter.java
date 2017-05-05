@@ -14,18 +14,14 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
-import com.google.gson.Gson;
-
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.dao.LocationDAO;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
-import org.openmrs.mobile.data.impl.EncounterDataService;
 import org.openmrs.mobile.data.impl.ObservationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
-import org.openmrs.mobile.data.rest.EncounterRestService;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Encountercreate;
 import org.openmrs.mobile.models.Observation;
@@ -35,7 +31,6 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ConsoleLogger;
 import org.openmrs.mobile.utilities.DateUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +41,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
     private PatientDashboardContract.View patientDashboardView;
     private PatientDataService patientDataService;
     private VisitDataService visitDataService;
-    protected OpenMRS openMRS;
+    private OpenMRS openMRS;
     private ObservationDataService observationDataService;
 
     public PatientDashboardPresenter(PatientDashboardContract.View view, OpenMRS openMRS) {
@@ -140,6 +135,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
     @Override
     public void fetchEncounterObservations(Encounter encounter) {
 
+        //observationDataService.getByPatient();
         observationDataService.getByEncounter(encounter, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Observation>() {
             @Override
             public void onCompleted(List<Observation> observations) {
@@ -168,7 +164,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
         ConsoleLogger.dump("OBS ID: " + observation.getUuid());
         ConsoleLogger.dumpToJson(obs);
 
-        observationDataService.update(observation, new DataService.GetSingleCallback<Observation>() {
+        /*observationDataService.update(observation, new DataService.GetSingleCallback<Observation>() {
             @Override
             public void onCompleted(Observation entity) {
                 ConsoleLogger.dump("Observation save completed");
@@ -181,7 +177,22 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
                 t.printStackTrace();
                 patientDashboardView.showSnack("Error occured: Unable to reach searver");
             }
-        });
+        });*/
+
+        /*observationDataService.update(observation.getUuid(), new DataService.GetSingleCallback<Observation>() {
+            @Override
+            public void onCompleted(Observation entity) {
+                ConsoleLogger.dump("Observation save completed");
+                ConsoleLogger.dumpToJson(entity);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                ConsoleLogger.dump("error occured");
+                t.printStackTrace();
+                patientDashboardView.showSnack("Error occured: Unable to reach searver");
+            }
+        });*/
     }
 
     @Override

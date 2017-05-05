@@ -5,8 +5,6 @@ import android.support.annotation.Nullable;
 
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.BaseOpenmrsEntity;
-import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Results;
 
@@ -20,9 +18,6 @@ public abstract class BaseEntityDataService<E extends BaseOpenmrsEntity, S> exte
     protected abstract Call<Results<E>> _restGetByPatient(String restPath, PagingInfo pagingInfo, String patientUuid,
                                                           String representation);
 
-    protected abstract Call<Results<E>> _restGetByEncounter(String restPath, PagingInfo pagingInfo, String patientUuid,
-                                                          String representation);
-    
     @Override
     public void getByPatient(@NonNull Patient patient, boolean includeInactive,
                              @Nullable PagingInfo pagingInfo,
@@ -32,17 +27,6 @@ public abstract class BaseEntityDataService<E extends BaseOpenmrsEntity, S> exte
 
         executeMultipleCallback(callback, pagingInfo,
                 () -> _restGetByPatient(buildRestRequestPath(), pagingInfo, patient.getUuid(), RestConstants.Representations.FULL));
-    }
-
-
-    public void getByEncounter(@NonNull Encounter encounter, boolean includeInactive,
-                               @Nullable PagingInfo pagingInfo,
-                               @NonNull GetMultipleCallback<E> callback) {
-        checkNotNull(encounter);
-        checkNotNull(callback);
-
-        executeMultipleCallback(callback, pagingInfo,
-                () -> _restGetByEncounter(buildRestRequestPath(), pagingInfo, encounter.getUuid(), RestConstants.Representations.FULL));
     }
 
 }
