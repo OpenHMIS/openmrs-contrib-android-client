@@ -27,7 +27,7 @@ public abstract class ApplicationConstants {
     public static final String VISIT_TYPE_UUID = "visit_type_uuid";
     public static final String LAST_SESSION_TOKEN = "last_session_id";
     public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-    public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.1.102:8080/openmrs/";
+    public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.30:8080/openmrs/";
 
 
     public abstract static class OpenMRSSharedPreferenceNames {
@@ -66,6 +66,7 @@ public abstract class ApplicationConstants {
         public static final String NO_VISIT_DIALOG_TAG = "noVisitDialogTag";
         public static final String SIMILAR_PATIENTS_TAG = "similarPatientsDialogTag";
         public static final String DELET_PATIENT_DIALOG_TAG = "deletePatientDialogTag";
+        public static final String VISIT_NOTE_TAG = "visitNoteTag";
     }
 
     public abstract static class RegisterPatientRequirements {

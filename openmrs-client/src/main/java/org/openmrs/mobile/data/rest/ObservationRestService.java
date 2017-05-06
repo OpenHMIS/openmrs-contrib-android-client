@@ -13,6 +13,7 @@ import retrofit2.http.Query;
 
 public interface ObservationRestService {
 
+
     @GET(RestConstants.GET_BY_UUID)
     Call<Observation> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
                                 @Path("uuid") String uuid,
@@ -62,7 +63,4 @@ public interface ObservationRestService {
                                               @Query("v") String representation,
                                               @Query("limit") int limit,
                                               @Query("startIndex") int startIndex);
-
-
-
 }

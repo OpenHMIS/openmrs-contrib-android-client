@@ -63,7 +63,7 @@ public class CustomFragmentDialog extends DialogFragment {
 
     public enum OnClickAction {
         SET_URL, SHOW_URL_DIALOG, DISMISS_URL_DIALOG, DISMISS, LOGOUT, FINISH, INTERNET, UNAUTHORIZED, END_VISIT,
-        START_VISIT, LOGIN, REGISTER_PATIENT, CANCEL_REGISTERING, DELETE_PATIENT
+        START_VISIT, LOGIN, REGISTER_PATIENT, CANCEL_REGISTERING, DELETE_PATIENT, SAVE_VISIT_NOTE
     }
 
     protected LayoutInflater mInflater;
@@ -95,7 +95,7 @@ public class CustomFragmentDialog extends DialogFragment {
         mCustomDialogBundle = (CustomDialogBundle) getArguments().getSerializable(ApplicationConstants.BundleKeys.CUSTOM_DIALOG_BUNDLE);
         if (mCustomDialogBundle.hasLoadingBar()) {
             this.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.LoadingDialogTheme_DialogTheme);
-        } else if(mCustomDialogBundle.hasPatientList()) {
+        } else if (mCustomDialogBundle.hasPatientList()) {
             this.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.SimilarPatients_DialogTheme);
         } else {
             this.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.DialogTheme);
@@ -214,7 +214,7 @@ public class CustomFragmentDialog extends DialogFragment {
             addProgressBar(mCustomDialogBundle.getProgressViewMessage());
             this.setCancelable(false);
         }
-        if(null != mCustomDialogBundle.getPatientsList()){
+        if (null != mCustomDialogBundle.getPatientsList()) {
             mRecyclerView = addRecycleView(mCustomDialogBundle.getPatientsList(), mCustomDialogBundle.getNewPatient());
         }
     }
@@ -293,7 +293,7 @@ public class CustomFragmentDialog extends DialogFragment {
 
     public String getEditTextValue() {
         String value = "";
-        if (mEditText!=null) {
+        if (mEditText != null) {
             value = mEditText.getText().toString();
         }
         return value;

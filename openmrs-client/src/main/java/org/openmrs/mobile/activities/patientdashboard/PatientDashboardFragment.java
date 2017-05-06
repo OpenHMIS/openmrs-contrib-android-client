@@ -33,12 +33,16 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
+import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
+import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ConsoleLogger;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FontsUtil;
@@ -180,6 +184,16 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         visit_note.setText(observation.getDiagnosisNote());
 
 
+        CustomDialogBundle createEditVisitNoteIcon = new CustomDialogBundle();
+        createEditVisitNoteIcon.setTitleViewMessage(getString(R.string.visit_note));
+        createEditVisitNoteIcon.setRightButtonText(getString(R.string.label_save));
+        createEditVisitNoteIcon.setRightButtonAction(CustomFragmentDialog.OnClickAction.SAVE_VISIT_NOTE);
+        createEditVisitNoteIcon.setEditTextViewMessage("yyy");
+        createEditVisitNoteIcon.setVisitNoteVisible(true);
+        createEditVisitNoteIcon.setVisitNoteText("Works");
+
+        ((PatientDashboardActivity) this.getActivity()).createAndShowDialog(createEditVisitNoteIcon, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
+
         visit_note.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -193,9 +207,11 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
             @Override
             public void afterTextChanged(Editable string) {
-                observation.setValue(string.toString());
+                /*observation.setValue(string.toString());
                 observation.setPerson(patient.getPerson());
-                mPresenter.saveObservation(observation);
+                observation.setPatient(patient);
+                mPresenter.saveObservation(observation);*/
+
 
             }
         });

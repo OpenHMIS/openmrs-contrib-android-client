@@ -74,6 +74,8 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
         return value;
     }
 
+    @SerializedName("value")
+    @Expose
     private String value;
 
     /**

@@ -41,7 +41,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
     private PatientDashboardContract.View patientDashboardView;
     private PatientDataService patientDataService;
     private VisitDataService visitDataService;
-    private OpenMRS openMRS;
+    protected OpenMRS openMRS;
     private ObservationDataService observationDataService;
 
     public PatientDashboardPresenter(PatientDashboardContract.View view, OpenMRS openMRS) {
@@ -134,8 +134,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
     @Override
     public void fetchEncounterObservations(Encounter encounter) {
-
-        //observationDataService.getByPatient();
         observationDataService.getByEncounter(encounter, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Observation>() {
             @Override
             public void onCompleted(List<Observation> observations) {
@@ -156,43 +154,21 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
     @Override
     public void saveObservation(Observation observation) {
-        Observation obs = new Observation();
-        obs.setConcept(observation.getConcept());
-        obs.setPerson(observation.getPerson());
-        obs.setObsDatetime(DateUtils.now(DateUtils.OPEN_MRS_REQUEST_FORMAT));
-        obs.setValue(observation.getValue());
-        ConsoleLogger.dump("OBS ID: " + observation.getUuid());
-        ConsoleLogger.dumpToJson(obs);
 
-        /*observationDataService.update(observation, new DataService.GetSingleCallback<Observation>() {
+        observationDataService.update(observation, new DataService.GetSingleCallback<Observation>() {
             @Override
             public void onCompleted(Observation entity) {
-                ConsoleLogger.dump("Observation save completed");
+                ConsoleLogger.dump("Successful");
                 ConsoleLogger.dumpToJson(entity);
             }
 
             @Override
             public void onError(Throwable t) {
-                ConsoleLogger.dump("error occured");
+                ConsoleLogger.dump("Failed");
                 t.printStackTrace();
-                patientDashboardView.showSnack("Error occured: Unable to reach searver");
             }
-        });*/
+        });
 
-        /*observationDataService.update(observation.getUuid(), new DataService.GetSingleCallback<Observation>() {
-            @Override
-            public void onCompleted(Observation entity) {
-                ConsoleLogger.dump("Observation save completed");
-                ConsoleLogger.dumpToJson(entity);
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                ConsoleLogger.dump("error occured");
-                t.printStackTrace();
-                patientDashboardView.showSnack("Error occured: Unable to reach searver");
-            }
-        });*/
     }
 
     @Override

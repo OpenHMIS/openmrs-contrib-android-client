@@ -35,6 +35,8 @@ public class CustomDialogBundle implements Serializable {
     private Patient newPatient;
     private boolean loadingBar;
     private boolean progressDialog;
+    private boolean visitNoteVisible;
+    private String visitNoteText;
 
     public boolean hasProgressDialog() {
         return progressDialog;
@@ -121,7 +123,7 @@ public class CustomDialogBundle implements Serializable {
         return patientsList;
     }
 
-    public boolean hasPatientList(){
+    public boolean hasPatientList() {
         return patientsList != null;
     }
 
@@ -137,4 +139,19 @@ public class CustomDialogBundle implements Serializable {
         this.newPatient = newPatient;
     }
 
+    public void setVisitNoteVisible(boolean visible) {
+        this.visitNoteVisible = visible;
+    }
+
+    public void setVisitNoteText(String string) {
+        this.visitNoteText = string;
+    }
+
+    public boolean isVisitNoteVisible() {
+        return visitNoteVisible;
+    }
+
+    public String getVisitNoteText() {
+        return visitNoteText;
+    }
 }

@@ -33,7 +33,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="0dp"
         android:visibility="gone"
-        fab:menu_backgroundColor="#000"
+        fab:menu_backgroundColor="#eaeaea"
         fab:menu_fab_label="@string/label_close"
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true">
