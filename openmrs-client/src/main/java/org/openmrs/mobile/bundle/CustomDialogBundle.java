@@ -15,6 +15,8 @@
 package org.openmrs.mobile.bundle;
 
 
+import android.os.Bundle;
+
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.models.Patient;
 
@@ -35,8 +37,7 @@ public class CustomDialogBundle implements Serializable {
     private Patient newPatient;
     private boolean loadingBar;
     private boolean progressDialog;
-    private boolean visitNoteVisible;
-    private String visitNoteText;
+    private Bundle bundle;
 
     public boolean hasProgressDialog() {
         return progressDialog;
@@ -139,19 +140,10 @@ public class CustomDialogBundle implements Serializable {
         this.newPatient = newPatient;
     }
 
-    public void setVisitNoteVisible(boolean visible) {
-        this.visitNoteVisible = visible;
+    public void setArguments(Bundle bundle) {
+        this.bundle = bundle;
     }
-
-    public void setVisitNoteText(String string) {
-        this.visitNoteText = string;
-    }
-
-    public boolean isVisitNoteVisible() {
-        return visitNoteVisible;
-    }
-
-    public String getVisitNoteText() {
-        return visitNoteText;
+    public Bundle getArguments() {
+       return bundle;
     }
 }

@@ -26,6 +26,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -170,59 +171,51 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     @Override
     public void updateVisitNote(Observation observation) {
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
-        layoutParams.setMargins(10, 10, 10, 10);
-        layoutParams.gravity = Gravity.TOP;
+        ViewGroup.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
+        LinearLayout itemsContainer = new LinearLayout(getContext());
+        itemsContainer.setLayoutParams(linearLayoutParams);
+        itemsContainer.setOrientation(LinearLayout.HORIZONTAL);
+        itemsContainer.setPadding(0, 0, 0, 0);
+
+        ImageView editIcon = new ImageView(getContext());
+        editIcon.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_edit));
+        editIcon.setPadding(0, 0, 0, 0);
 
 
-        TextInputEditText visit_note = new TextInputEditText(getContext());
-        visit_note.setLayoutParams(layoutParams);
-        visit_note.setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.transparent));
-        visit_note.setHint(getString(R.string.add_a_note));
-        visit_note.setPadding(3, 3, 3, 3);
-        visit_note.setGravity(Gravity.LEFT);
-        visit_note.setText(observation.getDiagnosisNote());
+        TextView editText = new TextView(getContext());
+        editText.setPadding(10, 0, 10, 0);
+        editText.setText(observation.getDiagnosisNote());
+        editText.setGravity(Gravity.LEFT);
+
+        itemsContainer.addView(editIcon);
+        itemsContainer.addView(editText);
 
 
-        CustomDialogBundle createEditVisitNoteIcon = new CustomDialogBundle();
-        createEditVisitNoteIcon.setTitleViewMessage(getString(R.string.visit_note));
-        createEditVisitNoteIcon.setRightButtonText(getString(R.string.label_save));
-        createEditVisitNoteIcon.setRightButtonAction(CustomFragmentDialog.OnClickAction.SAVE_VISIT_NOTE);
-        createEditVisitNoteIcon.setEditTextViewMessage("yyy");
-        createEditVisitNoteIcon.setVisitNoteVisible(true);
-        createEditVisitNoteIcon.setVisitNoteText("Works");
+        LinearLayout visitNoteContainer = (LinearLayout) fragmentView.findViewById(R.id.visit_note_container);
+        visitNoteContainer.addView(itemsContainer);
 
-        ((PatientDashboardActivity) this.getActivity()).createAndShowDialog(createEditVisitNoteIcon, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
+        CustomDialogBundle createEditVisitNote = new CustomDialogBundle();
+        createEditVisitNote.setTitleViewMessage(getString(R.string.visit_note));
+        createEditVisitNote.setRightButtonText(getString(R.string.label_save));
+        createEditVisitNote.setRightButtonAction(CustomFragmentDialog.OnClickAction.SAVE_VISIT_NOTE);
+        createEditVisitNote.setEditTextViewMessage(observation.getDiagnosisNote());
 
-        visit_note.addTextChangedListener(new TextWatcher() {
+
+        Bundle bundle = new Bundle();
+        bundle.putString("edttext", "From Activity");
+        createEditVisitNote.setArguments(bundle);
+
+
+        View.OnClickListener switchToEditMode = new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+            public void onClick(View v) {
+                ((PatientDashboardActivity) getActivity()).createAndShowDialog(createEditVisitNote, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
             }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable string) {
-                /*observation.setValue(string.toString());
-                observation.setPerson(patient.getPerson());
-                observation.setPatient(patient);
-                mPresenter.saveObservation(observation);*/
+        };
+        editIcon.setOnClickListener(switchToEditMode);
+        editText.setOnClickListener(switchToEditMode);
 
 
-            }
-        });
-
-        TextInputLayout textInputLayout = new TextInputLayout(getContext());
-        textInputLayout.setLayoutParams(new TextInputLayout.LayoutParams(TextInputLayout.LayoutParams.MATCH_PARENT, TextInputLayout.LayoutParams.WRAP_CONTENT));
-
-        textInputLayout.addView(visit_note);
-
-        View visit_note_container = fragmentView.findViewById(R.id.visit_note_container);
-        ((LinearLayout) visit_note_container).addView(textInputLayout);
     }
 
     private void initViewFields() {

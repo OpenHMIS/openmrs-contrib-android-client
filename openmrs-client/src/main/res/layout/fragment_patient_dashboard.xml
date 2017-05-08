@@ -247,7 +247,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/patient_card_margin"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:weightSum="1">
 
                 <!-- <EditText
                      android:id="@+id/visit_note"

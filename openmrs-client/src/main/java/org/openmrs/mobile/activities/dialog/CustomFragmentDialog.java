@@ -51,6 +51,7 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.ConsoleLogger;
 import org.openmrs.mobile.utilities.FontsUtil;
 
 import java.util.List;
@@ -364,6 +365,13 @@ public class CustomFragmentDialog extends DialogFragment {
                         //activity.mPresenter.deletePatient();
                         dismiss();
                         activity.finish();
+                        break;
+                    case SAVE_VISIT_NOTE:
+                        Bundle args = mCustomDialogBundle.getArguments();
+                        String strtext = args.getString("edttext");
+                        ConsoleLogger.dump(strtext);
+
+                        dismiss();
                         break;
                     default:
                         break;
