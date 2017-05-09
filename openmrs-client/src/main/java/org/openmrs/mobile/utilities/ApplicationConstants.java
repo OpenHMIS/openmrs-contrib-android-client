@@ -85,6 +85,8 @@ public abstract class ApplicationConstants {
         public static final String FORM_FIELDS_BUNDLE = "formFieldsBundle";
         public static final String FORM_FIELDS_LIST_BUNDLE = "formFieldsListBundle";
         public static final String PATIENT_QUERY_BUNDLE = "patientQuery";
+        public static final String PATIENT = "patientTag";
+        public static final String OBSERVATION = "observationTag";
     }
 
     public abstract static class CustomIntentActions {
@@ -102,12 +104,6 @@ public abstract class ApplicationConstants {
         public static final String VITALS = "67a71486-1a54-468f-ac3e-7091a9a79584";
         public static final String VISIT_NOTE_FORM_UUID = "c75f120a-04ec-11e3-8780-2b40bef9a44b";
         public static String[] ENCOUNTER_TYPES_DISPLAYS = {EncounterType.VITALS, EncounterType.ADMISSION, EncounterType.DISCHARGE, EncounterType.VISIT_NOTE};
-    }
-
-    public abstract static class Tags {
-        public static final String PATIENT = "patientTag";
-        public static final String PATIENT_ID = "patientIdTag";
-        public static final String OBSERVATION = "observationTag";
     }
 
 }

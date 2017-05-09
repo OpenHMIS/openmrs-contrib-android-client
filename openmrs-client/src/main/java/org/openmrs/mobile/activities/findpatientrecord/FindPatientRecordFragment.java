@@ -39,6 +39,8 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
         // Font config
         FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
 
+
+
         return mRootView;
     }
 

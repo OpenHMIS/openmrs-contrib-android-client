@@ -14,19 +14,14 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,7 +29,6 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
-import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Encounter;
@@ -55,15 +49,11 @@ import java.util.List;
 public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardContract.Presenter> implements PatientDashboardContract.View {
 
     private View fragmentView;
-    private TextView given_name;
-    private TextView middle_name;
-    private TextView family_name;
-    private ImageView genderIcon;
-    private TextView age;
-    private TextView patient_id;
-    private ImageView activeVisitIcon;
-    private TextView more_label;
-    private TextView visit_details;
+    private TextView patientDisplayName;
+    private TextView patientGender;
+    private TextView patientAge;
+    private TextView patientIdentifier;
+    private TextView visitDetails;
     private View floatingActionMenu;
     private Visit mainVisit;
     private Patient patient;
@@ -80,27 +70,26 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
         visitNoteContainer = (LinearLayout) fragmentView.findViewById(R.id.visit_note_container);
-
         floatingActionMenu = getActivity().findViewById(R.id.floatingActionMenu);
         floatingActionMenu.setVisibility(View.VISIBLE);
-
+        String patientId = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
         initViewFields();
-
-        String uuid = "6fd9b701-6abb-4e70-aa4a-c4b298972249";
-
-
-        mPresenter.fetchPatientData(uuid);
-
-        FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
-
         initializeListeners();
-
+        mPresenter.fetchPatientData(patientId);
+        FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
         return fragmentView;
     }
 
     private void initializeListeners() {
-        more_label = (TextView) fragmentView.findViewById(R.id.more_label);
-        visit_details = (TextView) fragmentView.findViewById(R.id.visit_details);
+        TextView moreLabel = (TextView) fragmentView.findViewById(R.id.more_label);
+        visitDetails = (TextView) fragmentView.findViewById(R.id.visit_details);
+    }
+
+    private void initViewFields() {
+        patientDisplayName = (TextView) fragmentView.findViewById(R.id.fetchedPatientDisplayName);
+        patientIdentifier = (TextView) fragmentView.findViewById(R.id.fetchedPatientIdentifier);
+        patientGender = (TextView) fragmentView.findViewById(R.id.fetchedPatientGender);
+        patientAge = (TextView) fragmentView.findViewById(R.id.fetchedPatientAge);
     }
 
 
@@ -114,14 +103,11 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         if (patient != null) {
             this.patient = patient;
             Person person = patient.getPerson();
-            given_name.setText(person.getName().getGivenName());
-            middle_name.setText(person.getName().getMiddleName());
-            family_name.setText(person.getName().getFamilyName());
-            genderIcon.setImageResource(String.valueOf(person.getGender()).toLowerCase().equals("m") ? R.drawable.ic_male : R.drawable.ic_female);
+            patientDisplayName.setText(person.getName().getNameString());
+            patientGender.setText(person.getGender());
+            patientIdentifier.setText(patient.getIdentifier().getIdentifier());
             DateTime date = DateUtils.convertTimeString(person.getBirthdate());
-            age.setText(calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
-            patient_id.setText(patient.getIdentifier().getIdentifier());
-
+            patientAge.setText(calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
             mPresenter.fetchVisits(patient);
         }
     }
@@ -130,24 +116,21 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     public void updateVisitsCard(List<Visit> visits) {
 
         if (visits.size() >= 1) {
-
-            String string = "";
-            String start_date_time = "";
-            String stop_date_time = "";
+            String visitdetailsText = "";
+            String visitStartDateTime;
+            String visitStopDateTime;
             mainVisit = visits.get(0);
-            stop_date_time = mainVisit.getStopDatetime();
-            start_date_time = mainVisit.getStartDatetime();
-
-
-            if (!StringUtils.notNull(stop_date_time)) {
-                string += getString(R.string.active_visit_label) + " - " + DateUtils.convertTime1(start_date_time, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT);
+            visitStopDateTime = mainVisit.getStopDatetime();
+            visitStartDateTime = mainVisit.getStartDatetime();
+            if (!StringUtils.notNull(visitStopDateTime)) {
+                visitdetailsText += getString(R.string.active_visit_label) + " - " + DateUtils.convertTime1(visitStartDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT);
             } else {
-                string += DateUtils.convertTime1(start_date_time, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT) + " - " + DateUtils.convertTime1(stop_date_time, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT);
+                visitdetailsText += DateUtils.convertTime1(visitStartDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT) + " - " + DateUtils.convertTime1(visitStopDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT);
             }
-            visit_details.setText(string);
+
+            visitDetails.setText(visitdetailsText);
 
             if (mainVisit != null) {
-                ConsoleLogger.dump("Inside  main visit UUID: " + mainVisit.getUuid());
                 if (mainVisit.getEncounters().size() == 0) {
                     /*****
                      *
@@ -168,6 +151,17 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
             }
 
+            LinearLayout previousVisitsContainer = (LinearLayout) fragmentView.findViewById(R.id.previous_visits_container);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.gravity = Gravity.CENTER;
+            Context context = getContext();
+            for (int counter = 1; counter < visits.size(); counter++) {
+                Visit visit = visits.get(counter);
+                TextView pastVisitTextView = new TextView(context);
+                pastVisitTextView.setText(DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_DATE_FORMAT) + " - " + DateUtils.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_DATE_FORMAT));
+                previousVisitsContainer.addView(pastVisitTextView);
+            }
+
         }
 
 
@@ -181,37 +175,26 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         itemsContainer.setLayoutParams(linearLayoutParams);
         itemsContainer.setOrientation(LinearLayout.HORIZONTAL);
         itemsContainer.setPadding(0, 0, 0, 0);
-
         ImageView editIcon = new ImageView(getContext());
         editIcon.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_edit));
         editIcon.setPadding(0, 0, 0, 0);
-
-
         TextView editText = new TextView(getContext());
         editText.setPadding(10, 0, 10, 0);
         editText.setText(observation.getDiagnosisNote());
         editText.setGravity(Gravity.LEFT);
-
         itemsContainer.addView(editIcon);
         itemsContainer.addView(editText);
-
-
         visitNoteContainer = (LinearLayout) fragmentView.findViewById(R.id.visit_note_container);
         visitNoteContainer.addView(itemsContainer);
-
         CustomDialogBundle createEditVisitNote = new CustomDialogBundle();
         createEditVisitNote.setTitleViewMessage(getString(R.string.visit_note));
         createEditVisitNote.setRightButtonText(getString(R.string.label_save));
         createEditVisitNote.setRightButtonAction(CustomFragmentDialog.OnClickAction.SAVE_VISIT_NOTE);
         createEditVisitNote.setEditNoteTextViewMessage(observation.getDiagnosisNote());
-
-
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ApplicationConstants.Tags.OBSERVATION, observation);
-        bundle.putSerializable(ApplicationConstants.Tags.PATIENT, patient);
+        bundle.putSerializable(ApplicationConstants.BundleKeys.OBSERVATION, observation);
+        bundle.putSerializable(ApplicationConstants.BundleKeys.PATIENT, patient);
         createEditVisitNote.setArguments(bundle);
-
-
         View.OnClickListener switchToEditMode = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,19 +203,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         };
         editIcon.setOnClickListener(switchToEditMode);
         editText.setOnClickListener(switchToEditMode);
-
-
     }
 
-    private void initViewFields() {
-        given_name = (TextView) fragmentView.findViewById(R.id.given_name);
-        middle_name = (TextView) fragmentView.findViewById(R.id.middle_name);
-        family_name = (TextView) fragmentView.findViewById(R.id.family_name);
-        genderIcon = (ImageView) fragmentView.findViewById(R.id.genderIcon);
-        age = (TextView) fragmentView.findViewById(R.id.age);
-        patient_id = (TextView) fragmentView.findViewById(R.id.patient_id);
-        activeVisitIcon = (ImageView) fragmentView.findViewById(R.id.activeVisitIcon);
-    }
 
     private String calculateAge(int year, int month, int day) {
         Calendar dob = Calendar.getInstance();

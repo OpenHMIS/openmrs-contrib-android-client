@@ -176,6 +176,8 @@
     <string name="patient_postal_label">Postal Code</string>
     <string name="patient_state_label">State</string>
     <string name="patient_country_label">Country</string>
+    <string name="dateadded_hint">Date Added:</string>
+    <string name="dash">  --  </string>
     <string name="patient_photo_edit">Update photo</string>
     <!-- Find Active visit activity -->
     <string name="action_active_visits">Active Visits</string>
@@ -280,7 +282,7 @@
     <string name="label_middle_name">Middle</string>
     <string name="label_family_name">Family</string>
     <string name="label_id">ID</string>
-    <string name="label_age">Age</string>
+    <string name="label_age">Age:</string>
     <string name="label_gender">Gender</string>
 
     <string name="label_diagnoses">Diagnoses</string>

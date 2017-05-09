@@ -24,6 +24,8 @@ import android.view.MenuItem;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
 public class FindPatientRecordActivity extends ACBaseActivity {
 
@@ -42,6 +44,11 @@ public class FindPatientRecordActivity extends ACBaseActivity {
         if (!loginFragment.isActive()) {
             addFragmentToActivity(getSupportFragmentManager(), loginFragment, R.id.loginContentFrame);
         }
+
+        Intent intent = new Intent(getBaseContext(), PatientDashboardActivity.class);
+        intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE, "6fd9b701-6abb-4e70-aa4a-c4b298972249");
+        startActivity(intent);
+
 
         mPresenter = new FindPatientRecordPresenter(loginFragment, mOpenMRS);
     }

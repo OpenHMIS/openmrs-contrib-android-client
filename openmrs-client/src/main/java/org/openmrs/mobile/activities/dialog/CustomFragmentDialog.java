@@ -395,8 +395,8 @@ public class CustomFragmentDialog extends DialogFragment {
                     case SAVE_VISIT_NOTE:
 
                         Bundle bundle = mCustomDialogBundle.getArguments();
-                        Patient patient = (Patient) bundle.getSerializable(ApplicationConstants.Tags.PATIENT);
-                        Observation observation = (Observation) bundle.getSerializable(ApplicationConstants.Tags.OBSERVATION);
+                        Patient patient = (Patient) bundle.getSerializable(ApplicationConstants.BundleKeys.PATIENT);
+                        Observation observation = (Observation) bundle.getSerializable(ApplicationConstants.BundleKeys.OBSERVATION);
                         observation.setValue(getEditNoteTextValue());
 
                         ObservationDataService observationDataService = new ObservationDataService();
