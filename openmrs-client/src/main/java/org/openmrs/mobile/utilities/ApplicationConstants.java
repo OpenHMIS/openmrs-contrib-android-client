@@ -105,7 +105,9 @@ public abstract class ApplicationConstants {
     }
 
     public abstract static class Tags {
-        public static final String PATIENT_ID = "patient_ID";
+        public static final String PATIENT = "patientTag";
+        public static final String PATIENT_ID = "patientIdTag";
+        public static final String OBSERVATION = "observationTag";
     }
 
 }

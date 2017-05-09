@@ -14,6 +14,8 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
+import android.widget.LinearLayout;
+
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.dao.LocationDAO;
@@ -37,6 +39,8 @@ public interface PatientDashboardContract {
         void updateVisitsCard(List<Visit> visits);
 
         void updateVisitNote(Observation observation);
+
+        LinearLayout getVisitNoteContainer();
     }
 
     interface Presenter extends BasePresenterContract {

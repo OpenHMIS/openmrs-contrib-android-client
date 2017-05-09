@@ -38,6 +38,7 @@ public class CustomDialogBundle implements Serializable {
     private boolean loadingBar;
     private boolean progressDialog;
     private Bundle bundle;
+    private String editNoteTextViewMessage;
 
     public boolean hasProgressDialog() {
         return progressDialog;
@@ -116,6 +117,10 @@ public class CustomDialogBundle implements Serializable {
         return editTextViewMessage;
     }
 
+    public String getEditNoteTextViewMessage() {
+        return editNoteTextViewMessage;
+    }
+
     public void setEditTextViewMessage(String editTextViewMessage) {
         this.editTextViewMessage = editTextViewMessage;
     }
@@ -143,7 +148,12 @@ public class CustomDialogBundle implements Serializable {
     public void setArguments(Bundle bundle) {
         this.bundle = bundle;
     }
+
     public Bundle getArguments() {
-       return bundle;
+        return bundle;
+    }
+
+    public void setEditNoteTextViewMessage(String string) {
+        this.editNoteTextViewMessage = string;
     }
 }

@@ -69,6 +69,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     private Patient patient;
 
 
+    private LinearLayout visitNoteContainer;
+
+
     public static PatientDashboardFragment newInstance() {
         return new PatientDashboardFragment();
     }
@@ -76,6 +79,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
+        visitNoteContainer = (LinearLayout) fragmentView.findViewById(R.id.visit_note_container);
+
         floatingActionMenu = getActivity().findViewById(R.id.floatingActionMenu);
         floatingActionMenu.setVisibility(View.VISIBLE);
 
@@ -191,18 +196,19 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         itemsContainer.addView(editText);
 
 
-        LinearLayout visitNoteContainer = (LinearLayout) fragmentView.findViewById(R.id.visit_note_container);
+        visitNoteContainer = (LinearLayout) fragmentView.findViewById(R.id.visit_note_container);
         visitNoteContainer.addView(itemsContainer);
 
         CustomDialogBundle createEditVisitNote = new CustomDialogBundle();
         createEditVisitNote.setTitleViewMessage(getString(R.string.visit_note));
         createEditVisitNote.setRightButtonText(getString(R.string.label_save));
         createEditVisitNote.setRightButtonAction(CustomFragmentDialog.OnClickAction.SAVE_VISIT_NOTE);
-        createEditVisitNote.setEditTextViewMessage(observation.getDiagnosisNote());
+        createEditVisitNote.setEditNoteTextViewMessage(observation.getDiagnosisNote());
 
 
         Bundle bundle = new Bundle();
-        bundle.putString("edttext", "From Activity");
+        bundle.putSerializable(ApplicationConstants.Tags.OBSERVATION, observation);
+        bundle.putSerializable(ApplicationConstants.Tags.PATIENT, patient);
         createEditVisitNote.setArguments(bundle);
 
 
@@ -239,6 +245,10 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         Integer ageInt = new Integer(age);
         String ageS = ageInt.toString();
         return ageS;
+    }
+
+    public LinearLayout getVisitNoteContainer() {
+        return visitNoteContainer;
     }
 
 

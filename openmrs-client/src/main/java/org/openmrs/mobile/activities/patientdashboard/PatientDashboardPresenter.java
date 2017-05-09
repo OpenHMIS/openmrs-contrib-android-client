@@ -82,6 +82,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
     @Override
     public void fetchVisits(Patient patient) {
+        patientDashboardView.getVisitNoteContainer().removeAllViews();
         visitDataService.getByPatient(patient, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Visit>() {
             @Override
             public void onCompleted(List<Visit> visits) {

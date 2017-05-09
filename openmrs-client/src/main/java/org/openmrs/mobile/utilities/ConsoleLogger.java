@@ -51,17 +51,21 @@ public class ConsoleLogger {
 
     public static void dump(Object object) {
         System.out.println("=========================== START LISTING OF OBJECT PROPERTIES ===========================");
-        for (Field field : object.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
-            String name = field.getName();
-            Object value = null;
-            try {
-                value = field.get(object);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+        if (null != object) {
+            for (Field field : object.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                String name = field.getName();
+                Object value = null;
+                try {
+                    value = field.get(object);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                //System.out.printf("Field name: %s, Field value: %s%n", name, value);
+                System.out.printf("%s : %s%n", name, value);
             }
-            //System.out.printf("Field name: %s, Field value: %s%n", name, value);
-            System.out.printf("%s : %s%n", name, value);
+        } else {
+            System.out.println(object);
         }
         System.out.println("=========================== END LISTING OF OBJECT PROPERTIES ===========================");
     }

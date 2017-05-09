@@ -40,6 +40,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
@@ -49,6 +50,9 @@ import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
+import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.impl.ObservationDataService;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ConsoleLogger;
@@ -78,6 +82,7 @@ public class CustomFragmentDialog extends DialogFragment {
     private Button mRightButton;
 
     protected EditText mEditText;
+    protected EditText mEditNoteText;
 
     private CustomDialogBundle mCustomDialogBundle;
 
@@ -196,6 +201,9 @@ public class CustomFragmentDialog extends DialogFragment {
         if (null != mCustomDialogBundle.getEditTextViewMessage()) {
             mEditText = addEditTextField(mCustomDialogBundle.getEditTextViewMessage());
         }
+        if (null != mCustomDialogBundle.getEditNoteTextViewMessage()) {
+            mEditNoteText = addEditNoteTextField(mCustomDialogBundle.getEditNoteTextViewMessage());
+        }
         if (null != mCustomDialogBundle.getTextViewMessage()) {
             mTextView = addTextField(mCustomDialogBundle.getTextViewMessage());
         }
@@ -233,6 +241,16 @@ public class CustomFragmentDialog extends DialogFragment {
     public EditText addEditTextField(String defaultMessage) {
         LinearLayout field = (LinearLayout) mInflater.inflate(R.layout.openmrs_edit_text_field, null);
         EditText editText = (EditText) field.findViewById(R.id.openmrsEditText);
+        if (null != defaultMessage) {
+            editText.setText(defaultMessage);
+        }
+        mFieldsLayout.addView(field);
+        return editText;
+    }
+
+    public EditText addEditNoteTextField(String defaultMessage) {
+        LinearLayout field = (LinearLayout) mInflater.inflate(R.layout.openmrs_edit_note_text_field, null);
+        EditText editText = (EditText) field.findViewById(R.id.openmrsEditNoteText);
         if (null != defaultMessage) {
             editText.setText(defaultMessage);
         }
@@ -296,6 +314,14 @@ public class CustomFragmentDialog extends DialogFragment {
         String value = "";
         if (mEditText != null) {
             value = mEditText.getText().toString();
+        }
+        return value;
+    }
+
+    public String getEditNoteTextValue() {
+        String value = "";
+        if (mEditNoteText != null) {
+            value = mEditNoteText.getText().toString();
         }
         return value;
     }
@@ -367,11 +393,28 @@ public class CustomFragmentDialog extends DialogFragment {
                         activity.finish();
                         break;
                     case SAVE_VISIT_NOTE:
-                        Bundle args = mCustomDialogBundle.getArguments();
-                        String strtext = args.getString("edttext");
-                        ConsoleLogger.dump(strtext);
 
-                        dismiss();
+                        Bundle bundle = mCustomDialogBundle.getArguments();
+                        Patient patient = (Patient) bundle.getSerializable(ApplicationConstants.Tags.PATIENT);
+                        Observation observation = (Observation) bundle.getSerializable(ApplicationConstants.Tags.OBSERVATION);
+                        observation.setValue(getEditNoteTextValue());
+
+                        ObservationDataService observationDataService = new ObservationDataService();
+
+                        observationDataService.update(observation, new DataService.GetSingleCallback<Observation>() {
+                            @Override
+                            public void onCompleted(Observation entity) {
+                                ((PatientDashboardActivity) getActivity()).mPresenter.fetchVisits(patient);
+                                dismiss();
+                            }
+
+                            @Override
+                            public void onError(Throwable t) {
+
+                            }
+                        });
+
+
                         break;
                     default:
                         break;
@@ -398,4 +441,8 @@ public class CustomFragmentDialog extends DialogFragment {
             }*/
         }
     }
+
+
+
+
 }
