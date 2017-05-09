@@ -32,6 +32,7 @@ public final class DateUtils {
     private static final String OPEN_MRS_RESPONSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     public static final String OPEN_MRS_REQUEST_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     public static final String OPEN_MRS_REQUEST_PATIENT_FORMAT = "yyyy-MM-dd";
+    public static final String PATIENT_DASHBOARD_DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
     public static final Long ZERO = 0L;
 
@@ -108,4 +109,7 @@ public final class DateUtils {
         return dateAsString;
     }
 
+    public static String now(String format) {
+        return new SimpleDateFormat(format).format(new Date());
+    }
 }

@@ -116,7 +116,7 @@ public class EncounterService extends IntentService {
                         Encounter encounter = response.body();
                         linkvisit(encountercreate.getPatientId(),encountercreate.getFormname(), encounter, encountercreate);
                         encountercreate.setSynced(true);
-                        encountercreate.save();
+                        //encountercreate.save();
                         new VisitApi().syncLastVitals(encountercreate.getPatient());
                         if (callbackListener != null) {
                             callbackListener.onResponse();
@@ -169,7 +169,7 @@ public class EncounterService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if(NetworkUtils.isOnline()) {
+        /*if(NetworkUtils.isOnline()) {
 
             List<Encountercreate> encountercreatelist = new Select()
                     .from(Encountercreate.class)
@@ -198,7 +198,7 @@ public class EncounterService extends IntentService {
         } else {
             ToastUtil.error("No internet connection. Form data is saved locally " +
                     "and will sync when internet connection is restored. ");
-        }
+        }*/
     }
 
 }

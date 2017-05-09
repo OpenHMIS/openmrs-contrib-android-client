@@ -15,6 +15,8 @@
 package org.openmrs.mobile.bundle;
 
 
+import android.os.Bundle;
+
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.models.Patient;
 
@@ -35,6 +37,8 @@ public class CustomDialogBundle implements Serializable {
     private Patient newPatient;
     private boolean loadingBar;
     private boolean progressDialog;
+    private Bundle bundle;
+    private String editNoteTextViewMessage;
 
     public boolean hasProgressDialog() {
         return progressDialog;
@@ -113,6 +117,10 @@ public class CustomDialogBundle implements Serializable {
         return editTextViewMessage;
     }
 
+    public String getEditNoteTextViewMessage() {
+        return editNoteTextViewMessage;
+    }
+
     public void setEditTextViewMessage(String editTextViewMessage) {
         this.editTextViewMessage = editTextViewMessage;
     }
@@ -121,7 +129,7 @@ public class CustomDialogBundle implements Serializable {
         return patientsList;
     }
 
-    public boolean hasPatientList(){
+    public boolean hasPatientList() {
         return patientsList != null;
     }
 
@@ -137,4 +145,15 @@ public class CustomDialogBundle implements Serializable {
         this.newPatient = newPatient;
     }
 
+    public void setArguments(Bundle bundle) {
+        this.bundle = bundle;
+    }
+
+    public Bundle getArguments() {
+        return bundle;
+    }
+
+    public void setEditNoteTextViewMessage(String string) {
+        this.editNoteTextViewMessage = string;
+    }
 }

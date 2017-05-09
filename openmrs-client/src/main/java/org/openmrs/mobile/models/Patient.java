@@ -21,10 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Patient extends BaseOpenmrsAuditableObject implements Serializable{
+public class Patient extends BaseOpenmrsAuditableObject implements Serializable {
 
     private Long id;
-    private String encounters = "";
+    //private String encounters = "";
+    @SerializedName("encounters")
+    @Expose
+    private List<Encounter> encounters = new ArrayList<Encounter>();
 
     @SerializedName("identifiers")
     @Expose
@@ -51,18 +54,14 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable{
     }
 
     /**
-     * 
-     * @return
-     *     The identifiers
+     * @return The identifiers
      */
     public List<PatientIdentifier> getIdentifiers() {
         return identifiers;
     }
 
     /**
-     * 
-     * @param identifiers
-     *     The identifiers
+     * @param identifiers The identifiers
      */
     public void setIdentifiers(List<PatientIdentifier> identifiers) {
         this.identifiers = identifiers;
@@ -77,83 +76,78 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable{
     }
 
     /**
-     * 
-     * @return
-     *     The person
+     * @return The person
      */
     public Person getPerson() {
         return person;
     }
 
     /**
-     * 
-     * @param person
-     *     The person
+     * @param person The person
      */
     public void setPerson(Person person) {
         this.person = person;
     }
 
     /**
-     * 
-     * @return
-     *     The voided
+     * @return The voided
      */
     public Boolean getVoided() {
         return voided;
     }
 
     /**
-     * 
-     * @param voided
-     *     The voided
+     * @param voided The voided
      */
     public void setVoided(Boolean voided) {
         this.voided = voided;
     }
 
     /**
-     * 
-     * @return
-     *     The resourceVersion
+     * @return The resourceVersion
      */
     public String getResourceVersion() {
         return resourceVersion;
     }
 
     /**
-     * 
-     * @param resourceVersion
-     *     The resourceVersion
+     * @param resourceVersion The resourceVersion
      */
     public void setResourceVersion(String resourceVersion) {
         this.resourceVersion = resourceVersion;
     }
 
-    public boolean isSynced()
-    {
+    public boolean isSynced() {
         return !StringUtils.isBlank(getUuid());
         //Keeping it this way until the synced flag can be made to work
     }
 
-    public String getEncounters() {
+    public List<Encounter> getEncounters() {
         return encounters;
     }
 
-    public void setEncounters(String encounters) {
+    /*public void setEncounters(String encounters) {
          this.encounters=encounters;
+    }*/
+
+    public void setEncounters(List<Encounter> encounters) {
+        this.encounters = encounters;
     }
 
 
-    public void addEncounters(Long encid)
+    /*public void addEncounters(Long encid)
     {
         this.encounters += encid+",";
+    }*/
+
+    public void addEncounters(Encounter encounter) {
+        this.encounters.add(encounter);
     }
 
-    public Map<String, String> toMap(){
+    public Map<String, String> toMap() {
         Map<String, String> map = new HashMap<>();
         puToMapIfNotNull(map, "givenname", person.getName().getGivenName());
-        puToMapIfNotNull(map, "middlename",person.getName().getMiddleName());
+        puToMapIfNotNull(map, "middlename", person.getName().getMiddleName());
         puToMapIfNotNull(map, "familyname", person.getName().getFamilyName());
         puToMapIfNotNull(map, "gender", person.getGender());
         puToMapIfNotNull(map, "birthdate", person.getBirthdate());
@@ -167,7 +161,7 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable{
     }
 
     private void puToMapIfNotNull(Map<String, String> map, String key, String value) {
-        if(StringUtils.notNull(value)){
+        if (StringUtils.notNull(value)) {
             map.put(key, value);
         }
     }

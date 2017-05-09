@@ -16,7 +16,7 @@
         android:maxLines="1"
         android:padding="@dimen/tag_padding"
         android:text="@string/label_previous_visits"
-        android:textColor="@color/color_white"
+        android:textColor="@color/white"
         android:textSize="@dimen/h1" />
 
     <android.support.v7.widget.RecyclerView

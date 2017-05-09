@@ -4,15 +4,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.openmrs.mobile.data.BaseDataService;
-import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.rest.PatientRestService;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-
-import java.util.List;
 
 import retrofit2.Call;
 

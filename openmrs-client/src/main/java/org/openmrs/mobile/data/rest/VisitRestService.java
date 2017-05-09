@@ -4,6 +4,7 @@ import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Visit;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -27,11 +28,11 @@ public interface VisitRestService {
                                 @Query("startIndex") int startIndex);
 
     @POST(RestConstants.CREATE)
-    Call<Visit> create(@Path(value = "restPath", encoded = true) String restPath, Visit entity);
+    Call<Visit> create(@Path(value = "restPath", encoded = true) String restPath, @Body Visit entity);
 
     @POST(RestConstants.UPDATE)
     Call<Visit> update(@Path(value = "restPath", encoded = true) String restPath,
-                       @Path("uuid") String uuid, Visit entity);
+                       @Path("uuid") String uuid, @Body Visit entity);
 
     @DELETE(RestConstants.PURGE)
     Call<Visit> purge(@Path(value = "restPath", encoded = true) String restPath,
@@ -48,4 +49,16 @@ public interface VisitRestService {
                                       @Query("v") String representation,
                                       @Query("limit") int limit,
                                       @Query("startIndex") int startIndex);
+
+    @GET(RestConstants.REST_PATH)
+    Call<Results<Visit>> getByEncounter(@Path(value = "restPath", encoded = true) String restPath,
+                                        @Query("encounter") String encounterUuid,
+                                        @Query("v") String representation);
+
+    @GET(RestConstants.REST_PATH)
+    Call<Results<Visit>> getByEncounter(@Path(value = "restPath", encoded = true) String restPath,
+                                        @Query("encounter") String encounterUuid,
+                                        @Query("v") String representation,
+                                        @Query("limit") int limit,
+                                        @Query("startIndex") int startIndex);
 }

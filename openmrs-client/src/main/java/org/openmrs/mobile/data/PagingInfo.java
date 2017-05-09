@@ -8,11 +8,13 @@ public class PagingInfo {
     private int page;
     private int pageSize;
 
-    public PagingInfo() {}
+    public PagingInfo() {
+    }
 
     /**
      * Creates a new {@link PagingInfo} instance.
-     * @param page The 1-based number of the page being requested.
+     *
+     * @param page     The 1-based number of the page being requested.
      * @param pageSize The number of records to include on each page.
      */
     public PagingInfo(int page, int pageSize) {
@@ -41,6 +43,6 @@ public class PagingInfo {
     }
 
     public int getStartIndex() {
-        return (pageSize * page) - 1;
+        return ((page - 1) * pageSize) + 1;
     }
 }

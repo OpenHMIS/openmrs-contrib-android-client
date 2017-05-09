@@ -27,7 +27,7 @@ public abstract class ApplicationConstants {
     public static final String VISIT_TYPE_UUID = "visit_type_uuid";
     public static final String LAST_SESSION_TOKEN = "last_session_id";
     public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-    public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.27:8080/openmrs/";
+    public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.30:8080/openmrs/";
 
 
     public abstract static class OpenMRSSharedPreferenceNames {
@@ -35,8 +35,8 @@ public abstract class ApplicationConstants {
     }
 
     public abstract static class API {
-        public static final String REST_ENDPOINT_V1 = "ws/rest/v1";
-        public static final String REST_ENDPOINT_V2 = "/ws/rest/v2";
+        public static final String REST_ENDPOINT_V1 = "ws/rest/v1/";
+        public static final String REST_ENDPOINT_V2 = "ws/rest/v2/";
         public static final String FULL = "full";
     }
 
@@ -66,6 +66,7 @@ public abstract class ApplicationConstants {
         public static final String NO_VISIT_DIALOG_TAG = "noVisitDialogTag";
         public static final String SIMILAR_PATIENTS_TAG = "similarPatientsDialogTag";
         public static final String DELET_PATIENT_DIALOG_TAG = "deletePatientDialogTag";
+        public static final String VISIT_NOTE_TAG = "visitNoteTag";
     }
 
     public abstract static class RegisterPatientRequirements {
@@ -99,11 +100,14 @@ public abstract class ApplicationConstants {
 
     public abstract static class EncounterTypes {
         public static final String VITALS = "67a71486-1a54-468f-ac3e-7091a9a79584";
+        public static final String VISIT_NOTE_FORM_UUID = "c75f120a-04ec-11e3-8780-2b40bef9a44b";
         public static String[] ENCOUNTER_TYPES_DISPLAYS = {EncounterType.VITALS, EncounterType.ADMISSION, EncounterType.DISCHARGE, EncounterType.VISIT_NOTE};
     }
 
     public abstract static class Tags {
-        public static final String PATIENT_ID = "patient_ID";
+        public static final String PATIENT = "patientTag";
+        public static final String PATIENT_ID = "patientIdTag";
+        public static final String OBSERVATION = "observationTag";
     }
 
 }

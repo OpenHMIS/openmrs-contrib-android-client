@@ -53,7 +53,6 @@
     <color name="color_primary">#4ec07e</color>
     <color name="color_primary_dark">#3b925f</color>
     <color name="color_accent">#4a90e2</color>
-    <color name="color_white">#ffffff</color>
     <color name="color_light_grey">#e1e1e1</color>
 
 </resources>

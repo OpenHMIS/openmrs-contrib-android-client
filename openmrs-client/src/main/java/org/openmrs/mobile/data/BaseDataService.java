@@ -8,10 +8,7 @@ import com.google.common.base.Supplier;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.RestServiceBuilder;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
-import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Results;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;

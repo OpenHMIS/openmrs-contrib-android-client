@@ -75,7 +75,7 @@ public class EncounterDAO {
         return encounterID;
     }
 
-    public Encounter getLastVitalsEncounter(String patientUUID) {
+    /*public Encounter getLastVitalsEncounter(String patientUUID) {
         DBOpenHelper helper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
         Encounter encounter = null;
 
@@ -112,7 +112,7 @@ public class EncounterDAO {
             }
         }
         return encounter;
-    }
+    }*/
 
     public boolean updateEncounter(long encounterID, Encounter encounter, long visitID) {
         encounter.setVisitID(visitID);

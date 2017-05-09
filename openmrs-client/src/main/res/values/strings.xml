@@ -192,6 +192,7 @@
     <!-- fragment_patient_diagnosis layout -->
     <string name="empty_diagnoses_list">Patient has no diagnoses yet.</string>
     <string name="diagnosis_note_label">Text of encounter note</string>
+
     <!-- Visit dashboard activity -->
     <string name="action_end_visit">End Visit</string>
     <string name="visit_dashboard_label">Encounters</string>
@@ -199,6 +200,12 @@
     <string name="list_visit_selector_hide">hide details</string>
     <string name="list_item_encounter_no_notes">No notes for this encounter.</string>
     <string name="visit_exp_list_empty">Visit has no encounters yet.</string>
+    <string name="action">Action</string>
+    <string name="visit_note">Visit Note</string>
+    <string name="add_a_note">Add a note</string>
+    <string name="label_more">More</string>
+    <string name="label_patient_id">Patient ID</string>
+
     <!-- Capture Vitals activity -->
     <string name="action_delete_patient">Delete Patient</string>
     <string name="action_register_patient">Register Patient</string>
@@ -246,11 +253,12 @@
     <string name="button_deny">Deny</string>
 
 
-    <string name="app_name">Banda Health Go</string>
+    <string name="app_name">Kijabe IPM</string>
     <string name="dashboard">Dashboard</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
+    <string name="create_account">No account yet? Create one</string>
     <string name="search_hint">Type to search</string>
 
 
@@ -283,13 +291,13 @@
     <string name="label_allergies">Allergies</string>
     <string name="label_active">Active</string>
 
-    <string name="label_start_visit">Start Visit</string>
+    <string name="label_add_visit">Add Visit</string>
+    <string name="label_add_diagnosis">Add Diagnosis</string>
+    <string name="label_im_form">IM Form</string>
+    <string name="label_add_image">Add Image</string>
     <string name="label_end_visit">End Visit</string>
-    <string name="label_create_past_visit">Create Past Visit</string>
-    <string name="label_visit_tasks">Visit Tasks</string>
-    <string name="label_visit_note">Visit Note</string>
-    <string name="label_admit_inpatient">Admit Inpatient</string>
-    <string name="label_capture_vitals">Capture Vitals</string>
+    <string name="label_add_task">Add Task</string>
+
 
     <string name="label_height">Height (cm)</string>
     <string name="label_weight">Weigt (kg)</string>
@@ -361,5 +369,8 @@
 
     <!--Activity Logs-->
     <string name="title_activity_logs">Logs</string>
+
+
+
 
 </resources>

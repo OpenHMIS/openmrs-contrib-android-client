@@ -25,7 +25,7 @@
                 app:tabIndicatorColor="@color/openmrs_color_green"
                 app:tabIndicatorHeight="8dp"
                 app:tabMode="fixed"
-                app:tabSelectedTextColor="@color/color_white"
+                app:tabSelectedTextColor="@color/white"
                 app:tabTextColor="@color/color_light_grey" />
         </android.support.design.widget.AppBarLayout>
 

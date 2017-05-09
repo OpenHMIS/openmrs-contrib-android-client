@@ -36,7 +36,9 @@ public class Resource implements Serializable {
     @Transient
     @SerializedName("links")
     @Expose
-    protected List<Link> links = new ArrayList<Link>();
+    protected List<Link> links;
+    //protected List<Link> links = new ArrayList<Link>();
+
 
     @Generated(hash = 561006165)
     public Resource(String uuid) {

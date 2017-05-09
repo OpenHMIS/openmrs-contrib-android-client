@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "encountercreate")
-public class Encountercreate extends Model implements Serializable{
+public class Encountercreate extends Resource implements Serializable{
 
     private Gson gson=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     private Type obscreatetype = new TypeToken<List<Obscreate>>(){}.getType();

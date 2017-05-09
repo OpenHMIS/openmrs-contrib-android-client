@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/test_dash"
+            android:icon="@drawable/ic_nav_settings"
+            android:title="Test Dash" />
+        <item
             android:id="@+id/navItemFindPatientRecord"
             android:icon="@drawable/ic_nav_find_patient"
             android:title="@string/nav_find_patient" />
@@ -22,8 +26,7 @@
         <item
             android:id="@+id/navItemPatientLists"
             android:icon="@drawable/ic_nav_patient_lists"
-            android:title="@string/nav_patient_lists"
-           />
+            android:title="@string/nav_patient_lists" />
 
         <item
             android:id="@+id/navItemVisitTasks"

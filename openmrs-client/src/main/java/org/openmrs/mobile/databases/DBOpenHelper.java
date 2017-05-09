@@ -34,9 +34,11 @@ import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
+
 import java.io.ByteArrayOutputStream;
 
 import java.util.concurrent.Callable;
+
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -93,9 +95,9 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
     }
 
     public long insertPatient(SQLiteDatabase db, Patient patient) {
-        long patientId;
+        long patientId = 0;
 
-        SQLiteStatement patientStatement = db.compileStatement(mPatientTable.insertIntoTableDefinition());
+        /*SQLiteStatement patientStatement = db.compileStatement(mPatientTable.insertIntoTableDefinition());
 
         try {
             db.beginTransaction();
@@ -141,7 +143,7 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
             patientStatement.close();
         }
 
-        patient.setId(patientId);
+        patient.setId(patientId);*/
 
         return patientId;
     }
@@ -177,7 +179,8 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
             newValues.put(PatientTable.Column.CITY, patient.getPerson().getAddress().getCityVillage());
 
         }
-        newValues.put(PatientTable.Column.ENCOUNTERS, patient.getEncounters());
+
+       // newValues.put(PatientTable.Column.ENCOUNTERS, patient.getEncounters());
 
         String[] whereArgs = new String[]{String.valueOf(patientID)};
 
@@ -280,7 +283,7 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
                 bindString(7, obs.getDiagnosisCertainty(), observationStatement);
             }
             bindString(8, obs.getDiagnosisNote(), observationStatement);
-            if(obs.getConcept() != null){
+            if (obs.getConcept() != null) {
                 bindString(9, obs.getConcept().getUuid(), observationStatement);
             }
             obsID = observationStatement.executeInsert();
@@ -345,6 +348,7 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
         return Observable.fromCallable(func)
                 .subscribeOn(Schedulers.io());
     }
+
     private byte[] bitmapToByteArray(Bitmap image) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
