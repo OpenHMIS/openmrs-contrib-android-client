@@ -43,6 +43,7 @@
         <activity android:name=".activities.visittasks.VisitTasksActivity" />
         <activity android:name=".activities.settings.SettingsActivity" />
         <activity android:name=".activities.patientdashboard.PatientDashboardActivity" />
+        <activity android:name=".activities.auditdataform.AuditDataActivity" />
     </application>
 
 </manifest>

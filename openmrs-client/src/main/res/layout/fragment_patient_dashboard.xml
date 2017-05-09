@@ -1,254 +1,261 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_margin="10dp"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="4dp">
 
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/cardView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            card_view:cardBackgroundColor="@color/white"
-            card_view:cardCornerRadius="4dp">
+            android:layout_margin="5dp"
+            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/topRow"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/fetchedPatientIdentifier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="start"
+                    android:textColor="@color/color_primary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/patientSeperator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="@string/dash"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/fetchedPatientDisplayName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="start"
+                    android:textColor="@color/color_primary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <LinearLayout
+                android:id="@+id/leftColumn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="30dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="30dp"
+                android:gravity="center_vertical"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/topRow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/fetchedPatientIdentifier"
+                        android:id="@+id/gender"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginRight="5dp"
-                        android:gravity="start"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:text="@string/gender_hint"
+                        android:textStyle="italic" />
 
                     <TextView
-                        android:id="@+id/patientSeperator"
+                        android:id="@+id/fetchedPatientGender"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:text="@string/dash"
-                        android:textSize="22sp" />
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp" />
 
                     <TextView
-                        android:id="@+id/fetchedPatientDisplayName"
+                        android:id="@+id/ageLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:gravity="start"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/label_age"
+                        android:textStyle="italic" />
+
+                    <TextView
+                        android:id="@+id/fetchedPatientAge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/label_age" />
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/darker_gray" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/birthdate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/birthdate_hint"
+                        android:textStyle="italic" />
+
+                    <TextView
+                        android:id="@+id/fetchedPatientBirthDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="4dp">
 
                 <LinearLayout
-                    android:id="@+id/leftColumn"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginStart="30dp"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/patient_card_margin"
+                    android:gravity="center"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/gender"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/gender_hint"
-                            android:textStyle="italic" />
-
-                        <TextView
-                            android:id="@+id/fetchedPatientGender"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp" />
-
-                        <TextView
-                            android:id="@+id/ageLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginRight="10dp"
-                            android:text="@string/label_age"
-                            android:textStyle="italic" />
-
-                        <TextView
-                            android:id="@+id/fetchedPatientAge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginRight="10dp"
-                            android:text="@string/label_age" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/birthdate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/birthdate_hint"
-                            android:textStyle="italic" />
-
-                        <TextView
-                            android:id="@+id/fetchedPatientBirthDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp" />
-
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            card_view:cardBackgroundColor="@color/white"
-            card_view:cardCornerRadius="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/patient_card_margin"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/visit_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="#4ec07e" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/darker_gray" />
-
-                <TextView
-                    android:id="@+id/more_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/label_more"
-                    android:textAlignment="gravity"
-                    android:textColor="#4ec07e" />
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            card_view:cardBackgroundColor="@color/white"
-            card_view:cardCornerRadius="4dp">
-
-            <LinearLayout
-                android:id="@+id/visit_note_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/patient_card_margin"
-                android:orientation="vertical"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:weightSum="1">
-
-
-            </LinearLayout>
-
-
-        </android.support.v7.widget.CardView>
-
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            card_view:cardBackgroundColor="@color/white"
-            card_view:cardCornerRadius="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
                     <TextView
+                        android:id="@+id/visit_details"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="@string/label_previous_visits"
-                        android:textAlignment="gravity"
-                        android:textColor="#4ec07e" />
+                        android:textColor="@color/color_primary"
+                        android:textStyle="bold" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@android:color/darker_gray" />
+
+                    <TextView
+                        android:id="@+id/more_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/label_more"
+                        android:textAlignment="gravity"
+                        android:textColor="#4ec07e" />
                 </LinearLayout>
 
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="4dp">
 
                 <LinearLayout
-                    android:id="@+id/previous_visits_container"
+                    android:id="@+id/visit_note_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/patient_card_margin"
                     android:orientation="vertical"
                     android:paddingBottom="10dp"
-                    android:weightSum="1"></LinearLayout>
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-    </LinearLayout>
+                    android:paddingTop="10dp"
+                    android:weightSum="1">
 
 
-</ScrollView>
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/label_previous_visits"
+                            android:textAlignment="gravity"
+                            android:textColor="#4ec07e" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/previous_visits_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/patient_card_margin"
+                        android:orientation="vertical"
+                        android:paddingBottom="10dp"
+                        android:weightSum="1"></LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</LinearLayout>

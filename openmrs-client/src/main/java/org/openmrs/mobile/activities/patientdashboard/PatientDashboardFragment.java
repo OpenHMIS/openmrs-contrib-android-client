@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.github.clans.fab.FloatingActionMenu;
 import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.auditdataform.AuditDataActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Encounter;
@@ -62,6 +64,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     private Visit mainVisit;
     private Patient patient;
     private LinearLayout visitNoteContainer;
+    private boolean isCurrentVisit = false;
 
 
     public static PatientDashboardFragment newInstance() {
@@ -84,7 +87,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         startAuditFormButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), PatientDashboardActivity.class);
+                Intent intent = new Intent(getContext(), AuditDataActivity.class);
                 intent.putExtra(ApplicationConstants.BundleKeys.PATIENT, patient);
                 intent.putExtra(ApplicationConstants.BundleKeys.VISIT, mainVisit);
                 startActivity(intent);
@@ -119,7 +122,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
             patientGender.setText(person.getGender());
             patientIdentifier.setText(patient.getIdentifier().getIdentifier());
             DateTime date = DateUtils.convertTimeString(person.getBirthdate());
-            patientAge.setText(calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
+            patientAge.setText(DateUtils.calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
             mPresenter.fetchVisits(patient);
         }
     }
@@ -135,6 +138,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
             visitStopDateTime = mainVisit.getStopDatetime();
             visitStartDateTime = mainVisit.getStartDatetime();
             if (!StringUtils.notNull(visitStopDateTime)) {
+                this.isCurrentVisit = true;
                 visitdetailsText += getString(R.string.active_visit_label) + " - " + DateUtils.convertTime1(visitStartDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT);
             } else {
                 visitdetailsText += DateUtils.convertTime1(visitStartDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT) + " - " + DateUtils.convertTime1(visitStopDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT);
@@ -187,7 +191,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         itemsContainer.setOrientation(LinearLayout.HORIZONTAL);
         itemsContainer.setPadding(0, 0, 0, 0);
         ImageView editIcon = new ImageView(getContext());
-        editIcon.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_edit));
+        editIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_menu_edit));
         editIcon.setPadding(0, 0, 0, 0);
         TextView editText = new TextView(getContext());
         editText.setPadding(10, 0, 10, 0);
@@ -202,6 +206,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         createEditVisitNote.setRightButtonText(getString(R.string.label_save));
         createEditVisitNote.setRightButtonAction(CustomFragmentDialog.OnClickAction.SAVE_VISIT_NOTE);
         createEditVisitNote.setEditNoteTextViewMessage(observation.getDiagnosisNote());
+
+
         Bundle bundle = new Bundle();
         bundle.putSerializable(ApplicationConstants.BundleKeys.OBSERVATION, observation);
         bundle.putSerializable(ApplicationConstants.BundleKeys.PATIENT, patient);
@@ -209,25 +215,16 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         View.OnClickListener switchToEditMode = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((PatientDashboardActivity) getActivity()).createAndShowDialog(createEditVisitNote, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
+                if (isCurrentVisit) {
+                    ((PatientDashboardActivity) getActivity()).createAndShowDialog(createEditVisitNote, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
+                } else {
+                    showSnack("Edit of past visits is disabled");
+                }
             }
         };
         editIcon.setOnClickListener(switchToEditMode);
         editText.setOnClickListener(switchToEditMode);
-    }
 
-
-    private String calculateAge(int year, int month, int day) {
-        Calendar dob = Calendar.getInstance();
-        Calendar today = Calendar.getInstance();
-        dob.set(year, month, day);
-        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
-        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
-            age--;
-        }
-        Integer ageInt = new Integer(age);
-        String ageS = ageInt.toString();
-        return ageS;
     }
 
     public LinearLayout getVisitNoteContainer() {

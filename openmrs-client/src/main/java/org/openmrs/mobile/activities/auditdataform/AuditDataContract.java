@@ -31,36 +31,12 @@ import java.util.Map;
 public interface AuditDataContract {
 
     interface View extends BaseView<Presenter> {
-        void showSnack(String s);
 
-        void updateContactCard(Patient patient);
-
-        void updateVisitsCard(List<Visit> visits);
-
-        void updateVisitNote(Observation observation);
-
-        LinearLayout getVisitNoteContainer();
     }
 
     interface Presenter extends BasePresenterContract {
 
-        Map<String, String> getCurrentLoggedInUserInfo();
 
-        LocationDAO getLocationDAO();
-
-        void fetchPatientData(final String patientId);
-
-        void fetchVisits(Patient patient);
-
-        void saveVisit(Visit visit);
-
-        void fetchPatientObservations(Patient patient);
-
-        void fetchEncounterObservations(Encounter encounter);
-
-        void createEncounter(Encountercreate encounter);
-
-        void saveObservation(Observation observation);
     }
 
 }

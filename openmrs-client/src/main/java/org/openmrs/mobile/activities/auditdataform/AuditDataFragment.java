@@ -67,7 +67,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_audit_data_form, container, false);
         /*visitNoteContainer = (LinearLayout) fragmentView.findViewById(R.id.visit_note_container);
         floatingActionMenu = getActivity().findViewById(R.id.floatingActionMenu);
         floatingActionMenu.setVisibility(View.VISIBLE);
@@ -92,14 +92,9 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
     }
 
 
-    @Override
-    public void showSnack(String text) {
-        Snackbar.make(fragmentView, text, Snackbar.LENGTH_LONG).setAction(getString(R.string.action), null).show();
-    }
 
-    @Override
     public void updateContactCard(Patient patient) {
-        if (patient != null) {
+        /*if (patient != null) {
             this.patient = patient;
             Person person = patient.getPerson();
             patientDisplayName.setText(person.getName().getNameString());
@@ -108,117 +103,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
             DateTime date = DateUtils.convertTimeString(person.getBirthdate());
             patientAge.setText(calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
             mPresenter.fetchVisits(patient);
-        }
-    }
-
-    @Override
-    public void updateVisitsCard(List<Visit> visits) {
-
-        if (visits.size() >= 1) {
-            String visitdetailsText = "";
-            String visitStartDateTime;
-            String visitStopDateTime;
-            mainVisit = visits.get(0);
-            visitStopDateTime = mainVisit.getStopDatetime();
-            visitStartDateTime = mainVisit.getStartDatetime();
-            if (!StringUtils.notNull(visitStopDateTime)) {
-                visitdetailsText += getString(R.string.active_visit_label) + " - " + DateUtils.convertTime1(visitStartDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT);
-            } else {
-                visitdetailsText += DateUtils.convertTime1(visitStartDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT) + " - " + DateUtils.convertTime1(visitStopDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT);
-            }
-
-            visitDetails.setText(visitdetailsText);
-
-            if (mainVisit != null) {
-                if (mainVisit.getEncounters().size() == 0) {
-                    /*****
-                     *
-                     * Create new encounter
-                     *
-                     */
-                } else {
-                    for (Encounter encounter : mainVisit.getEncounters()) {
-                        switch (encounter.getEncounterType().getDisplay()) {
-                            case EncounterType.VISIT_NOTE:
-                                mPresenter.fetchEncounterObservations(encounter);
-                                break;
-                        }
-                    }
-
-                }
-
-            }
-
-            LinearLayout previousVisitsContainer = (LinearLayout) fragmentView.findViewById(R.id.previous_visits_container);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.gravity = Gravity.CENTER;
-            Context context = getContext();
-            for (int counter = 1; counter < visits.size(); counter++) {
-                Visit visit = visits.get(counter);
-                TextView pastVisitTextView = new TextView(context);
-                pastVisitTextView.setText(DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_DATE_FORMAT) + " - " + DateUtils.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_DATE_FORMAT));
-                previousVisitsContainer.addView(pastVisitTextView);
-            }
-
-        }
-
-
-    }
-
-    @Override
-    public void updateVisitNote(Observation observation) {
-
-        ViewGroup.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
-        LinearLayout itemsContainer = new LinearLayout(getContext());
-        itemsContainer.setLayoutParams(linearLayoutParams);
-        itemsContainer.setOrientation(LinearLayout.HORIZONTAL);
-        itemsContainer.setPadding(0, 0, 0, 0);
-        ImageView editIcon = new ImageView(getContext());
-        editIcon.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_edit));
-        editIcon.setPadding(0, 0, 0, 0);
-        TextView editText = new TextView(getContext());
-        editText.setPadding(10, 0, 10, 0);
-        editText.setText(observation.getDiagnosisNote());
-        editText.setGravity(Gravity.LEFT);
-        itemsContainer.addView(editIcon);
-        itemsContainer.addView(editText);
-        visitNoteContainer = (LinearLayout) fragmentView.findViewById(R.id.visit_note_container);
-        visitNoteContainer.addView(itemsContainer);
-        CustomDialogBundle createEditVisitNote = new CustomDialogBundle();
-        createEditVisitNote.setTitleViewMessage(getString(R.string.visit_note));
-        createEditVisitNote.setRightButtonText(getString(R.string.label_save));
-        createEditVisitNote.setRightButtonAction(CustomFragmentDialog.OnClickAction.SAVE_VISIT_NOTE);
-        createEditVisitNote.setEditNoteTextViewMessage(observation.getDiagnosisNote());
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(ApplicationConstants.BundleKeys.OBSERVATION, observation);
-        bundle.putSerializable(ApplicationConstants.BundleKeys.PATIENT, patient);
-        createEditVisitNote.setArguments(bundle);
-        View.OnClickListener switchToEditMode = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((AuditDataActivity) getActivity()).createAndShowDialog(createEditVisitNote, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
-            }
-        };
-        editIcon.setOnClickListener(switchToEditMode);
-        editText.setOnClickListener(switchToEditMode);
-    }
-
-
-    private String calculateAge(int year, int month, int day) {
-        Calendar dob = Calendar.getInstance();
-        Calendar today = Calendar.getInstance();
-        dob.set(year, month, day);
-        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
-        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
-            age--;
-        }
-        Integer ageInt = new Integer(age);
-        String ageS = ageInt.toString();
-        return ageS;
-    }
-
-    public LinearLayout getVisitNoteContainer() {
-        return visitNoteContainer;
+        }*/
     }
 
 

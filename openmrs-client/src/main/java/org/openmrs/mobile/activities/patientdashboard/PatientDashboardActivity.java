@@ -41,7 +41,7 @@ public class PatientDashboardActivity extends ACBaseActivity {
             addFragmentToActivity(getSupportFragmentManager(), patientDashboardFragment, R.id.contentFrame);
         }
 
-        mPresenter = new PatientDashboardPresenter(patientDashboardFragment, mOpenMRS);
+        mPresenter = new PatientDashboardPresenter(patientDashboardFragment);
     }
 
     @Override

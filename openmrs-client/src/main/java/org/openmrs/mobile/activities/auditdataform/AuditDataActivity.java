@@ -39,7 +39,7 @@ public class AuditDataActivity extends ACBaseActivity {
             addFragmentToActivity(getSupportFragmentManager(), auditDataFragment, R.id.contentFrame);
         }
 
-        mPresenter = new AuditDataPresenter(auditDataFragment, mOpenMRS);
+        mPresenter = new AuditDataPresenter(auditDataFragment);
     }
 
     @Override

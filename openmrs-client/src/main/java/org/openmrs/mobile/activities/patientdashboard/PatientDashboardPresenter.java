@@ -16,41 +16,31 @@ package org.openmrs.mobile.activities.patientdashboard;
 
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
-import org.openmrs.mobile.dao.LocationDAO;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.impl.ObservationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.Encountercreate;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.ConsoleLogger;
-import org.openmrs.mobile.utilities.DateUtils;
 
 import java.util.List;
-import java.util.Map;
 
 public class PatientDashboardPresenter extends BasePresenter implements PatientDashboardContract.Presenter {
 
-
-    private LocationDAO locationDAO;
     private PatientDashboardContract.View patientDashboardView;
     private PatientDataService patientDataService;
     private VisitDataService visitDataService;
-    protected OpenMRS openMRS;
     private ObservationDataService observationDataService;
 
-    public PatientDashboardPresenter(PatientDashboardContract.View view, OpenMRS openMRS) {
+    public PatientDashboardPresenter(PatientDashboardContract.View view) {
         this.patientDashboardView = view;
-        this.openMRS = openMRS;
         this.patientDashboardView.setPresenter(this);
         this.patientDataService = new PatientDataService();
         this.visitDataService = new VisitDataService();
-        this.locationDAO = new LocationDAO();
         this.observationDataService = new ObservationDataService();
     }
 
@@ -62,7 +52,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
     @Override
     public void fetchPatientData(String uuid) {
-        ConsoleLogger.dump("Fetching patient data " + uuid);
         patientDataService.getByUUID(uuid, new DataService.GetSingleCallback<Patient>() {
             @Override
             public void onCompleted(Patient patient) {
@@ -73,7 +62,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
             @Override
             public void onError(Throwable t) {
-                ConsoleLogger.dump("error occured");
                 t.printStackTrace();
                 patientDashboardView.showSnack("Error occured: Unable to reach searver");
             }
@@ -91,46 +79,10 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
             @Override
             public void onError(Throwable t) {
-                ConsoleLogger.dump("error occured");
                 t.printStackTrace();
                 patientDashboardView.showSnack("Error occured: Unable to reach searver");
             }
         });
-    }
-
-    @Override
-    public void saveVisit(Visit visit) {
-        visitDataService.update(visit, new DataService.GetSingleCallback<Visit>() {
-            @Override
-            public void onCompleted(Visit entity) {
-
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                ConsoleLogger.dump("error occured");
-                t.printStackTrace();
-                patientDashboardView.showSnack("Error occured: Unable to reach searver");
-            }
-        });
-    }
-
-    @Override
-    public void fetchPatientObservations(Patient patient) {
-        observationDataService.getByPatient(patient, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Observation>() {
-            @Override
-            public void onCompleted(List<Observation> observations) {
-
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                ConsoleLogger.dump("error occured");
-                t.printStackTrace();
-                patientDashboardView.showSnack("Error occured: Unable to reach searver");
-            }
-        });
-
     }
 
     @Override
@@ -151,40 +103,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
                 t.printStackTrace();
             }
         });
-    }
-
-    @Override
-    public void saveObservation(Observation observation) {
-
-        observationDataService.update(observation, new DataService.GetSingleCallback<Observation>() {
-            @Override
-            public void onCompleted(Observation entity) {
-                ConsoleLogger.dump("Successful");
-                ConsoleLogger.dumpToJson(entity);
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                ConsoleLogger.dump("Failed");
-                t.printStackTrace();
-            }
-        });
-
-    }
-
-    @Override
-    public Map<String, String> getCurrentLoggedInUserInfo() {
-        return openMRS.getCurrentLoggedInUserInfo();
-    }
-
-    @Override
-    public LocationDAO getLocationDAO() {
-        return this.locationDAO;
-    }
-
-    @Override
-    public void createEncounter(Encountercreate encounter) {
-
     }
 
 }
