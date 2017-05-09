@@ -87,6 +87,7 @@ public abstract class ApplicationConstants {
         public static final String PATIENT_QUERY_BUNDLE = "patientQuery";
         public static final String PATIENT = "patientTag";
         public static final String OBSERVATION = "observationTag";
+        public static final String VISIT = "visitTag";
     }
 
     public abstract static class CustomIntentActions {

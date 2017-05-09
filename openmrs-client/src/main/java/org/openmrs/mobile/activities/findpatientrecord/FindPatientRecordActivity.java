@@ -45,7 +45,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
             addFragmentToActivity(getSupportFragmentManager(), loginFragment, R.id.loginContentFrame);
         }
 
-        Intent intent = new Intent(getBaseContext(), PatientDashboardActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PatientDashboardActivity.class);
         intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE, "6fd9b701-6abb-4e70-aa4a-c4b298972249");
         startActivity(intent);
 

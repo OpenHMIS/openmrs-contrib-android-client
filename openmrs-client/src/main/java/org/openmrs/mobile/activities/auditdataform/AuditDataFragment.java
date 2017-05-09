@@ -12,10 +12,9 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.patientdashboard;
+package org.openmrs.mobile.activities.auditdataform;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -26,9 +25,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 
 import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
@@ -49,7 +45,7 @@ import org.openmrs.mobile.utilities.StringUtils;
 import java.util.Calendar;
 import java.util.List;
 
-public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardContract.Presenter> implements PatientDashboardContract.View {
+public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presenter> implements AuditDataContract.View {
 
     private View fragmentView;
     private TextView patientDisplayName;
@@ -57,39 +53,35 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     private TextView patientAge;
     private TextView patientIdentifier;
     private TextView visitDetails;
-    private FloatingActionMenu floatingActionMenu;
-    private FloatingActionButton startAuditFormButton;
+    private View floatingActionMenu;
     private Visit mainVisit;
     private Patient patient;
+
+
     private LinearLayout visitNoteContainer;
 
 
-    public static PatientDashboardFragment newInstance() {
-        return new PatientDashboardFragment();
+    public static AuditDataFragment newInstance() {
+        return new AuditDataFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
-        visitNoteContainer = (LinearLayout) fragmentView.findViewById(R.id.visit_note_container);
+        /*visitNoteContainer = (LinearLayout) fragmentView.findViewById(R.id.visit_note_container);
+        floatingActionMenu = getActivity().findViewById(R.id.floatingActionMenu);
+        floatingActionMenu.setVisibility(View.VISIBLE);
         String patientId = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
         initViewFields();
         initializeListeners();
         mPresenter.fetchPatientData(patientId);
-        FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
+        FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));*/
         return fragmentView;
     }
 
     private void initializeListeners() {
-        startAuditFormButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), PatientDashboardActivity.class);
-                intent.putExtra(ApplicationConstants.BundleKeys.PATIENT, patient);
-                intent.putExtra(ApplicationConstants.BundleKeys.VISIT, mainVisit);
-                startActivity(intent);
-            }
-        });
+        TextView moreLabel = (TextView) fragmentView.findViewById(R.id.more_label);
+        visitDetails = (TextView) fragmentView.findViewById(R.id.visit_details);
     }
 
     private void initViewFields() {
@@ -97,11 +89,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         patientIdentifier = (TextView) fragmentView.findViewById(R.id.fetchedPatientIdentifier);
         patientGender = (TextView) fragmentView.findViewById(R.id.fetchedPatientGender);
         patientAge = (TextView) fragmentView.findViewById(R.id.fetchedPatientAge);
-        visitDetails = (TextView) fragmentView.findViewById(R.id.visit_details);
-        TextView moreLabel = (TextView) fragmentView.findViewById(R.id.more_label);
-        floatingActionMenu = (FloatingActionMenu) getActivity().findViewById(R.id.floatingActionMenu);
-        floatingActionMenu.setVisibility(View.VISIBLE);
-        startAuditFormButton = (FloatingActionButton) getActivity().findViewById(R.id.audit_data_form);
     }
 
 
@@ -209,7 +196,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         View.OnClickListener switchToEditMode = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((PatientDashboardActivity) getActivity()).createAndShowDialog(createEditVisitNote, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
+                ((AuditDataActivity) getActivity()).createAndShowDialog(createEditVisitNote, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
             }
         };
         editIcon.setOnClickListener(switchToEditMode);

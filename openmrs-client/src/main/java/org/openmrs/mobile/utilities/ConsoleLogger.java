@@ -40,11 +40,15 @@ public class ConsoleLogger {
 
     public static void dump(Map map) {
         System.out.println("=========================== START OUTPUT OF MAP ===========================");
-        Set keys = map.keySet();
-        for (Iterator i = keys.iterator(); i.hasNext(); ) {
-            String key = (String) i.next();
-            String value = (String) map.get(key);
-            System.out.printf("%s : %s%n", key, value);
+        if (null != map) {
+            Set keys = map.keySet();
+            for (Iterator i = keys.iterator(); i.hasNext(); ) {
+                String key = (String) i.next();
+                String value = (String) map.get(key);
+                System.out.printf("%s : %s%n", key, value);
+            }
+        } else {
+            System.out.println(map);
         }
         System.out.println("=========================== END OUTPUT OF MAP ===========================");
     }
