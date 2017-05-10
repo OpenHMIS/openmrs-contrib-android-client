@@ -43,6 +43,3 @@ modules/odk.collect/android/*
 *.project
 *.classpath
 .settings/
-
-/openmrs-client/src/main/java/org/openmrs/mobile/ConsoleLogger.java
-/openmrs-client/src/main/java/org/openmrs/mobile/utilities/ConsoleLogger.java

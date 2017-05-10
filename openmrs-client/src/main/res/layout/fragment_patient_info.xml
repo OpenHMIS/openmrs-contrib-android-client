@@ -473,7 +473,7 @@
                     <!--android:text="@string/reg_ques_phno"/>-->
 
                     <!--<EditText-->
-                    <!--android:id="@+id/phone"-->
+                    <!--android:id="@+id/visitDetails"-->
                     <!--android:layout_width="match_parent"-->
                     <!--android:layout_height="wrap_content"-->
                     <!--android:layout_marginLeft="20dp"-->
@@ -482,7 +482,7 @@
                     <!--android:textSize="14sp"-->
                     <!--android:focusable="true"-->
                     <!--android:hint="@string/phone_hint"-->
-                    <!--android:inputType="phone"-->
+                    <!--android:inputType="visitDetails"-->
                     <!--android:singleLine="true" />-->
                 </LinearLayout>
 

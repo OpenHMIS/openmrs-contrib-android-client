@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -24,6 +25,26 @@ public class VisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private List<Visit> visits;
     private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;
+
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public LoadingViewHolder(View view) {
+            super(view);
+            progressBar = (ProgressBar) view.findViewById(R.id.progressBar1);
+        }
+    }
+
+    private class visitViewHolder extends RecyclerView.ViewHolder {
+        public TextView visitDetails;
+        public LinearLayout visitNotesContainer;
+
+        public visitViewHolder(View view) {
+            super(view);
+            visitDetails = (TextView) view.findViewById(R.id.visitDetails);
+            visitNotesContainer = (LinearLayout) view.findViewById(R.id.visitNotesContainer);
+        }
+    }
 
     public VisitsAdapter(RecyclerView recyclerView, List<Visit> visits, Activity activity) {
         this.visits = visits;
@@ -58,10 +79,10 @@ public class VisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ITEM) {
-            View view = LayoutInflater.from(activity).inflate(R.layout.item_recycler_view_row, parent, false);
-            return new UserViewHolder(view);
+            View view = LayoutInflater.from(activity).inflate(R.layout.previous_visits_row, parent, false);
+            return new visitViewHolder(view);
         } else if (viewType == VIEW_TYPE_LOADING) {
-            View view = LayoutInflater.from(activity).inflate(R.layout.item_loading, parent, false);
+            View view = LayoutInflater.from(activity).inflate(R.layout.previous_visits_loading, parent, false);
             return new LoadingViewHolder(view);
         }
         return null;
@@ -69,11 +90,11 @@ public class VisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof UserViewHolder) {
-            /*Contact contact = visits.get(position);
-            UserViewHolder userViewHolder = (UserViewHolder) holder;
-            userViewHolder.phone.setText(contact.getEmail());
-            userViewHolder.email.setText(contact.getPhone());*/
+        if (holder instanceof visitViewHolder) {
+            Visit visit = visits.get(position);
+            visitViewHolder visitViewHolder = (visitViewHolder) holder;
+            //visitViewHolder.visitDetails.setText(visit.getEmail());
+            //visitViewHolder.visitNotesContainer.setText(visit.getPhone());
         } else if (holder instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
             loadingViewHolder.progressBar.setIndeterminate(true);
@@ -89,23 +110,5 @@ public class VisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         isLoading = false;
     }
 
-    private class LoadingViewHolder extends RecyclerView.ViewHolder {
-        public ProgressBar progressBar;
 
-        public LoadingViewHolder(View view) {
-            super(view);
-            progressBar = (ProgressBar) view.findViewById(R.id.progressBar1);
-        }
-    }
-
-    private class UserViewHolder extends RecyclerView.ViewHolder {
-        public TextView phone;
-        public TextView email;
-
-        public UserViewHolder(View view) {
-            super(view);
-            phone = (TextView) view.findViewById(R.id.txt_phone);
-            email = (TextView) view.findViewById(R.id.txt_email);
-        }
-    }
 }

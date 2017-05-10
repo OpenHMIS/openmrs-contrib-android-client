@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -52,7 +51,6 @@ import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 
-import java.util.Calendar;
 import java.util.List;
 
 public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardContract.Presenter> implements PatientDashboardContract.View {
@@ -78,7 +76,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
-        visitNoteContainer = (LinearLayout) fragmentView.findViewById(R.id.visit_note_container);
+        visitNoteContainer = (LinearLayout) fragmentView.findViewById(R.id.visitNotesContainer);
         String patientId = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
         initViewFields();
         initializeListeners();
@@ -104,8 +102,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         patientIdentifier = (TextView) fragmentView.findViewById(R.id.fetchedPatientIdentifier);
         patientGender = (TextView) fragmentView.findViewById(R.id.fetchedPatientGender);
         patientAge = (TextView) fragmentView.findViewById(R.id.fetchedPatientAge);
-        visitDetails = (TextView) fragmentView.findViewById(R.id.visit_details);
-        TextView moreLabel = (TextView) fragmentView.findViewById(R.id.more_label);
+        visitDetails = (TextView) fragmentView.findViewById(R.id.visitDetails);
+        //TextView moreLabel = (TextView) fragmentView.findViewById(R.id.more_label);
         floatingActionMenu = (FloatingActionMenu) getActivity().findViewById(R.id.floatingActionMenu);
         floatingActionMenu.setVisibility(View.VISIBLE);
         startAuditFormButton = (FloatingActionButton) getActivity().findViewById(R.id.audit_data_form);
@@ -143,13 +141,11 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
             visitStartDateTime = mainVisit.getStartDatetime();
             if (!StringUtils.notNull(visitStopDateTime)) {
                 this.isCurrentVisit = true;
-                visitdetailsText += getString(R.string.active_visit_label) + " - " + DateUtils.convertTime1(visitStartDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT);
+                visitdetailsText += getString(R.string.active_visit_label) + ": " + DateUtils.convertTime1(visitStartDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT);
             } else {
-                visitdetailsText += DateUtils.convertTime1(visitStartDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT) + " - " + DateUtils.convertTime1(visitStopDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT);
+                visitdetailsText += "Visit:\n"+DateUtils.convertTime1(visitStartDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT) + " - " + DateUtils.convertTime1(visitStopDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT);
             }
-
             visitDetails.setText(visitdetailsText);
-
             if (mainVisit != null) {
                 if (mainVisit.getEncounters().size() == 0) {
                     /*****
@@ -170,10 +166,10 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
             }
 
-            LinearLayout previousVisitsContainer = (LinearLayout) fragmentView.findViewById(R.id.previous_visits_container);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.gravity = Gravity.CENTER;
-            Context context = getContext();
+            //LinearLayout previousVisitsContainer = (LinearLayout) fragmentView.findViewById(R.id.previous_visits_container);
+            ///LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            //layoutParams.gravity = Gravity.CENTER;
+            //Context context = getContext();
             //visits.remove(0);
             /*for (int counter = 1; counter < visits.size(); counter++) {
                 Visit visit = visits.get(counter);
@@ -182,27 +178,27 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
                 previousVisitsContainer.addView(pastVisitTextView);
             }*/
 
-            RecyclerView previousVisits = (RecyclerView) fragmentView.findViewById(R.id.previous_visits);
+            RecyclerView previousVisits = (RecyclerView) fragmentView.findViewById(R.id.previousVisits);
 
             previousVisits.setLayoutManager(new LinearLayoutManager(getContext()));
-            VisitsAdapter contactAdapter = new VisitsAdapter(previousVisits, visits, getActivity());
-            previousVisits.setAdapter(contactAdapter);
+            VisitsAdapter visitsAdapter = new VisitsAdapter(previousVisits, visits, getActivity());
+            previousVisits.setAdapter(visitsAdapter);
 
-            contactAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+            visitsAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
                 @Override
                 public void onLoadMore() {
-                    if (visits.size() <= 20) {
+                    if (visits.size() <= 2) {
                         visits.add(null);
-                        contactAdapter.notifyItemInserted(visits.size() - 1);
+                        visitsAdapter.notifyItemInserted(visits.size() - 1);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 visits.remove(visits.size() - 1);
-                                contactAdapter.notifyItemRemoved(visits.size());
+                                visitsAdapter.notifyItemRemoved(visits.size());
 
                                 //Load more from server here
-                                contactAdapter.notifyDataSetChanged();
-                                contactAdapter.setLoaded();
+                                visitsAdapter.notifyDataSetChanged();
+                                visitsAdapter.setLoaded();
 
                             }
                         }, 5000);
@@ -234,7 +230,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         editText.setGravity(Gravity.LEFT);
         itemsContainer.addView(editIcon);
         itemsContainer.addView(editText);
-        visitNoteContainer = (LinearLayout) fragmentView.findViewById(R.id.visit_note_container);
+        visitNoteContainer = (LinearLayout) fragmentView.findViewById(R.id.visitNotesContainer);
         visitNoteContainer.addView(itemsContainer);
         CustomDialogBundle createEditVisitNote = new CustomDialogBundle();
         createEditVisitNote.setTitleViewMessage(getString(R.string.visit_note));

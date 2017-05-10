@@ -14,36 +14,18 @@
 
 package org.openmrs.mobile.activities.auditdataform;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
-import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
-import org.openmrs.mobile.bundle.CustomDialogBundle;
-import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.EncounterType;
-import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Visit;
-import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.DateUtils;
-import org.openmrs.mobile.utilities.FontsUtil;
-import org.openmrs.mobile.utilities.StringUtils;
-
-import java.util.Calendar;
-import java.util.List;
 
 public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presenter> implements AuditDataContract.View {
 
@@ -80,8 +62,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
     }
 
     private void initializeListeners() {
-        TextView moreLabel = (TextView) fragmentView.findViewById(R.id.more_label);
-        visitDetails = (TextView) fragmentView.findViewById(R.id.visit_details);
+        //TextView moreLabel = (TextView) fragmentView.findViewById(R.id.more_label);
+        visitDetails = (TextView) fragmentView.findViewById(R.id.visitDetails);
     }
 
     private void initViewFields() {
