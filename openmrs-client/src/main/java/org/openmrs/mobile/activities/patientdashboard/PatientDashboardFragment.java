@@ -17,9 +17,12 @@ package org.openmrs.mobile.activities.patientdashboard;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -170,12 +174,43 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.gravity = Gravity.CENTER;
             Context context = getContext();
-            for (int counter = 1; counter < visits.size(); counter++) {
+            //visits.remove(0);
+            /*for (int counter = 1; counter < visits.size(); counter++) {
                 Visit visit = visits.get(counter);
                 TextView pastVisitTextView = new TextView(context);
                 pastVisitTextView.setText(DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_DATE_FORMAT) + " - " + DateUtils.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_DATE_FORMAT));
                 previousVisitsContainer.addView(pastVisitTextView);
-            }
+            }*/
+
+            RecyclerView previousVisits = (RecyclerView) fragmentView.findViewById(R.id.previous_visits);
+
+            previousVisits.setLayoutManager(new LinearLayoutManager(getContext()));
+            VisitsAdapter contactAdapter = new VisitsAdapter(previousVisits, visits, getActivity());
+            previousVisits.setAdapter(contactAdapter);
+
+            contactAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+                @Override
+                public void onLoadMore() {
+                    if (visits.size() <= 20) {
+                        visits.add(null);
+                        contactAdapter.notifyItemInserted(visits.size() - 1);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                visits.remove(visits.size() - 1);
+                                contactAdapter.notifyItemRemoved(visits.size());
+
+                                //Load more from server here
+                                contactAdapter.notifyDataSetChanged();
+                                contactAdapter.setLoaded();
+
+                            }
+                        }, 5000);
+                    } else {
+                        Toast.makeText(getContext(), "Loading data completed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
         }
 

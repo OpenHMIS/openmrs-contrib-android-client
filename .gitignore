@@ -45,3 +45,4 @@ modules/odk.collect/android/*
 .settings/
 
 /openmrs-client/src/main/java/org/openmrs/mobile/ConsoleLogger.java
+/openmrs-client/src/main/java/org/openmrs/mobile/utilities/ConsoleLogger.java
