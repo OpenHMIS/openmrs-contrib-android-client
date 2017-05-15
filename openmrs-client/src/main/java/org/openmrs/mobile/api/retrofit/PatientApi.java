@@ -313,7 +313,7 @@ public class PatientApi extends RetrofitApi {
 		for (String s : enc.split(","))
 			list.add(Long.parseLong(s));
 
-		for (long id : list) {
+		/*for (long id : list) {
 			EncounterCreate encounterCreate = new Select()
 					.from(EncounterCreate.class)
 					.where("id = ?", id)
@@ -321,7 +321,7 @@ public class PatientApi extends RetrofitApi {
 			encounterCreate.setPatient(patient.getUuid());
 			encounterCreate.save();
 			new EncounterService().addEncounter(encounterCreate);
-		}
+		}*/
 	}
 
 	private SimplePromise<String> getIdGenPatientIdentifier() {

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+	<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+		<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="8dp"
+				android:layout_marginTop="8dp">
+
+			<EditText
+					android:id="@+id/admissionDate"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/admission_date"
+					android:inputType="date" />
+		</android.support.design.widget.TextInputLayout>
+
+		<TextView
+				android:text="@string/is_audit_complete"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<RadioGroup
+				android:layout_width="match_parent"
+				android:orientation="horizontal"
+				android:layout_height="wrap_content">
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/yes"
+					android:id="@+id/is_audit_complete_yes"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/no"
+					android:id="@+id/is_audit_complete_no"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+		</RadioGroup>
+
+
+		<TextView
+				android:text="@string/is_death_in_hospital"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<RadioGroup
+				android:layout_width="match_parent"
+				android:orientation="horizontal"
+				android:layout_height="wrap_content">
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/yes"
+					android:id="@+id/is_death_in_hospital_yes"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/no"
+					android:id="@+id/is_death_in_hospital_no"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+		</RadioGroup>
+
+
+		<TextView
+				android:text="@string/is_palliative_consult"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<RadioGroup
+				android:layout_width="match_parent"
+				android:orientation="horizontal"
+				android:layout_height="wrap_content">
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/yes"
+					android:id="@+id/is_palliative_consult_yes"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/no"
+					android:id="@+id/is_palliative_consult_no"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+		</RadioGroup>
+
+
+		<TextView
+				android:text="@string/is_preop_risk_assessment_only"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<RadioGroup
+				android:layout_width="match_parent"
+				android:orientation="horizontal"
+				android:layout_height="wrap_content">
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/yes"
+					android:id="@+id/is_preop_risk_assessment_only_yes"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/no"
+					android:id="@+id/is_preop_risk_assessment_only_no"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+		</RadioGroup>
+
+		<TextView
+				android:text="@string/is_icu_stay"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<RadioGroup
+				android:layout_width="match_parent"
+				android:orientation="horizontal"
+				android:layout_height="wrap_content">
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/yes"
+					android:id="@+id/is_icu_stay_yes"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/no"
+					android:id="@+id/is_icu_stay_no"
+					android:layout_gravity="start"
+					android:checked="false" />
+		</RadioGroup>
+
+		<TextView
+				android:text="@string/is_hdu_stay"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<RadioGroup
+				android:layout_width="match_parent"
+				android:orientation="horizontal"
+				android:layout_height="wrap_content">
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/yes"
+					android:id="@+id/is_hdu_stay_yes"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/no"
+					android:id="@+id/is_hdu_stay_no"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+		</RadioGroup>
+
+		<TextView
+				android:text="@string/is_hdu_comgmt"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<RadioGroup
+				android:layout_width="match_parent"
+				android:orientation="horizontal"
+				android:layout_height="wrap_content">
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/yes"
+					android:id="@+id/is_hdu_comgmt_yes"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/no"
+					android:id="@+id/is_hdu_comgmt_no"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+		</RadioGroup>
+
+		<TextView
+				android:text="@string/is_hiv_positive"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<RadioGroup
+				android:layout_width="match_parent"
+				android:orientation="horizontal"
+				android:layout_height="wrap_content">
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/yes"
+					android:id="@+id/is_hiv_positive_yes"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/no"
+					android:id="@+id/is_hiv_positive_no"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+		</RadioGroup>
+
+
+		<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="8dp"
+				android:layout_marginTop="8dp">
+
+			<EditText
+					android:id="@+id/cd4"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/cd4"
+					android:inputType="text" />
+		</android.support.design.widget.TextInputLayout>
+
+		<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="8dp"
+				android:layout_marginTop="8dp">
+
+			<EditText
+					android:id="@+id/hba1c"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/hba1c"
+					android:inputType="text" />
+		</android.support.design.widget.TextInputLayout>
+
+		<TextView
+				android:text="@string/inpatient_service_type"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<Spinner
+				android:id="@+id/inpatient_service_type"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:entries="@array/inpatient_service_types"
+				android:prompt="@string/inpatient_service_type_prompt" />
+
+		<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="8dp"
+				android:layout_marginTop="8dp">
+
+			<EditText
+					android:id="@+id/discharge_diagnosis"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/discharge_diagnosis"
+					android:inputType="text" />
+		</android.support.design.widget.TextInputLayout>
+
+
+	</LinearLayout>
+
+</ScrollView>

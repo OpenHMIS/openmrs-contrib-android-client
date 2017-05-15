@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:card_view="http://schemas.android.com/tools"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="vertical">
-	
+
 	<android.support.v7.widget.CardView
 			android:id="@+id/cardView"
 			android:layout_width="match_parent"
@@ -12,192 +13,152 @@
 			android:layout_margin="10dp"
 			card_view:cardBackgroundColor="@color/white"
 			card_view:cardCornerRadius="4dp">
-		
+
 		<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_margin="5dp"
 				android:layout_marginBottom="30dp"
 				android:orientation="vertical">
-			
+
 			<LinearLayout
 					android:id="@+id/topRow"
 					android:layout_width="wrap_content"
 					android:layout_height="match_parent"
 					android:orientation="horizontal">
-				
+
 				<TextView
 						android:id="@+id/fetchedPatientDisplayName"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_marginLeft="10dp"
 						android:layout_marginRight="5dp"
+						android:layout_marginStart="10dp"
+						android:layout_marginEnd="5dp"
 						android:layout_marginBottom="5dp"
 						android:gravity="start"
 						android:textColor="@color/color_primary"
 						android:textSize="20sp"
 						android:textStyle="bold" />
-			
+
 			</LinearLayout>
-			
+
 			<LinearLayout
 					android:id="@+id/secondRow"
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
 					android:orientation="horizontal">
-				
-				
+
+
 				<TextView
 						android:id="@+id/fileNumberLabel"
 						android:layout_width="wrap_content"
 						android:layout_height="match_parent"
 						android:layout_marginLeft="10dp"
+						android:layout_marginStart="10dp"
 						android:layout_marginRight="5dp"
+						android:layout_marginEnd="5dp"
 						android:gravity="start"
 						android:text="@string/patient_identifier_label"
 						android:textSize="15sp"
 						android:textStyle="bold" />
-				
+
 				<TextView
 						android:id="@+id/fetchedPatientIdentifier"
 						android:layout_width="wrap_content"
 						android:layout_height="match_parent"
 						android:layout_marginLeft="10dp"
+						android:layout_marginStart="10dp"
 						android:layout_marginRight="25dp"
+						android:layout_marginEnd="25dp"
 						android:gravity="start"
 						android:textColor="@color/color_primary"
 						android:textSize="15sp"
 						android:textStyle="bold" />
-			
+
 			</LinearLayout>
-			
+
 			<View
 					android:layout_width="match_parent"
 					android:layout_height="1dp"
 					android:background="@android:color/darker_gray" />
-			
-			<LinearLayout
-					android:id="@+id/leftColumn"
-					android:layout_width="match_parent"
-					android:layout_height="match_parent"
+
+
+			<com.google.android.flexbox.FlexboxLayout
 					android:layout_marginEnd="30dp"
 					android:layout_marginLeft="5dp"
 					android:layout_marginRight="5dp"
-					android:layout_marginStart="10dp"
-					android:gravity="center_vertical"
-					android:orientation="vertical">
-				
-				<LinearLayout
-						android:layout_width="match_parent"
+					android:layout_marginStart="30dp"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="vertical"
+					app:alignItems="center"
+					app:alignContent="center"
+					app:flexDirection="row"
+					app:flexWrap="wrap"
+					android:layout_marginTop="5dp">
+
+				<TextView
+						android:id="@+id/gender"
+						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_marginTop="5dp"
-						android:orientation="horizontal">
-					
-					<TextView
-							android:id="@+id/gender"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:text="@string/gender_hint"
-							android:textStyle="italic" />
-					
-					<TextView
-							android:id="@+id/fetchedPatientGender"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:layout_marginLeft="10dp"
-							android:layout_marginRight="10dp" />
-					
-					<TextView
-							android:id="@+id/ageLabel"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:layout_marginEnd="10dp"
-							android:layout_marginRight="10dp"
-							android:text="@string/label_age"
-							android:textStyle="italic" />
-					
-					<TextView
-							android:id="@+id/fetchedPatientAge"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:layout_marginEnd="10dp"
-							android:layout_marginRight="10dp"
-							android:text="@string/label_age" />
-					
-					<TextView
-							android:id="@+id/birthdate"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:layout_marginLeft="20dp"
-							android:layout_marginRight="10dp"
-							android:text="@string/birthdate_hint"
-							android:textStyle="italic" />
-					
-					<TextView
-							android:id="@+id/fetchedPatientBirthDate"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:layout_marginLeft="10dp"
-							android:layout_marginRight="10dp" />
-				
-				</LinearLayout>
-			</LinearLayout>
+						android:text="@string/gender_hint"
+						android:textStyle="italic" />
+
+				<TextView
+						android:id="@+id/fetchedPatientGender"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginLeft="10dp"
+						android:layout_marginRight="10dp" />
+
+				<TextView
+						android:id="@+id/ageLabel"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginRight="10dp"
+						android:text="@string/label_age"
+						android:textStyle="italic" />
+
+				<TextView
+						android:id="@+id/fetchedPatientAge"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginRight="10dp"
+						android:text="@string/label_age" />
+
+				<TextView
+						android:id="@+id/birthdate"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginLeft="20dp"
+						android:layout_marginStart="20dp"
+						android:layout_marginRight="5dp"
+						android:layout_marginEnd="5dp"
+						android:text="@string/birthdate_hint"
+						android:textStyle="italic" />
+
+				<TextView
+						android:id="@+id/fetchedPatientBirthDate"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content" />
+
+			</com.google.android.flexbox.FlexboxLayout>
 		</LinearLayout>
 	</android.support.v7.widget.CardView>
-	
+
 	<ScrollView
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
-		
+
 		<LinearLayout
+				android:animateLayoutChanges="true"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="vertical">
-			
-			<android.support.v7.widget.CardView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_margin="10dp"
-					android:visibility="gone"
-					android:id="@+id/visitDetailsCardView"
-					card_view:cardBackgroundColor="@color/white"
-					card_view:cardCornerRadius="4dp">
-				
-				<LinearLayout
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_margin="@dimen/patient_card_margin"
-						android:orientation="vertical">
-					
-					<TextView
-							android:id="@+id/visitDetails"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_gravity="start"
-							android:gravity="start"
-							android:textColor="@color/openmrs_color_grey"
-							android:textStyle="bold" />
-					
-					<LinearLayout
-							android:layout_width="match_parent"
-							android:layout_height="0dp"
-							android:layout_gravity="end"
-							android:layout_weight="0.5"
-							android:gravity="end">
-						
-						<ImageView
-								android:layout_width="15dp"
-								android:layout_height="15dp"
-								android:layout_gravity="bottom"
-								android:contentDescription="@string/label_more"
-								android:src="@drawable/ic_more"
-								android:textColor="#4ec07e"
-								android:visibility="gone" />
-					</LinearLayout>
-				</LinearLayout>
-			
-			</android.support.v7.widget.CardView>
-			
+
 			<android.support.v7.widget.CardView
 					android:id="@+id/observationsCardView"
 					android:visibility="gone"
@@ -206,30 +167,40 @@
 					android:layout_margin="10dp"
 					card_view:cardBackgroundColor="@color/white"
 					card_view:cardCornerRadius="4dp">
-				
+
 				<LinearLayout
-						android:id="@+id/observationsContainer"
 						android:layout_width="match_parent"
+						android:layout_marginLeft="@dimen/patient_card_margin"
+						android:layout_marginEnd="@dimen/patient_card_margin"
+						android:layout_marginStart="@dimen/patient_card_margin"
+						android:layout_marginRight="@dimen/patient_card_margin"
 						android:layout_height="wrap_content"
-						android:layout_margin="@dimen/patient_card_margin"
-						android:orientation="vertical"
-						android:paddingBottom="10dp"
 						android:paddingTop="10dp"
-						android:weightSum="1">
-				
-				
+						android:orientation="vertical">
+
+					<TextView
+							android:id="@+id/visitDetails"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:layout_gravity="start"
+							android:gravity="start"
+							android:textColor="@color/openmrs_color_grey"
+							android:textStyle="bold" />
+
+
+					<LinearLayout
+							android:id="@+id/observationsContainer"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:orientation="vertical"></LinearLayout>
+
 				</LinearLayout>
-			
-			
 			</android.support.v7.widget.CardView>
-			
+
 			<android.support.v7.widget.RecyclerView
-					android:id="@+id/previousVisits"
+					android:id="@+id/pastVisits"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content" />
-		
 		</LinearLayout>
-	
-	
 	</ScrollView>
 </LinearLayout>

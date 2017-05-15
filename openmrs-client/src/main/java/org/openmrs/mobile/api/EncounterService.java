@@ -45,7 +45,7 @@ public class EncounterService extends IntentService {
 			@Nullable DefaultResponseCallbackListener callbackListener) {
 
 		if (NetworkUtils.isOnline()) {
-			new VisitDAO().getActiveVisitByPatientId(encounterCreate.getPatientId())
+			/*new VisitDAO().getActiveVisitByPatientId(encounterCreate.getPatientId())
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(visit -> {
 						if (visit != null) {
@@ -59,7 +59,7 @@ public class EncounterService extends IntentService {
 
 							startNewVisitForEncounter(encounterCreate);
 						}
-					});
+					});*/
 		} else
 			ToastUtil.error("No internet connection. Form data is saved locally " +
 					"and will sync when internet connection is restored. ");
@@ -108,7 +108,7 @@ public class EncounterService extends IntentService {
 
 		if (NetworkUtils.isOnline()) {
 
-			encounterCreate.pullObslist();
+			/*encounterCreate.pullObslist();
 			Call<Encounter> call = apiService.createEncounter(encounterCreate);
 			call.enqueue(new Callback<Encounter>() {
 				@Override
@@ -136,7 +136,7 @@ public class EncounterService extends IntentService {
 						callbackListener.onErrorResponse(t.getLocalizedMessage());
 					}
 				}
-			});
+			});*/
 
 		} else {
 			ToastUtil.error("Sync is off. Turn on sync to save form data.");
@@ -149,7 +149,7 @@ public class EncounterService extends IntentService {
 	}
 
 	private void linkvisit(Long patientid, String formname, Encounter encounter, EncounterCreate encounterCreate) {
-		VisitDAO visitDAO = new VisitDAO();
+		/*VisitDAO visitDAO = new VisitDAO();
 		visitDAO.getVisitByUuid(encounter.getVisit().getUuid())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(visit -> {
@@ -164,14 +164,14 @@ public class EncounterService extends IntentService {
 							.observeOn(AndroidSchedulers.mainThread())
 							.subscribe(id ->
 									ToastUtil.success(formname + " data saved successfully"));
-				});
+				});*/
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		if (NetworkUtils.isOnline()) {
 
-			List<EncounterCreate> encountercreatelist = new Select()
+			/*List<EncounterCreate> encountercreatelist = new Select()
 					.from(EncounterCreate.class)
 					.execute();
 
@@ -190,7 +190,7 @@ public class EncounterService extends IntentService {
 								}
 							});
 				}
-			}
+			}*/
 
 		} else {
 			ToastUtil.error("No internet connection. Form data is saved locally " +
