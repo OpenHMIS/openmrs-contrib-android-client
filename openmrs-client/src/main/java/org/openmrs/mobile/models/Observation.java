@@ -85,10 +85,6 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	@Expose
 	private Object value;
 
-	@SerializedName("voided")
-	@Expose
-	private String voided;
-
 	@Expose
 	@ForeignKey(stubbedRelationship = true)
 	private Provider provider;
@@ -302,7 +298,6 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	public void setDiagnosisCertainty(String diagnosisCertainty) {
 		this.diagnosisCertainty = diagnosisCertainty;
 	}
-
 
 	public String getDiagnosisOrder() {
 		return diagnosisOrder;

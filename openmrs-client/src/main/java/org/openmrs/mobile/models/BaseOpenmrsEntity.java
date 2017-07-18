@@ -13,30 +13,34 @@ public class BaseOpenmrsEntity extends BaseOpenmrsAuditableObject implements Ser
 
 	@Expose
 	@Column
-	private Boolean voided = Boolean.FALSE;
+	@SerializedName("voided")
+	private Boolean voided;
 
 	@Expose
 	@Column
+	@SerializedName("dateVoided")
 	private Date dateVoided;
 
 	@Expose
 	@ForeignKey(stubbedRelationship = true)
+	@SerializedName("voidedBy")
 	private User voidedBy;
 
 	@Expose
 	@Column
+	@SerializedName("voidReason")
 	private String voidReason;
-
-	public Boolean getVoided() {
-		return getActive();
-	}
 
 	Boolean isVoided() {
 		return getVoided();
 	}
 
+	public Boolean getVoided() {
+		return voided;
+	}
+
 	public void setVoided(Boolean voided) {
-		setActive(voided);
+		this.voided = voided;
 	}
 
 	public Date getDateVoided() {

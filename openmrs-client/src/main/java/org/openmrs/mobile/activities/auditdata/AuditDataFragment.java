@@ -1087,15 +1087,33 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	}
 
 	public void clearExtraObservation() {
-		mechanicalVentilationObservation = null;
-		vaospressorsObservation = null;
-		surgeryObservation = null;
-		confirmedInfectionObservation = null;
-		firstSbpObservation = null;
-		firstMapObservation = null;
-		firstIcuHeartRateObservation = null;
-		firstGcsScoreObservation = null;
-		priorSedetionObservation = null;
+		if (mechanicalVentilationObservation != null) {
+			mechanicalVentilationObservation.setVoided(true);
+		}
+		if (vaospressorsObservation != null) {
+			vaospressorsObservation.setVoided(true);
+		}
+		if (surgeryObservation != null) {
+			surgeryObservation.setVoided(true);
+		}
+		if (confirmedInfectionObservation != null) {
+			confirmedInfectionObservation.setVoided(true);
+		}
+		if (firstSbpObservation != null) {
+			firstSbpObservation.setVoided(true);
+		}
+		if (firstMapObservation != null) {
+			firstMapObservation.setVoided(true);
+		}
+		if (firstIcuHeartRateObservation != null) {
+			firstIcuHeartRateObservation.setVoided(true);
+		}
+		if (firstGcsScoreObservation != null) {
+			firstGcsScoreObservation.setVoided(true);
+		}
+		if (priorSedetionObservation != null) {
+			priorSedetionObservation.setVoided(true);
+		}
 	}
 
 }
