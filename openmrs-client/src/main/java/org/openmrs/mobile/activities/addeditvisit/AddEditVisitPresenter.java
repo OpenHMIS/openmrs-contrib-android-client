@@ -54,7 +54,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	private VisitDataService visitDataService;
 	private PatientDataService patientDataService;
 	private LocationDataService locationDataService;
-	private boolean processing, endVisitTag;
+	private boolean processing, isEndVisit;
 	private String patientUuid;
 	private Location location;
 
@@ -71,7 +71,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		this.addEditVisitView = addEditVisitView;
 		this.addEditVisitView.setPresenter(this);
 		this.patientUuid = patientUuid;
-		this.endVisitTag = endVisit;
+		this.isEndVisit = isEndVisit;
 
 		this.visit = new Visit();
 
@@ -158,7 +158,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 							visit.setStartDatetime(new Date());
 						}
 
-						if(endVisitTag){
+						if(isEndVisit){
 							addEditVisitView.loadEndVisitView();
 						} else {
 							loadVisitTypes();
@@ -346,8 +346,8 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	@Override
-	public boolean getEndVisitTag() {
-		return endVisitTag;
+	public boolean isEndVisit() {
+		return isEndVisit;
 	}
 
 	@Override

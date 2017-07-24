@@ -115,7 +115,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 			DateTime dateTime = null;
 
-			if (!mPresenter.getEndVisitTag()) {
+			if (!mPresenter.isEndVisit()) {
 				dateTime = DateUtils.convertTimeString(
 						DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
 								DateUtils.OPEN_MRS_REQUEST_FORMAT));
@@ -134,7 +134,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 			DatePickerDialog mDatePicker = new DatePickerDialog(AddEditVisitFragment.this.getActivity(),
 					(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) -> {
-						if (!mPresenter.getEndVisitTag()) {
+						if (!mPresenter.isEndVisit()) {
 							mPresenter.getVisit()
 									.setStartDatetime(DateUtils.constructDate(selectedyear, selectedmonth, selectedday));
 							visitDateInput.setText(DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
@@ -161,7 +161,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			toolbar.setTitle(getString(R.string.label_edit_visit));
 		}
 
-		if (null != mPresenter.getVisit().getStartDatetime() && !mPresenter.getEndVisitTag()) {
+		if (null != mPresenter.getVisit().getStartDatetime() && !mPresenter.isEndVisit()) {
 			visitDateInput.setText(
 					DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
 							DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));

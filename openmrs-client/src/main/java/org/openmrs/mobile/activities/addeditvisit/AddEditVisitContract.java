@@ -71,7 +71,7 @@ public interface AddEditVisitContract {
 
 		void endVisit(Visit visit);
 
-		boolean getEndVisitTag();
+		boolean isEndVisit();
 	}
 }
 
