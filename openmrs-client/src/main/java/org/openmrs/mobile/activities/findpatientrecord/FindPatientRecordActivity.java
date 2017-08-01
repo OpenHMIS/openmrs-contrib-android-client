@@ -115,14 +115,9 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 			searchPatientsView = (EditText)MenuItemCompat.getActionView(mFindPatientMenuItem);
 		}
 
-		if (StringUtils.notEmpty(query)) {
-			mFindPatientMenuItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM |
-					MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		} else {
-			setTitle(R.string.nav_find_patient);
-			mFindPatientMenuItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM |
-					MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-		}
+		setTitle(R.string.nav_find_patient);
+		mFindPatientMenuItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM |
+				MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
 		searchPatientsView.setText(query);
 		searchPatientsView.addTextChangedListener(new TextWatcher() {
@@ -162,6 +157,16 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 			}
 		});
 
+		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		MenuItem actionSearchMenuItem = menu.findItem(R.id.action_search);
+		if (StringUtils.notEmpty(query)) {
+			actionSearchMenuItem.expandActionView();
+		}
 		return true;
 	}
 
