@@ -56,7 +56,7 @@ public class PersonAddress extends BaseOpenmrsEntity {
 	@Column
 	private String postalCode;
 
-	@ForeignKey
+	@ForeignKey(stubbedRelationship = true)
 	private Person person;
 
 	/**

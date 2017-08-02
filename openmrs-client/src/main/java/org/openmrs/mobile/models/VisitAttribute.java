@@ -12,7 +12,7 @@ import org.openmrs.mobile.data.db.AppDatabase;
 public class VisitAttribute extends BaseOpenmrsEntity {
 	@SerializedName("visit")
 	@Expose
-	@ForeignKey
+	@ForeignKey(stubbedRelationship = true)
 	private Visit visit;
 
 	@SerializedName("value")

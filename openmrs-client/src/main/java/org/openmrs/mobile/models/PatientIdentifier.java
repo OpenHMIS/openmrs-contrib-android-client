@@ -35,7 +35,7 @@ public class PatientIdentifier extends BaseOpenmrsEntity {
 	@ForeignKey(stubbedRelationship = true)
 	private Location location;
 
-	@ForeignKey
+	@ForeignKey(stubbedRelationship = true)
 	private Patient patient;
 
 	/**

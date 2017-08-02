@@ -28,12 +28,12 @@ public class ConceptAnswer extends BaseOpenmrsAuditableObject {
 	 */
 	@SerializedName("concept")
 	@Expose
-	@ForeignKey
+	@ForeignKey(stubbedRelationship = true)
 	private Concept concept;
 
 	@SerializedName("answerConcept")
 	@Expose
-	@ForeignKey
+	@ForeignKey(stubbedRelationship = true)
 	private Concept answerConcept;
 
 	public Concept getConcept() {

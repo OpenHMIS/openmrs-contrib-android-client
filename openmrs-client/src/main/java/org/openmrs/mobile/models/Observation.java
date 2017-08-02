@@ -63,7 +63,7 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 
 	@SerializedName("encounter")
 	@Expose
-	@ForeignKey
+	@ForeignKey(stubbedRelationship = true)
 	private Encounter encounter = null;
 
 	@SerializedName("formFieldPath")

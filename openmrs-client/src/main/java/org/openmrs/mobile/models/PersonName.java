@@ -35,7 +35,7 @@ public class PersonName extends BaseOpenmrsEntity {
 	@Column
 	private String familyName;
 
-	@ForeignKey
+	@ForeignKey(stubbedRelationship = true)
 	private Person person;
 
 	/**

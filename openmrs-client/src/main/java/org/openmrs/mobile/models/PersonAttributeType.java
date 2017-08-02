@@ -47,7 +47,7 @@ public class PersonAttributeType extends BaseOpenmrsMetadata {
 
 	@Expose
 	@SerializedName("editPrivilege")
-	@ForeignKey
+	@ForeignKey(stubbedRelationship = true)
 	private Privilege editPrivilege;
 
 	public Concept getConcept() {

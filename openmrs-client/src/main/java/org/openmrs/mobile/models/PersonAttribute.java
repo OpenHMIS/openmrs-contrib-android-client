@@ -37,7 +37,7 @@ public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
 	@ForeignKey(stubbedRelationship = true)
 	private Concept conceptValue;
 
-	@ForeignKey
+	@ForeignKey(stubbedRelationship = true)
 	private Person person;
 
 	@Override
