@@ -9,6 +9,8 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
+import java.util.Date;
+
 @Table(database = AppDatabase.class)
 public class ConceptSearchResult extends BaseOpenmrsObject {
 	@SerializedName("concept")
@@ -23,6 +25,10 @@ public class ConceptSearchResult extends BaseOpenmrsObject {
 	@Expose
 	@Column
 	private String value;
+	@SerializedName("dateChanged")
+	@Expose
+	@Column
+	private Date dateChanged;
 
 	public Concept getConcept() {
 		return this.concept;
@@ -46,6 +52,14 @@ public class ConceptSearchResult extends BaseOpenmrsObject {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public Date getDateChanged() {
+		return dateChanged;
+	}
+
+	public void setDateChanged(Date dateChanged) {
+		this.dateChanged = dateChanged;
 	}
 
 	@Override
