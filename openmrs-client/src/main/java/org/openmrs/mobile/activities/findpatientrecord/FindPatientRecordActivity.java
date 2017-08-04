@@ -116,8 +116,6 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		}
 
 		setTitle(R.string.nav_find_patient);
-		mFindPatientMenuItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM |
-				MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
 		searchPatientsView.setText(query);
 		searchPatientsView.addTextChangedListener(new TextWatcher() {

@@ -35,8 +35,8 @@ public class ConceptRestServiceImpl extends BaseRestService<Concept, ConceptRest
 
 	public Call<Results<Concept>> findConcept(@NonNull String searchQuery, @Nullable QueryOptions options,
 			@NonNull PagingInfo pagingInfo) {
-		return restService.findConcept(ApplicationConstants.API.REST_ENDPOINT_V2 + "/custom/diagnoses", searchQuery,
-				QueryOptions.getRepresentation(options),
-				PagingInfo.getStartIndex(pagingInfo), PagingInfo.getLimit(pagingInfo));
+		return restService.findConcept(buildRestRequestPath(), searchQuery,
+				QueryOptions.getRepresentation(options), PagingInfo.getLimit(pagingInfo),
+				PagingInfo.getStartIndex(pagingInfo));
 	}
 }

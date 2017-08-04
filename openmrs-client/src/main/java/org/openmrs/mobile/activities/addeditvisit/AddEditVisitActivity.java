@@ -36,7 +36,6 @@ public class AddEditVisitActivity extends ACBaseActivity {
 	public AddEditVisitContract.Presenter addEditVisitPresenter;
 	private String patientUuid, visitUuid, providerUuid, visitStopDate;
 	private Bundle extras;
-	private Intent intent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -137,5 +136,4 @@ public class AddEditVisitActivity extends ACBaseActivity {
 				return super.onOptionsItemSelected(item);
 		}
 	}
-
 }

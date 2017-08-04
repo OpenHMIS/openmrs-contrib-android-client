@@ -161,7 +161,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			toolbar.setTitle(getString(R.string.label_edit_visit));
 		}
 
-		if (null != mPresenter.getVisit().getStartDatetime() && !mPresenter.getEndVisitTag()) {
+		if (mPresenter.getVisit().getStartDatetime() != null && !mPresenter.getEndVisitTag()) {
 			visitDateInput.setText(
 					DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
 							DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
@@ -296,7 +296,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 		// set existing visit attribute if any
 		String visitTypeUuid = mPresenter.searchVisitAttributeValueByType(visitAttributeType);
-		if (null != visitTypeUuid) {
+		if (visitTypeUuid != null) {
 			setDefaultDropdownSelection(conceptNameArrayAdapter, visitTypeUuid, conceptNamesDropdown);
 		}
 
@@ -324,7 +324,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		visitTypeDropdown.setAdapter(visitTypeArrayAdapter);
 
 		// set existing visit type if any
-		if (null != mPresenter.getVisit().getVisitType()) {
+		if (mPresenter.getVisit().getVisitType() != null) {
 			setDefaultDropdownSelection(visitTypeArrayAdapter, mPresenter.getVisit().getVisitType().getUuid(),
 					visitTypeDropdown);
 		}
