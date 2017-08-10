@@ -39,7 +39,7 @@ public class SyncAdapterTest {
 	@Test
 	public void sync_callToPerformSyncCallsSyncServiceToSync() {
 		Account account = new Account("test", "test");
-		SyncAdapter syncAdapter = new SyncAdapter(context, true, syncService);
+		SyncAdapter syncAdapter = new SyncAdapter(context, syncService);
 		syncAdapter.onPerformSync(account, Bundle.EMPTY, "test", contentProviderClient, syncResult);
 
 		Mockito.verify(syncService, Mockito.times(1)).sync();

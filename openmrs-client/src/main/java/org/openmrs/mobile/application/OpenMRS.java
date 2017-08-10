@@ -28,6 +28,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.openmrs.mobile.dagger.ApplicationModule;
 import org.openmrs.mobile.dagger.DaggerApplicationComponent;
+import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.security.SecretKeyGenerator;
 import org.openmrs.mobile.sync.SyncManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -55,6 +56,9 @@ public class OpenMRS extends Application {
 
 	@Inject
 	NetworkUtils networkUtils;
+
+	@Inject
+	DatabaseHelper databaseHelper;
 
 	@Override
 	public void onCreate() {
@@ -361,5 +365,9 @@ public class OpenMRS extends Application {
 
 	public NetworkUtils getNetworkUtils() {
 		return networkUtils;
+	}
+
+	public DatabaseHelper getDatabaseHelper() {
+		return databaseHelper;
 	}
 }

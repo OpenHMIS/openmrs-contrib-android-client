@@ -12,6 +12,7 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.db.DbService;
+import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifier;
 import org.openmrs.mobile.models.PatientIdentifier_Table;
@@ -27,7 +28,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class PatientDbService extends BaseDbService<Patient> implements DbService<Patient> {
 	@Inject
-	public PatientDbService() { }
+	public PatientDbService(Repository repository) {
+		super(repository);
+	}
 
 	@Override
 	protected ModelAdapter<Patient> getEntityTable() {

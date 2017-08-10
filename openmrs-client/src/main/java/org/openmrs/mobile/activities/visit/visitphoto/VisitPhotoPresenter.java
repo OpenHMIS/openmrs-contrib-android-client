@@ -58,7 +58,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	private void loadVisitDocumentObservations() {
 		visitPhotoView.showTabSpinner(true);
 		// get obs for patient.
-		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid, QueryOptions.DEFAULT,
+		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid, null,
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {

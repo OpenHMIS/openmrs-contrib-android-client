@@ -11,11 +11,11 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.data.rest.retrofit;
 
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Results;
 
 import retrofit2.Call;
@@ -41,4 +41,16 @@ public interface ConceptRestService {
 			@Query("v") String representation,
 			@Query("limit") Integer limit,
 			@Query("startIndex") Integer startIndex);
+
+	@GET(RestConstants.REST_PATH)
+	Call<Results<Concept>> getSetConcepts(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("set") String setUuid,
+			@Query("includeSetConcepts") Boolean includeSetConcepts,
+			@Query("v") String representation);
+
+	@GET(RestConstants.REST_PATH)
+	Call<Results<RecordInfo>> getSetConceptRecordInfo(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("set") String setUuid,
+			@Query("includeSetConcepts") Boolean includeSetConcepts,
+			@Query("v") String representation);
 }

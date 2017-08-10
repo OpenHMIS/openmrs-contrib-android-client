@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.structure.ModelAdapter;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.db.DbService;
+import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.ConceptAnswer_Table;
 
@@ -18,7 +19,9 @@ import javax.inject.Inject;
 
 public class ConceptAnswerDbService extends BaseDbService<ConceptAnswer> implements DbService<ConceptAnswer> {
 	@Inject
-	public ConceptAnswerDbService() { }
+	public ConceptAnswerDbService(Repository repository) {
+		super(repository);
+	}
 
 	@Override
 	protected ModelAdapter<ConceptAnswer> getEntityTable() {

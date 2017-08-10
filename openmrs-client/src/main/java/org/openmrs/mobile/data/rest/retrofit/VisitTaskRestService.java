@@ -18,6 +18,8 @@ import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.VisitTask;
 
+import java.util.Date;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -62,6 +64,15 @@ public interface VisitTaskRestService {
 			@Query("status") String status,
 			@Query("patient_uuid") String patientUuid,
 			@Query("visit_uuid") String visitUuid,
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll,
+			@Query("limit") Integer limit,
+			@Query("startIndex") Integer startIndex);
+
+	@GET(RestConstants.GET_ALL)
+	Call<Results<VisitTask>> getAllSince(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("visit_uuid") String visitUuid,
+			@Query("since") Date since,
 			@Query("v") String representation,
 			@Query("includeAll") Boolean includeAll,
 			@Query("limit") Integer limit,

@@ -1,13 +1,16 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-public class ConceptReferenceTerm extends BaseOpenmrsObject{
+import org.openmrs.mobile.data.db.AppDatabase;
+
+@Table(database = AppDatabase.class)
+public class ConceptReferenceTerm extends BaseOpenmrsObject {
 	@Expose
+	@Column
 	private String code;
-
-	@Expose
-	private ConceptSource conceptSource;
 
 	public String getCode() {
 		return code;
@@ -15,13 +18,5 @@ public class ConceptReferenceTerm extends BaseOpenmrsObject{
 
 	public void setCode(String code) {
 		this.code = code;
-	}
-
-	public ConceptSource getConceptSource() {
-		return conceptSource;
-	}
-
-	public void setConceptSource(ConceptSource conceptSource) {
-		this.conceptSource = conceptSource;
 	}
 }

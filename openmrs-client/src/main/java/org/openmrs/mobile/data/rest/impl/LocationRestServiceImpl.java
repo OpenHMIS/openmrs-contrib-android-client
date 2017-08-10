@@ -31,6 +31,6 @@ public class LocationRestServiceImpl extends BaseMetadataRestService<Location, L
 		restService = RestServiceBuilder.createService(LocationRestService.class, url, "", "");
 
 		return restService.getLoginLocations(buildRestRequestPath(),
-				QueryOptions.getRepresentation(QueryOptions.LOAD_RELATED_OBJECTS));
+				QueryOptions.getRepresentation(QueryOptions.FULL_REP));
 	}
 }

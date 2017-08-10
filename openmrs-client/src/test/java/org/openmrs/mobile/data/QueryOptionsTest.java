@@ -13,7 +13,7 @@ import org.robolectric.annotation.Config;
 public class QueryOptionsTest {
 	@Test
 	public void queryOptions_canGetFullRepresentation() {
-		QueryOptions fullQueryOptions = QueryOptions.LOAD_RELATED_OBJECTS;
+		QueryOptions fullQueryOptions = QueryOptions.FULL_REP;
 		
 		String result = QueryOptions.getRepresentation(fullQueryOptions);
 

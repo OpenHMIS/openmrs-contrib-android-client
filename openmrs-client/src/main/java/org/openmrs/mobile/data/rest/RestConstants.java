@@ -16,6 +16,15 @@ public class RestConstants {
 		public static final String FULL = "full";
 		public static final String DEFAULT = "default";
 		public static final String REF = "ref";
-		public static final String RECORD_INFO = "custom:(uuid,dateChanged}";
+
+		public static final String RECORD_INFO = "custom:(uuid,dateCreated,dateChanged)";
+
+		public static final String DIAGNOSIS_CONCEPT = "custom:(uuid,display,name:(uuid,display,name),conceptClass:"
+				+ "(uuid,display),retired,mappings:(uuid,display,conceptReferenceTerm:(uuid,display,code)),dateCreated,"
+				+ "dateChanged)";
+		public static final String PATIENT_LIST_PATIENTS = "custom:(uuid,patient:(uuid,dateChanged),patientList:(uuid,"
+				+ "display))";
+		public static final String VISIT_ENCOUNTER = "custom:(uuid,display,encounterDatetime,patient:ref,location:ref,"
+				+ "form:ref,encounterType:ref,obs,creator:ref,dateCreated,changedBy:ref,dateChanged)";
 	}
 }

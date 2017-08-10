@@ -84,7 +84,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	public void getPatientList() {
 		patientListView.showPatientListProgressSpinner(true);
 		setPage(1);
-		patientListDataService.getAll(new QueryOptions(false, false), new PagingInfo(1, 100),
+		patientListDataService.getAll(null, new PagingInfo(1, 100),
 				new DataService.GetCallback<List<PatientList>>() {
 					@Override
 					public void onCompleted(List<PatientList> entities) {
@@ -118,7 +118,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 		setTotalNumberResults(0);
 		setExistingPatientListUuid(patientListUuid);
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
-		patientListContextDataService.getListPatients(patientListUuid, new QueryOptions(false, false), pagingInfo,
+		patientListContextDataService.getListPatients(patientListUuid, null, pagingInfo,
 				new DataService.GetCallback<List<PatientListContext>>() {
 					@Override
 					public void onCompleted(List<PatientListContext> entities) {

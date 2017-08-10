@@ -7,9 +7,9 @@ import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.openmrs.mobile.data.db.BaseEntityDbService;
 import org.openmrs.mobile.data.db.EntityDbService;
+import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.Visit_Table;
-import org.openmrs.mobile.utilities.DateUtils;
 
 import java.util.Date;
 
@@ -19,7 +19,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class VisitDbService extends BaseEntityDbService<Visit> implements EntityDbService<Visit> {
 	@Inject
-	public VisitDbService() { }
+	public VisitDbService(Repository repository) {
+		super(repository);
+	}
 
 	@Override
 	protected ModelAdapter<Visit> getEntityTable() {

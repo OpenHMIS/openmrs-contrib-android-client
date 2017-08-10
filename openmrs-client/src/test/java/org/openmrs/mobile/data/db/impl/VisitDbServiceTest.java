@@ -9,7 +9,7 @@ import org.openmrs.mobile.models.Visit;
 public class VisitDbServiceTest extends BaseEntityDbServiceTest<Visit> {
 	@Override
 	protected BaseDbService<Visit> getDbService() {
-		return new VisitDbService();
+		return null;
 	}
 
 	@Override
