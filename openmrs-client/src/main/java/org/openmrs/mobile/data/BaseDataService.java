@@ -33,7 +33,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends BaseDbService<E>,
 			RS extends BaseRestService<E, ?>> implements DataService<E> {
-	public static final String TAG = "BaseDataService";
+	public static final String TAG = "Data Service";
 
 	/**
 	 * The database service for this entity.
@@ -302,21 +302,25 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 			public void onResponse(Call<R> call, Response<R> response) {
 				// The request may have failed but still get here
 				if (response.isSuccessful()) {
-					// Save the resulting model to the db
-					try {
-						T result = responseConverter.apply(response.body());
-						if (result instanceof Resource) {
-							((Resource)result).processRelationships();
+					// This is likely running on the UI thread so spawn another thread to do the db stuff
+					new Thread(() -> {
+						// Save the resulting model to the db
+						try {
+							T result = responseConverter.apply(response.body());
+							if (result instanceof Resource) {
+								((Resource)result).processRelationships();
+							}
+
+							dbOperation.accept(result);
+
+							setCachedResult(options, result);
+
+							new Handler(Looper.getMainLooper()).post(() -> callback.onCompleted(result));
+						} catch (Exception ex) {
+							// An exception occurred while trying to save the entity in the db
+							new Handler(Looper.getMainLooper()).post(() -> callback.onError(ex));
 						}
-
-						dbOperation.accept(result);
-
-						setCachedResult(options, result);
-						callback.onCompleted(result);
-					} catch (Exception ex) {
-						// An exception occurred while trying to save the entity in the db
-						callback.onError(ex);
-					}
+					}).start();
 				} else {
 					// Something failed. If the issue was a connectivity issue then try to get the entity from the db
 					if (response.code() >= 502 && response.code() <= 504) {
@@ -329,15 +333,16 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 								if (result != null) {
 									// Found it! Return this entity and ignore the rest connection error
 									setCachedResult(options, response);
-									callback.onCompleted(result);
+									new Handler(Looper.getMainLooper()).post(() -> callback.onCompleted(result));
 								} else {
 									// Could not find the entity so notify of the error
-									callback.onError(
-											new DataOperationException(response.code() + ": " + response.message()));
+									new Handler(Looper.getMainLooper()).post(() -> callback.onError(
+											new DataOperationException(response.code() + ": " + response.message())));
 								}
 							} catch (Exception ex) {
 								// An exception occurred while trying to get the entity from the db
-								callback.onError(new DataOperationException(ex));
+								new Handler(Looper.getMainLooper()).post(() ->
+										callback.onError(new DataOperationException(ex)));
 							}
 						}).start();
 					} else {
@@ -359,14 +364,15 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 							if (result != null) {
 								// Found it! Return this entity and ignore the rest exception
 								setCachedResult(options, result);
-								callback.onCompleted(result);
+								new Handler(Looper.getMainLooper()).post(() -> callback.onCompleted(result));
 							} else {
 								// Could not find the entity so notify of the error
-								callback.onError(new DataOperationException(t));
+								new Handler(Looper.getMainLooper()).post(() ->
+										callback.onError(new DataOperationException(t)));
 							}
 						} catch (Exception ex) {
 							// An exception occurred while trying to get the entity from the db
-							callback.onError(new DataOperationException(ex));
+							new Handler(Looper.getMainLooper()).post(() -> callback.onError(new DataOperationException(ex)));
 						}
 					}).start();
 				} else {

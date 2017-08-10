@@ -1,8 +1,12 @@
 package org.openmrs.mobile.data.rest.impl;
 
+import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.rest.BaseEntityRestService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.retrofit.VisitRestService;
+import org.openmrs.mobile.models.RecordInfo;
+import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
@@ -34,5 +38,12 @@ public class VisitRestServiceImpl extends BaseEntityRestService<Visit, VisitRest
 				visitUuid, updatedVisit.getVisitType().getUuid(),
 				DateUtils.convertTime(updatedVisit.getStartDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT),
 				updatedVisit.getAttributes());
+	}
+
+	public Call<Results<RecordInfo>> getRecordInfoByPatient(String patientUuid, QueryOptions options,
+			PagingInfo pagingInfo) {
+		return restService.getRecordInfoByPatient(buildRestRequestPath(), patientUuid,
+				RestConstants.Representations.RECORD_INFO, QueryOptions.getIncludeInactive(options),
+				PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo));
 	}
 }

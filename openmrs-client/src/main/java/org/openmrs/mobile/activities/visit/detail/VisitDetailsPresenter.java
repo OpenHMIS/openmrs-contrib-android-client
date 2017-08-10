@@ -25,6 +25,7 @@ import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Visit;
@@ -92,7 +93,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		visitDataService.getByUuid(visitUUID, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
+		visitDataService.getByUuid(visitUUID, QueryOptions.FULL_REP, getSingleCallback);
 	}
 
 	@Override
@@ -111,7 +112,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 				Log.e("error", t.getLocalizedMessage());
 			}
 		};
-		conceptDataService.getByConceptName(name, QueryOptions.LOAD_RELATED_OBJECTS, getCallback);
+		conceptDataService.getByConceptName(name, QueryOptions.FULL_REP, getCallback);
 
 	}
 
@@ -137,8 +138,14 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	private void loadVisitAttributeTypes() {
 		visitDetailsView.showTabSpinner(true);
+
+		QueryOptions options = new QueryOptions.Builder()
+				.cacheKey(ApplicationConstants.CacheKays.VISIT_ATTRIBUTE_TYPE)
+				.customRepresentation(RestConstants.Representations.FULL)
+				.build();
+
 		visitAttributeTypeDataService
-				.getAll(new QueryOptions(ApplicationConstants.CacheKays.VISIT_ATTRIBUTE_TYPE, true), new PagingInfo(0, 100),
+				.getAll(options, new PagingInfo(0, 100),
 						new DataService.GetCallback<List<VisitAttributeType>>() {
 							@Override
 							public void onCompleted(List<VisitAttributeType> entities) {

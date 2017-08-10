@@ -8,6 +8,8 @@ import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 
 import retrofit2.Call;
@@ -31,5 +33,9 @@ public class VisitTaskRestServiceImpl extends BaseEntityRestService<VisitTask, V
 		return restService.getAll(buildRestRequestPath(), status, patient_uuid, visit_uuid,
 				QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
 				PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo));
+	}
+
+	public Call<Results<VisitTask>> getAllSince(String visitUuid, Date since, QueryOptions options, PagingInfo pagingInfo) {
+		return null;
 	}
 }

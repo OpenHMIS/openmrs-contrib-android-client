@@ -6,7 +6,7 @@ import dagger.Component;
 import org.openmrs.mobile.application.OpenMRS;
 
 @Singleton
-@Component(modules = ApplicationModule.class)
+@Component(modules = { ApplicationModule.class, DbModule.class })
 public interface ApplicationComponent {
 	void inject(OpenMRS openMRS);
 }

@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class PatientDbServiceTest extends BaseAuditableDbServiceTest<Patient> {
 	@Override
 	protected BaseDbService<Patient> getDbService() {
-		return new PatientDbService();
+		return null;
 	}
 
 	@Override

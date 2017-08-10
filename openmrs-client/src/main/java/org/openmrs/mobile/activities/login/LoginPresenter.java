@@ -24,6 +24,7 @@ import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.SessionDataService;
 import org.openmrs.mobile.data.impl.UserDataService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.retrofit.RestServiceBuilder;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Session;
@@ -141,7 +142,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 						RestServiceBuilder.applyDefaultBaseUrl();
 						//Instantiate the user service  here to use our new session
 						//userService = new UserDataService();
-						userService.getByUsername(username, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
+						userService.getByUsername(username, QueryOptions.FULL_REP, pagingInfo,
 								loginUsersFoundCallback);
 						loginView.userAuthenticated();
 						loginView.finishLoginActivity();
@@ -201,7 +202,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 			}
 		};
 
-		userService.getByUuid(uuid, new QueryOptions(true, true), fetchUserCallback);
+		userService.getByUuid(uuid, QueryOptions.INCLUDE_ALL_FULL_REP, fetchUserCallback);
 	}
 
 	@Override

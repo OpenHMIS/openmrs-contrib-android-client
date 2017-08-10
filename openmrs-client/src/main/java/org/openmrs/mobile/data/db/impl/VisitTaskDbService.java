@@ -7,10 +7,10 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.BaseEntityDbService;
 import org.openmrs.mobile.data.db.EntityDbService;
+import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.models.VisitTaskStatus;
 import org.openmrs.mobile.models.VisitTask_Table;
-import org.openmrs.mobile.models.VisitType;
 
 import java.util.List;
 
@@ -18,7 +18,9 @@ import javax.inject.Inject;
 
 public class VisitTaskDbService extends BaseEntityDbService<VisitTask> implements EntityDbService<VisitTask> {
 	@Inject
-	public VisitTaskDbService() { }
+	public VisitTaskDbService(Repository repository) {
+		super(repository);
+	}
 
 	@Override
 	protected ModelAdapter<VisitTask> getEntityTable() {

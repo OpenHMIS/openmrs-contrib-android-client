@@ -6,11 +6,8 @@ import android.support.annotation.Nullable;
 import org.openmrs.mobile.data.db.BaseMetadataDbService;
 import org.openmrs.mobile.data.rest.BaseMetadataRestService;
 import org.openmrs.mobile.models.BaseOpenmrsMetadata;
-import org.openmrs.mobile.models.Results;
 
 import java.util.List;
-
-import retrofit2.Call;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

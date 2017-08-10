@@ -81,7 +81,7 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 								.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 			}
 		};
-		visitPredefinedTaskDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo, callback);
+		visitPredefinedTaskDataService.getAll(QueryOptions.FULL_REP, pagingInfo, callback);
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 		visitTasksView.showTabSpinner(true);
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
 		// get open tasks
-		visitTaskDataService.getAll("OPEN", patientUUID, visitUUID, QueryOptions.LOAD_RELATED_OBJECTS,
+		visitTaskDataService.getAll("OPEN", patientUUID, visitUUID, QueryOptions.FULL_REP,
 				pagingInfo,
 				new DataService.GetCallback<List<VisitTask>>() {
 					@Override
@@ -97,7 +97,7 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 						visitTasksView.setOpenVisitTasks(visitTasksList);
 
 						// get closed tasks
-						visitTaskDataService.getAll("CLOSED", patientUUID, visitUUID, QueryOptions.LOAD_RELATED_OBJECTS,
+						visitTaskDataService.getAll("CLOSED", patientUUID, visitUUID, QueryOptions.FULL_REP,
 								pagingInfo,
 								new DataService.GetCallback<List<VisitTask>>() {
 									@Override
@@ -201,6 +201,6 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		visitDataService.getByUuid(visitUUID, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
+		visitDataService.getByUuid(visitUUID, QueryOptions.FULL_REP, getSingleCallback);
 	}
 }

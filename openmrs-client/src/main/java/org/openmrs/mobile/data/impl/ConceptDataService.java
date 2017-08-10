@@ -22,16 +22,11 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.ConceptDbService;
 import org.openmrs.mobile.data.rest.impl.ConceptRestServiceImpl;
-import org.openmrs.mobile.data.rest.retrofit.ConceptRestService;
 import org.openmrs.mobile.models.Concept;
-import org.openmrs.mobile.models.Results;
-import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import retrofit2.Call;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

@@ -27,6 +27,7 @@ import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.PatientIdentifierTypeDataService;
 import org.openmrs.mobile.data.impl.PersonAttributeTypeDataService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
@@ -186,8 +187,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 						.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 			}
 		};
+
 		//Just check if the identifier are the same. If not it saves the patient.
-		patientDataService.getByUuid(patientToUpdateUuid, new QueryOptions(false, true), singleCallback);
+		patientDataService.getByUuid(patientToUpdateUuid, QueryOptions.FULL_REP, singleCallback);
 	}
 
 	@Override
@@ -267,14 +269,14 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 						.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 			}
 		};
+
 		//Just check if the identifier are the same. If not it saves the patient.
-				patientDataService.getByIdentifier(patient.getIdentifier().getIdentifier(),
-						QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo, callback);
+		patientDataService.getByIdentifier(patient.getIdentifier().getIdentifier(), QueryOptions.FULL_REP, pagingInfo, callback);
 	}
 
 	@Override
 	public void getConceptAnswer(String uuid, Spinner dropdown) {
-		conceptDataService.getByUuid(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Concept>() {
+		conceptDataService.getByUuid(uuid, QueryOptions.FULL_REP, new DataService.GetCallback<Concept>() {
 			@Override
 			public void onCompleted(Concept concept) {
 				if (concept != null) {
@@ -319,17 +321,21 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 					}
 				};
 		patientIdentifierTypeDataService
-				.getAll(new QueryOptions(ApplicationConstants.CacheKays.PERSON_IDENTIFIER_TYPE, false), null,
-						callback);
+				.getAll(new QueryOptions.Builder().cacheKey(ApplicationConstants.CacheKays.PERSON_IDENTIFIER_TYPE).build(),
+						null, callback);
 	}
 
 	@Override
 	public List<PersonAttributeType> getPersonAttributeTypes() {
 		patientRegistrationView.showPageSpinner(true);
 		final List<PersonAttributeType> personAttributeTypes = new ArrayList<>();
+
+		QueryOptions options = new QueryOptions.Builder()
+				.cacheKey(ApplicationConstants.CacheKays.PERSON_ATTRIBUTE_TYPE)
+				.customRepresentation(RestConstants.Representations.FULL)
+				.build();
 		personAttributeTypeDataService
-				.getAll(new QueryOptions(ApplicationConstants.CacheKays.PERSON_ATTRIBUTE_TYPE, true), null, new DataService
-						.GetCallback<List<PersonAttributeType>>() {
+				.getAll(options, null, new DataService.GetCallback<List<PersonAttributeType>>() {
 					@Override
 					public void onCompleted(List<PersonAttributeType> entities) {
 
@@ -384,7 +390,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 										.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		locationDataService.getByUuid(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
+		locationDataService.getByUuid(locationUuid, QueryOptions.FULL_REP, getSingleCallback);
 	}
 
 	@Override

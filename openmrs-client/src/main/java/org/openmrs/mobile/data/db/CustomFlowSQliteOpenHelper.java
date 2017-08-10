@@ -1,7 +1,6 @@
 package org.openmrs.mobile.data.db;
 
 import com.raizlabs.android.dbflow.config.DatabaseDefinition;
-import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.structure.database.DatabaseHelperListener;
 import com.raizlabs.android.dbflow.structure.database.FlowSQLiteOpenHelper;
 

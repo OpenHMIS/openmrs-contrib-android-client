@@ -10,22 +10,22 @@ import java.util.Date;
 @Table(database = AppDatabase.class)
 public class PullSubscription extends BaseOpenmrsObject {
 	@Column
-	String subscriptionClass;
+	private String subscriptionClass;
 
 	@Column
-	String subscriptionKey;
+	private String subscriptionKey;
 
 	@Column
-	Date lastSync;
+	private Date lastSync;
 
 	@Column
-	Integer minimumInterval;
+	private Integer minimumInterval;
 
 	@Column
-	Integer maximumIncrementalCount;
+	private Integer maximumIncrementalCount;
 
 	@Column
-	Boolean forceSyncAfterPush;
+	private Boolean forceSyncAfterPush;
 
 	public String getSubscriptionClass() {
 		return subscriptionClass;
@@ -69,6 +69,10 @@ public class PullSubscription extends BaseOpenmrsObject {
 
 	public Boolean getForceSyncAfterPush() {
 		return forceSyncAfterPush;
+	}
+
+	Boolean isForceSyncAfterPush() {
+		return getForceSyncAfterPush();
 	}
 
 	public void setForceSyncAfterPush(Boolean forceSyncAfterPush) {

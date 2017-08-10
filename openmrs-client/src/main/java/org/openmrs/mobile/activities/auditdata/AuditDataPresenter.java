@@ -64,8 +64,8 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				t.printStackTrace();
 			}
 		};
-		conceptDataService.getByUuid(ApplicationConstants.AuditFormConcepts.CONCEPT_INPATIENT_SERVICE_TYPE, QueryOptions
-				.LOAD_RELATED_OBJECTS, conceptGetCallback);
+		conceptDataService.getByUuid(ApplicationConstants.AuditFormConcepts.CONCEPT_INPATIENT_SERVICE_TYPE,
+				QueryOptions.FULL_REP, conceptGetCallback);
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				t.printStackTrace();
 			}
 		};
-		visitDataService.getByUuid(visitUuid, QueryOptions.LOAD_RELATED_OBJECTS, fetchEncountersCallback);
+		visitDataService.getByUuid(visitUuid, QueryOptions.FULL_REP, fetchEncountersCallback);
 	}
 
 	private void fetchEncounter(String uuid) {
@@ -109,7 +109,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				t.printStackTrace();
 			}
 		};
-		encounterDataService.getByUuid(uuid, QueryOptions.LOAD_RELATED_OBJECTS, fetchEncountercallback);
+		encounterDataService.getByUuid(uuid, QueryOptions.FULL_REP, fetchEncountercallback);
 	}
 
 	@Override

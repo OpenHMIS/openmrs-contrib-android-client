@@ -8,7 +8,7 @@ import org.openmrs.mobile.models.Location;
 public class LocationDbServiceTest extends BaseMetadataDbServiceTest<Location> {
 	@Override
 	protected BaseDbService<Location> getDbService() {
-		return new LocationDbService();
+		return null;
 	}
 
 	@Override
