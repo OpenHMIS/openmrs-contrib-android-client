@@ -99,7 +99,7 @@
 								android:layout_marginBottom="5dp">
 
 							<TextView
-									android:id="@+id/visitDateLabel"
+									android:id="@+id/visitStartDateLabel"
 									android:layout_column="0"
 									android:layout_marginRight="@dimen/table_columns_margin"
 									android:gravity="left"
@@ -108,7 +108,38 @@
 									android:textSize="18sp" />
 
 							<android.support.design.widget.TextInputEditText
-									android:id="@+id/visitDateInput"
+									android:id="@+id/visitStartDateInput"
+									android:layout_width="match_parent"
+									android:layout_height="wrap_content"
+									android:layout_marginLeft="20dp"
+									android:layout_marginRight="20dp"
+									android:focusable="false"
+									android:nextFocusDown="@+id/estyr"
+									android:imeOptions="actionNext"
+									android:inputType="text"
+									android:maxLines="1"
+									android:textSize="14sp" />
+
+						</TableRow>
+
+						<TableRow
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginBottom="5dp">
+
+							<TextView
+									android:visibility="gone"
+									android:id="@+id/visitEndDateLabel"
+									android:layout_column="0"
+									android:layout_marginRight="@dimen/table_columns_margin"
+									android:gravity="left"
+									android:text="@string/end_visit_date"
+									android:textColor="@color/dark_grey"
+									android:textSize="18sp" />
+
+							<android.support.design.widget.TextInputEditText
+									android:visibility="gone"
+									android:id="@+id/visitEndDateInput"
 									android:layout_width="match_parent"
 									android:layout_height="wrap_content"
 									android:layout_marginLeft="20dp"

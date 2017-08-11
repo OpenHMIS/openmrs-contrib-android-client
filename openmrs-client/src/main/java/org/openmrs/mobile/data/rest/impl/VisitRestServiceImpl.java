@@ -13,7 +13,8 @@ import retrofit2.Call;
 
 public class VisitRestServiceImpl extends BaseEntityRestService<Visit, VisitRestService> {
 	@Inject
-	public VisitRestServiceImpl() { }
+	public VisitRestServiceImpl() {
+	}
 
 	@Override
 	protected String getRestPath() {
@@ -30,9 +31,17 @@ public class VisitRestServiceImpl extends BaseEntityRestService<Visit, VisitRest
 	}
 
 	public Call<Visit> updateVisit(String visitUuid, Visit updatedVisit) {
+		final String stopDateTime;
+		if (null != updatedVisit.getStopDatetime()) {
+			stopDateTime = DateUtils.convertTime(
+					updatedVisit.getStopDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT);
+		} else
+			stopDateTime = null;
+
 		return restService.updateVisit(ApplicationConstants.API.REST_ENDPOINT_V2 + "/custom/visitedit",
 				visitUuid, updatedVisit.getVisitType().getUuid(),
 				DateUtils.convertTime(updatedVisit.getStartDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT),
+				stopDateTime,
 				updatedVisit.getAttributes());
 	}
 }

@@ -1,6 +1,8 @@
 package org.openmrs.mobile.data.rest.impl;
 
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.rest.BaseMetadataRestService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.retrofit.LocationRestService;
 import org.openmrs.mobile.data.rest.retrofit.RestServiceBuilder;
 import org.openmrs.mobile.models.Location;
@@ -28,6 +30,7 @@ public class LocationRestServiceImpl extends BaseMetadataRestService<Location, L
 	public Call<Results<Location>> getLoginLocations(String url) {
 		restService = RestServiceBuilder.createService(LocationRestService.class, url, "", "");
 
-		return restService.getLoginLocations(buildRestRequestPath());
+		return restService.getLoginLocations(buildRestRequestPath(),
+				QueryOptions.getRepresentation(QueryOptions.LOAD_RELATED_OBJECTS));
 	}
 }

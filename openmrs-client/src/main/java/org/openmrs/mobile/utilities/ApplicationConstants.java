@@ -134,7 +134,7 @@ public abstract class ApplicationConstants {
 		public static final String CUSTOM_DIALOG_BUNDLE = "customDialogBundle";
 		public static final String PATIENT_UUID_BUNDLE = "patientUUID";
 		public static final String VISIT_UUID_BUNDLE = "visitUUID";
-		public static final String END_VISIT_TAG = "endVisitTag";
+		public static final String END_VISIT = "endVisit";
 		public static final String PROVIDER_UUID_BUNDLE = "providerUUID";
 		public static final String EncounterTypeEntity = "EncounterTypeEntity";
 		public static final String VALUEREFERENCE = "valueReference";

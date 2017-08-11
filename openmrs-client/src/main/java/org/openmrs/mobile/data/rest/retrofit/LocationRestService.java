@@ -29,6 +29,7 @@ public interface LocationRestService {
 			@Query("includeAll") Boolean includeAll);
 
 	@GET(RestConstants.LOCATION_PATH)
-	Call<Results<Location>> getLoginLocations(@Path(value = "restPath", encoded = true) String restPath);
+	Call<Results<Location>> getLoginLocations(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("v") String representation);
 
 }

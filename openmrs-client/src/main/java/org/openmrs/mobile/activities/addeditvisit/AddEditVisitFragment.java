@@ -51,7 +51,6 @@ import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,8 +67,8 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	private Map<String, VisitAttribute> visitAttributeMap = new HashMap<>();
 	private Map<View, VisitAttributeType> viewVisitAttributeTypeMap = new HashMap<>();
 	private String patientUuid, visitUuid, providerUuid, visitStopDate;
-	private EditText visitDateInput;
-	private TextView visitDateLabel;
+	private EditText visitStartDateInput, visitEndDateInput;
+	private TextView visitStartDateLabel, visitEndDateLabel;
 	private TableRow visitTypeRow;
 
 	public static AddEditVisitFragment newInstance() {
@@ -86,8 +85,10 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		addEditVisitScreen = (LinearLayout)root.findViewById(R.id.addEditVisitScreen);
 		visitTypeDropdown = (Spinner)root.findViewById(R.id.visit_type);
 		visitSubmitButton = (Button)root.findViewById(R.id.visitSubmitButton);
-		visitDateLabel = (TextView)root.findViewById(R.id.visitDateLabel);
-		visitDateInput = (EditText)root.findViewById(R.id.visitDateInput);
+		visitStartDateLabel = (TextView)root.findViewById(R.id.visitStartDateLabel);
+		visitEndDateLabel = (TextView)root.findViewById(R.id.visitEndDateLabel);
+		visitStartDateInput = (EditText)root.findViewById(R.id.visitStartDateInput);
+		visitEndDateInput = (EditText)root.findViewById(R.id.visitEndDateInput);
 		visitTypeRow = (TableRow)root.findViewById(R.id.visitTypeRow);
 
 		this.patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
@@ -108,47 +109,50 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			}
 		});
 
-		visitDateInput.setOnClickListener(v -> {
-			int cYear;
-			int cMonth;
-			int cDay;
+		visitStartDateInput.setOnClickListener(v -> {
+			DateTime dateTime = DateUtils.convertTimeString(
+					DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
+							DateUtils.OPEN_MRS_REQUEST_FORMAT));
 
-			DateTime dateTime = null;
-
-			if (!mPresenter.getEndVisitTag()) {
-				dateTime = DateUtils.convertTimeString(
-						DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
-								DateUtils.OPEN_MRS_REQUEST_FORMAT));
-			}
-
-			if (dateTime == null) {
-				Calendar currentDate = Calendar.getInstance();
-				cYear = currentDate.get(Calendar.YEAR);
-				cMonth = currentDate.get(Calendar.MONTH);
-				cDay = currentDate.get(Calendar.DAY_OF_MONTH);
-			} else {
-				cYear = dateTime.getYear();
-				cMonth = dateTime.getMonthOfYear() - 1;
-				cDay = dateTime.getDayOfMonth();
-			}
-
-			DatePickerDialog mDatePicker = new DatePickerDialog(AddEditVisitFragment.this.getActivity(),
-					(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) -> {
-						if (!mPresenter.getEndVisitTag()) {
-							mPresenter.getVisit()
-									.setStartDatetime(DateUtils.constructDate(selectedyear, selectedmonth, selectedday));
-							visitDateInput.setText(DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
-									DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
-						} else {
-							mPresenter.getVisit()
-									.setStopDatetime(DateUtils.constructDate(selectedyear, selectedmonth, selectedday));
-							visitDateInput.setText(DateUtils.convertTime(mPresenter.getVisit().getStopDatetime().getTime(),
-									DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
-						}
-					}, cYear, cMonth, cDay);
-			mDatePicker.getDatePicker().setMaxDate(System.currentTimeMillis());
-			mDatePicker.show();
+			createVisitDatePicker(dateTime, System.currentTimeMillis(), true);
 		});
+
+		visitEndDateInput.setOnClickListener(v -> {
+			if (mPresenter.getVisit().getStopDatetime() != null) {
+				DateTime dateTime = DateUtils.convertTimeString(
+						DateUtils.convertTime(mPresenter.getVisit().getStopDatetime().getTime(),
+								DateUtils.OPEN_MRS_REQUEST_FORMAT));
+
+				createVisitDatePicker(dateTime, 0, false);
+			}
+		});
+	}
+
+	private void createVisitDatePicker(DateTime dateTime, long maxDate, boolean startDate) {
+		int currentYear = dateTime.getYear();
+		int currentMonth = dateTime.getMonthOfYear() - 1;
+		int currentDay = dateTime.getDayOfMonth();
+
+		DatePickerDialog mDatePicker = new DatePickerDialog(AddEditVisitFragment.this.getActivity(),
+				(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) -> {
+					if (startDate) {
+						mPresenter.getVisit()
+								.setStartDatetime(DateUtils.constructDate(selectedyear, selectedmonth, selectedday));
+						visitStartDateInput.setText(DateUtils.convertTime(mPresenter.getVisit().getStartDatetime()
+										.getTime(),
+								DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
+					} else {
+						mPresenter.getVisit()
+								.setStopDatetime(DateUtils.constructDate(selectedyear, selectedmonth, selectedday));
+						visitEndDateInput.setText(DateUtils.convertTime(mPresenter.getVisit().getStopDatetime().getTime(),
+								DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
+					}
+				}, currentYear, currentMonth, currentDay);
+
+		if (maxDate > 0)
+			mDatePicker.getDatePicker().setMaxDate(maxDate);
+
+		mDatePicker.show();
 	}
 
 	@Override
@@ -161,13 +165,20 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			toolbar.setTitle(getString(R.string.label_edit_visit));
 		}
 
-		if (mPresenter.getVisit().getStartDatetime() != null && !mPresenter.getEndVisitTag()) {
-			visitDateInput.setText(
-					DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
+		visitStartDateInput.setText(
+				DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
+						DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
+
+		if (mPresenter.getVisit().getStopDatetime() != null) {
+			visitEndDateLabel.setVisibility(View.VISIBLE);
+			visitEndDateInput.setVisibility(View.VISIBLE);
+			visitEndDateInput.setText(
+					DateUtils.convertTime(mPresenter.getVisit().getStopDatetime().getTime(),
 							DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
-		} else {
-			visitDateInput.setText(
-					DateUtils.getDateToday(DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
+			if (mPresenter.isEndVisit()) {
+				visitStartDateInput.setVisibility(View.GONE);
+				visitStartDateLabel.setVisibility(View.GONE);
+			}
 		}
 
 		setSpinnerVisibility(false);
@@ -177,7 +188,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	public void loadEndVisitView() {
 		showPageSpinner(false);
 		visitSubmitButton.setText(R.string.label_end_visit);
-		visitDateLabel.setText(R.string.end_visit_date);
 		visitTypeRow.setVisibility(View.GONE);
 
 		visitSubmitButton.setOnClickListener(v -> {
@@ -307,7 +317,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 				VisitAttribute visitAttribute = new VisitAttribute();
 				visitAttribute.setValue(conceptAnswer.getUuid());
 				visitAttribute.setAttributeType(visitAttributeType);
-				visitAttributeMap.clear();
+				removeVisitAttributeTypeInMap(visitAttributeType, visitAttributeMap);
 				visitAttributeMap.put(conceptAnswer.getUuid(), visitAttribute);
 			}
 
@@ -315,6 +325,20 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			public void onNothingSelected(AdapterView<?> parent) {
 			}
 		});
+	}
+
+	private void removeVisitAttributeTypeInMap(VisitAttributeType visitAttributeType,
+			Map<String, VisitAttribute> visitAttributeMap) {
+		if (visitAttributeMap == null || visitAttributeType == null) {
+			return;
+		}
+
+		for (Map.Entry<String, VisitAttribute> set : visitAttributeMap.entrySet()) {
+			if (set.getValue().getAttributeType().equals(visitAttributeType)) {
+				visitAttributeMap.remove(set.getKey());
+				break;
+			}
+		}
 	}
 
 	@Override

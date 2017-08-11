@@ -229,7 +229,7 @@ public class VisitActivity extends ACBaseActivity {
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitClosedDate);
-				intent.putExtra(ApplicationConstants.BundleKeys.END_VISIT_TAG, true);
+				intent.putExtra(ApplicationConstants.BundleKeys.END_VISIT, true);
 				startActivityForResult(intent, END_VISIT_RESULT);
 				break;
 			case R.id.capture_vitals:

@@ -57,7 +57,7 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
     @Mock
     private AddEditVisitContract.View view;
     private AddEditVisitPresenter presenter;
-    private String patientUuid = "11-22-33-44";
+    private String patientUuid = "11-22-33-44", visitUuid = "24-65-9";
     private Patient patient;
     private Visit visit;
     private Location location;
@@ -66,8 +66,9 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
 
     @Before
     public void setUp(){
-	presenter = new AddEditVisitPresenter(view, patientUuid, false, visitDataService,
-                patientDataService, visitTypeDataService, visitAttributeTypeDataService, conceptAnswerDataService, locationDataService);
+        presenter = new AddEditVisitPresenter(view, patientUuid, null, false, visitDataService,
+                patientDataService, visitTypeDataService, visitAttributeTypeDataService,
+                conceptAnswerDataService, locationDataService);
 
         patient = new Patient();
         patient.setUuid(patientUuid);
@@ -117,11 +118,10 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback<List<Visit>>) invocation.getArguments()[3]).onCompleted(visits);
+                ((DataService.GetCallback<Visit>) invocation.getArguments()[2]).onCompleted(visit);
                 return null;
             }
-        }).when(visitDataService).getByPatient(any(Patient.class), any(QueryOptions.class), any(PagingInfo.class),
-                any(DataService.GetCallback.class));
+        }).when(visitDataService).getByUuid(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
 
         // load visit types callback
         doAnswer(new Answer<Void>() {
@@ -146,7 +146,7 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                visit.setUuid("24-65-9");
+                visit.setUuid(visitUuid);
                 ((DataService.GetCallback<Visit>) invocation.getArguments()[1]).onCompleted(visit);
                 return null;
             }

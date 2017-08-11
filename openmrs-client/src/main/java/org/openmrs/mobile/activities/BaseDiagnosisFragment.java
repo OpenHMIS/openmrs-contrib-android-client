@@ -89,6 +89,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 									.findConcept(searchDiagnosis.getText().toString(), getIBaseDiagnosisFragment());
 						}
 					}, SEARCH_DIAGNOSES_DELAY);
+				} else {
+					loadingProgressBar.setVisibility(View.GONE);
 				}
 			}
 		});
