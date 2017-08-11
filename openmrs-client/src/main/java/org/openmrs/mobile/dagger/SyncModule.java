@@ -27,38 +27,7 @@ public class SyncModule {
 	}
 
 	@Provides
-	@Singleton
-	public SyncAdapter providesSyncAdapter() {
-		return new SyncAdapter(context, true, providesSyncService());
-	}
-
-	@Provides
-	@Singleton
-	public SyncService providesSyncService() {
-		return new SyncService(providesSyncProvider(), providesSyncLogDbService(), providesPullSubscriptionDbService());
-	}
-
-	@Provides
-	@Singleton
-	public DbService<SyncLog> providesSyncLogDbService() {
-		return new SyncLogDbService();
-	}
-
-	@Provides
-	@Singleton
-	public DbService<PullSubscription> providesPullSubscriptionDbService() {
-		return new PullSubscriptionDbService();
-	}
-
-	@Provides
-	@Singleton
-	public SyncProvider providesSyncProvider() {
-		return new PushSyncProvider(providesPatientDbService());
-	}
-
-	@Provides
-	@Singleton
-	public DbService<Patient> providesPatientDbService() {
-		return new PatientDbService();
+	public Context providesContext() {
+		return this.context;
 	}
 }

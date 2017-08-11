@@ -13,7 +13,6 @@ import org.openmrs.mobile.models.Results;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.util.Objects;
 
 import retrofit2.Call;
 
@@ -146,7 +145,7 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 	}
 
 	@Override
-	public Call<Results<RecordInfo>> getRecordInfo() {
+	public Call<Results<RecordInfo>> getRecordInfo(QueryOptions options) {
 		if (getRecordInfoMethod == null) {
 			Log.w("Rest Service", "Attempt to call 'getRecordInfo' REST method but REST service method could not be found for "
 					+ "entity '" + entityClass.getName() + "'");
@@ -158,7 +157,7 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 
 		try {
 			Object result = getRecordInfoMethod.invoke(restService, buildRestRequestPath(),
-					RestConstants.Representations.RECORD_INFO);
+					RestConstants.Representations.RECORD_INFO, QueryOptions.getIncludeInactive(options));
 
 			if (result != null) {
 				call = (Call<Results<RecordInfo>>)result;

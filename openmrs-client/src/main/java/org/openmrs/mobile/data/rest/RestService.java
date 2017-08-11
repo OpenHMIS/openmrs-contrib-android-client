@@ -13,7 +13,7 @@ public interface RestService<E extends BaseOpenmrsObject> {
 
 	Call<Results<E>> getAll(QueryOptions options, PagingInfo pagingInfo);
 
-	Call<Results<RecordInfo>> getRecordInfo();
+	Call<Results<RecordInfo>> getRecordInfo(QueryOptions options);
 
 	Call<E> create(E entity);
 

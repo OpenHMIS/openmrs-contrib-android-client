@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.dagger.ReceiverComponent;
+import org.openmrs.mobile.utilities.TimeConstants;
 
 public class SyncManager {
 	// Sync constants
@@ -24,9 +25,8 @@ public class SyncManager {
 	// The account name (this isn't used by the app, but is needed for syncing)
 	private final String SYNC_ADAPTER_ACCOUNT = "syncAdapterAccount";
 	// Sync interval constants
-	private final long MILLISECONDS_PER_MINUTE = 60000L;
 	private final long SYNC_INTERVAL_IN_MINUTES = 5L;
-	private final long SYNC_INTERVAL_IN_MILLISECONDS = SYNC_INTERVAL_IN_MINUTES * MILLISECONDS_PER_MINUTE;
+	private final long SYNC_INTERVAL_IN_MILLISECONDS = SYNC_INTERVAL_IN_MINUTES * TimeConstants.MILLIS_PER_MINUTE;
 
 	private static final String ALARM_SYNC_INTENT = "alarmSyncIntent";
 

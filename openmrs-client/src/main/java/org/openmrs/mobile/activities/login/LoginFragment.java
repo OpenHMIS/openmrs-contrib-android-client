@@ -45,6 +45,7 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.listeners.watcher.LoginValidatorWatcher;
 import org.openmrs.mobile.models.Location;
+import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.ImageUtils;
@@ -61,19 +62,20 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.INVAL
 
 public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> implements LoginContract.View {
 
-	private static String mLoginUrl = "";
-	private static List<HashMap<String, String>> mLocationsList;
-	protected OpenMRS mOpenMRS = OpenMRS.getInstance();
-	private View mRootView;
-	private TextInputEditText mUrl, mUsername, mPassword;
-	private Button mLoginButton;
-	private ProgressBar mLoadingProgressBar;
-	private Spinner mDropdownLocation;
-	private SparseArray<Bitmap> mBitmapCache;
-	private LoginValidatorWatcher mLoginValidatorWatcher;
-	private TextView mChangeUrlIcon;
-	private TextInputLayout mLoginUrlTextLayout;
-	private View mViewsContainer;
+	private static String loginUrl = "";
+	private static List<HashMap<String, String>> locationsList;
+	protected OpenMRS openMRS = OpenMRS.getInstance();
+	private View rootView;
+	private TextInputEditText url, username, password;
+	private Button loginButton;
+	private ProgressBar loadingProgressBar;
+	private Spinner dropdownLocation;
+	private SparseArray<Bitmap> bitmapCache;
+	private LoginValidatorWatcher loginValidatorWatcher;
+	private TextView changeUrlIcon;
+	private TextInputLayout loginUrlTextLayout;
+	private View viewsContainer;
+	private AuthorizationManager authorizationManager;
 
 	public static LoginFragment newInstance() {
 		return new LoginFragment();
@@ -81,96 +83,101 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		mRootView = inflater.inflate(R.layout.fragment_login, container, false);
+		rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
-		if (mLoginUrl.equals(ApplicationConstants.EMPTY_STRING)) {
-			mLoginUrl = OpenMRS.getInstance().getServerUrl();
+		if (loginUrl.equals(ApplicationConstants.EMPTY_STRING)) {
+			loginUrl = OpenMRS.getInstance().getServerUrl();
 		}
-		initViewFields(mRootView);
+		initViewFields(rootView);
 		initListeners();
 		loadLocations();
+		authorizationManager = openMRS.getAuthorizationManager();
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 
-		return mRootView;
+		if (authorizationManager.hasUserSessionExpiredDueToInactivity()) {
+			mPresenter.userWasLoggedOutDueToInactivity();
+		}
+
+		return rootView;
 	}
 
 	private void initViewFields(View mRootView) {
-		mViewsContainer = mRootView.findViewById(R.id.viewsContainer);
-		mUrl = (TextInputEditText)mRootView.findViewById(R.id.loginUrlField);
-		mDropdownLocation = (Spinner)mRootView.findViewById(R.id.locationSpinner);
-		mUsername = (TextInputEditText)mRootView.findViewById(R.id.loginUsernameField);
-		mUsername.setText(OpenMRS.getInstance().getUsername());
-		mPassword = (TextInputEditText)mRootView.findViewById(R.id.loginPasswordField);
-		mLoginButton = (Button)mRootView.findViewById(R.id.loginButton);
-		mLoadingProgressBar = (ProgressBar)mRootView.findViewById(R.id.locationLoadingProgressBar);
-		mChangeUrlIcon = (TextView)mRootView.findViewById(R.id.changeUrlIcon);
-		mLoginUrlTextLayout = (TextInputLayout)mRootView.findViewById(R.id.loginUrlTextLayout);
-		mUrl.setText(mLoginUrl);
+		viewsContainer = mRootView.findViewById(R.id.viewsContainer);
+		url = (TextInputEditText)mRootView.findViewById(R.id.loginUrlField);
+		dropdownLocation = (Spinner)mRootView.findViewById(R.id.locationSpinner);
+		username = (TextInputEditText)mRootView.findViewById(R.id.loginUsernameField);
+		username.setText(OpenMRS.getInstance().getUsername());
+		password = (TextInputEditText)mRootView.findViewById(R.id.loginPasswordField);
+		loginButton = (Button)mRootView.findViewById(R.id.loginButton);
+		loadingProgressBar = (ProgressBar)mRootView.findViewById(R.id.locationLoadingProgressBar);
+		changeUrlIcon = (TextView)mRootView.findViewById(R.id.changeUrlIcon);
+		loginUrlTextLayout = (TextInputLayout)mRootView.findViewById(R.id.loginUrlTextLayout);
+		url.setText(loginUrl);
 	}
 
 	private void loadLocations() {
 
-		mLocationsList = new ArrayList<>();
-		String locationsStr = mOpenMRS.getLocations();
+		locationsList = new ArrayList<>();
+		String locationsStr = openMRS.getLocations();
 		if (StringUtils.notEmpty(locationsStr)) {
 			Gson gson = new Gson();
 			Type type = new TypeToken<List<HashMap<String, String>>>() {
 			}.getType();
-			mLocationsList = gson.fromJson(locationsStr, type);
+			locationsList = gson.fromJson(locationsStr, type);
 		}
 
-		if (mLocationsList.isEmpty()) {
-			mPresenter.loadLocations(mLoginUrl);
+		if (locationsList.isEmpty()) {
+			mPresenter.loadLocations(loginUrl);
 		} else {
-			updateLocationsSpinner(mLocationsList, mLoginUrl);
+			updateLocationsSpinner(locationsList, loginUrl);
 		}
 
 	}
 
 	private void initListeners() {
-		mChangeUrlIcon.setOnClickListener(view -> {
-			if (mLoginUrlTextLayout.getVisibility() == View.VISIBLE) {
+		changeUrlIcon.setOnClickListener(view -> {
+			if (loginUrlTextLayout.getVisibility() == View.VISIBLE) {
 				showEditUrlEditField(false);
 			} else {
 				showEditUrlEditField(true);
 			}
 		});
 
-		mLoginValidatorWatcher = new LoginValidatorWatcher(mUrl, mUsername, mPassword, mDropdownLocation, mLoginButton);
+		loginValidatorWatcher = new LoginValidatorWatcher(url, username, password, dropdownLocation, loginButton);
 
-		mUrl.setOnFocusChangeListener((view, b1) -> {
-			if (StringUtils.notEmpty(mUrl.getText().toString())
+		url.setOnFocusChangeListener((view, b1) -> {
+			if (StringUtils.notEmpty(url.getText().toString())
 					&& !view.isFocused()
-					&& mLoginValidatorWatcher.isUrlChanged()
-					|| (mLoginValidatorWatcher.isUrlChanged() && !view.isFocused()
-					&& mLoginValidatorWatcher.isLocationErrorOccurred())
-					|| (!mLoginValidatorWatcher.isUrlChanged() && !view.isFocused())) {
+					&& loginValidatorWatcher.isUrlChanged()
+					|| (loginValidatorWatcher.isUrlChanged() && !view.isFocused()
+					&& loginValidatorWatcher.isLocationErrorOccurred())
+					|| (!loginValidatorWatcher.isUrlChanged() && !view.isFocused())) {
 				((LoginFragment)getActivity()
 						.getSupportFragmentManager()
 						.findFragmentById(R.id.loginContentFrame))
-						.setUrl(mUrl.getText().toString());
-				mLoginValidatorWatcher.setUrlChanged(false);
+						.setUrl(url.getText().toString());
+				loginValidatorWatcher.setUrlChanged(false);
 			}
 		});
 
-		mLoginButton.setOnClickListener(v -> mPresenter.login(mUsername.getText().toString(),
-				mPassword.getText().toString(),
-				mUrl.getText().toString(),
-				mLoginUrl));
+		loginButton.setOnClickListener(v -> mPresenter.login(username.getText().toString(),
+				password.getText().toString(),
+				url.getText().toString(),
+				loginUrl));
 	}
 
 	public void login(boolean wipeDatabase) {
-		mPresenter.authenticateUser(mUsername.getText().toString(),
-				mPassword.getText().toString(),
-				mUrl.getText().toString(), wipeDatabase);
+		mPresenter.authenticateUser(username.getText().toString(),
+				password.getText().toString(),
+				url.getText().toString(), wipeDatabase);
 	}
 
 	private void showEditUrlEditField(boolean visibility) {
 		if (!visibility) {
-			mLoginUrlTextLayout.setVisibility(View.GONE);
+			loginUrlTextLayout.setVisibility(View.GONE);
 		} else {
-			mLoginUrlTextLayout.setVisibility(View.VISIBLE);
+			loginUrlTextLayout.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -213,16 +220,19 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 
 	@Override
 	public void userAuthenticated() {
-		mPresenter.saveLocationsInPreferences(mLocationsList, mDropdownLocation.getSelectedItemPosition());
-		Intent intent = new Intent(mOpenMRS.getApplicationContext(), PatientListActivity.class);
+		mPresenter.saveLocationsInPreferences(locationsList, dropdownLocation.getSelectedItemPosition());
+		Intent intent = new Intent(openMRS.getApplicationContext(), PatientListActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		mOpenMRS.getApplicationContext().startActivity(intent);
+		openMRS.getApplicationContext().startActivity(intent);
 		getActivity().finish();
 
 	}
 
 	@Override
 	public void finishLoginActivity() {
+		// Since the user has just logged in, update the interaction time so we don't have a (potentially) immediate
+		// re-login
+		authorizationManager.trackUserInteraction();
 		getActivity().finish();
 	}
 
@@ -241,23 +251,23 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	private void bindDrawableResources() {
-		mBitmapCache = new SparseArray<>();
+		bitmapCache = new SparseArray<>();
 		ImageView bandaHealthLogo = (ImageView)getActivity().findViewById(R.id.bandaHealthLogo);
 		createImageBitmap(R.drawable.banda_logo, bandaHealthLogo.getLayoutParams());
-		bandaHealthLogo.setImageBitmap(mBitmapCache.get(R.drawable.banda_logo));
+		bandaHealthLogo.setImageBitmap(bitmapCache.get(R.drawable.banda_logo));
 	}
 
 	private void createImageBitmap(Integer key, ViewGroup.LayoutParams layoutParams) {
-		if (mBitmapCache.get(key) == null) {
-			mBitmapCache.put(key, ImageUtils.decodeBitmapFromResource(getResources(), key,
+		if (bitmapCache.get(key) == null) {
+			bitmapCache.put(key, ImageUtils.decodeBitmapFromResource(getResources(), key,
 					layoutParams.width, layoutParams.height));
 		}
 	}
 
 	private void unbindDrawableResources() {
-		if (null != mBitmapCache) {
-			for (int i = 0; i < mBitmapCache.size(); i++) {
-				Bitmap bitmap = mBitmapCache.valueAt(i);
+		if (null != bitmapCache) {
+			for (int i = 0; i < bitmapCache.size(); i++) {
+				Bitmap bitmap = bitmapCache.valueAt(i);
 				bitmap.recycle();
 			}
 		}
@@ -265,8 +275,8 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 
 	@Override
 	public void updateLoginFormLocations(List<Location> locationsList, String serverURL) {
-		mLoginUrl = serverURL;
-		mUrl.setText(serverURL);
+		loginUrl = serverURL;
+		url.setText(serverURL);
 		List<HashMap<String, String>> items = null;
 		if (locationsList != null) {
 			items = getLocationStringList(locationsList);
@@ -278,10 +288,10 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	private void updateLocationsSpinner(List<HashMap<String, String>> locations, String serverURL) {
-		mLocationsList = locations;
+		locationsList = locations;
 		setProgressBarVisibility(true);
-		mLoginUrl = serverURL;
-		mUrl.setText(serverURL);
+		loginUrl = serverURL;
+		url.setText(serverURL);
 		int selectedLocation = 0;
 		int locationsSize = 0;
 		if (locations != null) {
@@ -298,8 +308,8 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		ArrayAdapter<String> adapter =
 				new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerArray);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mDropdownLocation.setAdapter(adapter);
-		mDropdownLocation.setSelection(selectedLocation);
+		dropdownLocation.setAdapter(adapter);
+		dropdownLocation.setSelection(selectedLocation);
 		setProgressBarVisibility(false);
 
 	}
@@ -319,7 +329,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		if (visible) {
 			ACBaseActivity.hideSoftKeyboard(getActivity());
 		}
-		mLoadingProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
+		loadingProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 
 	private List<HashMap<String, String>> getLocationStringList(List<Location> locationList) {

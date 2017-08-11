@@ -424,7 +424,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						break;
 					case ADD_VISIT_TASKS:
 						if (StringUtils.notEmpty(getAutoCompleteTextValue())) {
-							/*((VisitTasksActivity)getActivity()).mPresenter
+							/*((VisitTasksActivity)getActivity()).presenter
 									.createVisitTasksObject(getAutoCompleteTextValue());
 							dismiss();
 							break;*/

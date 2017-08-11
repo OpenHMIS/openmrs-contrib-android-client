@@ -14,32 +14,59 @@
 
 package org.openmrs.mobile.net;
 
+import javax.inject.Inject;
+
 import android.content.Intent;
 
+import org.joda.time.DateTime;
 import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
 public class AuthorizationManager {
 
-	protected OpenMRS mOpenMRS = OpenMRS.getInstance();
+	private DateTime lastUserInteraction;
+	private static final long DISCONNECT_TIMEOUT_HOURS = 4;
+	public static final long DISCONNECT_TIMEOUT_MILLIS = DISCONNECT_TIMEOUT_HOURS
+			* 60 * 60 * 1000; // 1 hr = 60 minutes * 60 seconds * 1000 ms
+
+	protected OpenMRS openMRS;
+
+	@Inject
+	public AuthorizationManager(OpenMRS openMRS) {
+		lastUserInteraction = DateTime.now();
+		this.openMRS = openMRS;
+	}
 
 	public boolean isUserNameOrServerEmpty() {
 		boolean result = false;
-		if (mOpenMRS.getUsername().equals(ApplicationConstants.EMPTY_STRING) ||
-				(mOpenMRS.getServerUrl().equals(ApplicationConstants.EMPTY_STRING))) {
+		if (openMRS.getUsername().equals(ApplicationConstants.EMPTY_STRING) ||
+				(openMRS.getServerUrl().equals(ApplicationConstants.EMPTY_STRING))) {
 			result = true;
 		}
 		return result;
 	}
 
+	public void invalidateUser() {
+		openMRS.setSessionToken(ApplicationConstants.EMPTY_STRING);
+	}
+
 	public boolean isUserLoggedIn() {
-		return !ApplicationConstants.EMPTY_STRING.equals(mOpenMRS.getSessionToken());
+		return !ApplicationConstants.EMPTY_STRING.equals(openMRS.getSessionToken());
 	}
 
 	public void moveToLoginActivity() {
-		Intent intent = new Intent(mOpenMRS.getApplicationContext(), LoginActivity.class);
+		Intent intent = new Intent(openMRS.getApplicationContext(), LoginActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		mOpenMRS.getApplicationContext().startActivity(intent);
+		openMRS.getApplicationContext().startActivity(intent);
+	}
+
+	public boolean hasUserSessionExpiredDueToInactivity() {
+		long durationSinceLastInteraction = DateTime.now().getMillis() - lastUserInteraction.getMillis();
+		return durationSinceLastInteraction >= DISCONNECT_TIMEOUT_MILLIS;
+	}
+
+	public void trackUserInteraction() {
+		lastUserInteraction = DateTime.now();
 	}
 }

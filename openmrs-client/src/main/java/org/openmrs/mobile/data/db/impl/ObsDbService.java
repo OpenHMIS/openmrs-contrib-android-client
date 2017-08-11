@@ -10,6 +10,7 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.db.DbService;
+import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Observation_Table;
@@ -22,7 +23,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ObsDbService extends BaseDbService<Observation> implements DbService<Observation> {
 	@Inject
-	public ObsDbService() { }
+	public ObsDbService(Repository repository) {
+		super(repository);
+	}
 
 	@Override
 	protected ModelAdapter<Observation> getEntityTable() {

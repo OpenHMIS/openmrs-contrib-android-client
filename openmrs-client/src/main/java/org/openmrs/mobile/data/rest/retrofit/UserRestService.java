@@ -1,7 +1,6 @@
 package org.openmrs.mobile.data.rest.retrofit;
 
 import org.openmrs.mobile.data.rest.RestConstants;
-import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.User;
 

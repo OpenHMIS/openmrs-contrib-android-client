@@ -7,7 +7,7 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.db.DbService;
-import org.openmrs.mobile.models.PatientListCondition_Table;
+import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.PatientListContext;
 import org.openmrs.mobile.models.PatientListContext_Table;
 
@@ -18,7 +18,9 @@ import javax.inject.Inject;
 public class PatientListContextDbService extends BaseDbService<PatientListContext>
 		implements DbService<PatientListContext> {
 	@Inject
-	public PatientListContextDbService() { }
+	public PatientListContextDbService(Repository repository) {
+		super(repository);
+	}
 
 	@Override
 	protected ModelAdapter<PatientListContext> getEntityTable() {

@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.sync.SyncManager;
 
 @Module
@@ -19,5 +20,11 @@ public class ApplicationModule {
 	@Singleton
 	public SyncManager provideSyncManager() {
 		return new SyncManager(openMRS, DaggerReceiverComponent.create());
+	}
+
+	@Provides
+	@Singleton
+	public AuthorizationManager provideAuthorizationManager() {
+		return new AuthorizationManager(openMRS);
 	}
 }

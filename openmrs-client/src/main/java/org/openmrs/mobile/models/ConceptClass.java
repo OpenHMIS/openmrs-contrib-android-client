@@ -19,6 +19,6 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import org.openmrs.mobile.data.db.AppDatabase;
 
 @Table(database = AppDatabase.class)
-public class ConceptClass extends Resource {
+public class ConceptClass extends BaseOpenmrsMetadata {
 
 }

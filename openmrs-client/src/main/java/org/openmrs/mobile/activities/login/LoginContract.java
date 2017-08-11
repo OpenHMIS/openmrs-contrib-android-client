@@ -51,6 +51,8 @@ public interface LoginContract {
 		void authenticateUser(final String username, final String password, final String url, boolean wipeDatabase);
 
 		void saveLocationsInPreferences(List<HashMap<String, String>> locationList, int selectedItemPosition);
+
+		void userWasLoggedOutDueToInactivity();
 	}
 
 }

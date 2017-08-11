@@ -7,11 +7,8 @@ import org.openmrs.mobile.data.db.BaseEntityDbService;
 import org.openmrs.mobile.data.rest.BaseEntityRestService;
 import org.openmrs.mobile.models.BaseOpenmrsEntity;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Results;
 
 import java.util.List;
-
-import retrofit2.Call;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

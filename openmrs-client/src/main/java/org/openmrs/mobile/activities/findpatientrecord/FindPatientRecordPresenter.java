@@ -81,7 +81,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 				findPatientView.setProgressBarVisibility(false);
 			}
 		};
-		patientDataService.getByNameOrIdentifier(query, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
+		patientDataService.getByNameOrIdentifier(query, QueryOptions.FULL_REP, pagingInfo,
 				getMultipleCallback);
 	}
 
@@ -89,7 +89,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 		findPatientView.setProgressBarVisibility(true);
 		setLoading(true);
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
-		patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
+		patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, QueryOptions.FULL_REP, pagingInfo,
 				new DataService.GetCallback<List<Patient>>() {
 					@Override
 					public void onCompleted(List<Patient> patients) {

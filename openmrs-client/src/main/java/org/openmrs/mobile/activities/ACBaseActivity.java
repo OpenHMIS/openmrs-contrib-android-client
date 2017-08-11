@@ -37,7 +37,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.auth.AUTH;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
@@ -46,21 +45,20 @@ import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
-import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class ACBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-	protected final OpenMRS mOpenMRS = OpenMRS.getInstance();
-	protected final OpenMRSLogger mOpenMRSLogger = mOpenMRS.getOpenMRSLogger();
-	protected FragmentManager mFragmentManager;
-	protected CustomFragmentDialog mCustomFragmentDialog;
+	protected final OpenMRS openMRS = OpenMRS.getInstance();
+	protected final OpenMRSLogger openMRSLogger = openMRS.getOpenMRSLogger();
+	protected FragmentManager fragmentManager;
+	protected CustomFragmentDialog customFragmentDialog;
 	protected DrawerLayout drawer;
-	protected AuthorizationManager mAuthorizationManager;
+	protected AuthorizationManager authorizationManager;
 	protected FrameLayout frameLayout;
-	private MenuItem mSyncbutton;
+	private MenuItem syncbutton;
 	private Toolbar toolbar;
 	private OpenMRS instance = OpenMRS.getInstance();
 
@@ -68,19 +66,25 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_acbase);
-		mFragmentManager = getSupportFragmentManager();
-		mAuthorizationManager = new AuthorizationManager();
+		fragmentManager = getSupportFragmentManager();
 		frameLayout = (FrameLayout)findViewById(R.id.content_frame);
 		intitializeToolbar();
 		intitializeNavigationDrawer();
+
+		authorizationManager = openMRS.getAuthorizationManager();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		supportInvalidateOptionsMenu();
-		if (!(this instanceof LoginActivity) && !mAuthorizationManager.isUserLoggedIn()) {
-			mAuthorizationManager.moveToLoginActivity();
+
+		boolean activityIsLoginActivity = this instanceof LoginActivity;
+		if (!activityIsLoginActivity && (!authorizationManager.isUserLoggedIn() ||
+				authorizationManager.hasUserSessionExpiredDueToInactivity())) {
+			authorizationManager.moveToLoginActivity();
+		} else if (!activityIsLoginActivity) {
+			authorizationManager.trackUserInteraction();
 		}
 	}
 
@@ -111,8 +115,8 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	}
 
 	public void logout() {
-		mOpenMRS.clearUserPreferencesData();
-		mAuthorizationManager.moveToLoginActivity();
+		openMRS.clearUserPreferencesData();
+		authorizationManager.moveToLoginActivity();
 		finish();
 	}
 
@@ -158,11 +162,11 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 
 	public void createAndShowDialog(CustomDialogBundle bundle, String tag) {
 		CustomFragmentDialog instance = CustomFragmentDialog.newInstance(bundle);
-		instance.show(mFragmentManager, tag);
+		instance.show(fragmentManager, tag);
 	}
 
 	public void moveUnauthorizedUserToLoginScreen() {
-		mOpenMRS.clearUserPreferencesData();
+		openMRS.clearUserPreferencesData();
 		Intent intent = new Intent(this, LoginActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		this.startActivity(intent);
@@ -173,8 +177,8 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	}
 
 	public void dismissCustomFragmentDialog() {
-		if (mCustomFragmentDialog != null) {
-			mCustomFragmentDialog.dismiss();
+		if (customFragmentDialog != null) {
+			customFragmentDialog.dismiss();
 		}
 	}
 
@@ -183,10 +187,10 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		bundle.setProgressViewMessage(getString(R.string.progress_dialog_message));
 		bundle.setProgressDialog(true);
 		bundle.setTitleViewMessage(dialogMessage);
-		mCustomFragmentDialog = CustomFragmentDialog.newInstance(bundle);
-		mCustomFragmentDialog.setCancelable(false);
-		mCustomFragmentDialog.setRetainInstance(true);
-		mCustomFragmentDialog.show(mFragmentManager, dialogMessage);
+		customFragmentDialog = CustomFragmentDialog.newInstance(bundle);
+		customFragmentDialog.setCancelable(false);
+		customFragmentDialog.setRetainInstance(true);
+		customFragmentDialog.show(fragmentManager, dialogMessage);
 	}
 
 	public void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
@@ -216,7 +220,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		Menu menu = navigationView.getMenu();
 		MenuItem logoutMenuItem = menu.findItem(R.id.navLogout);
 		if (logoutMenuItem != null) {
-			logoutMenuItem.setTitle(getString(R.string.action_logout) + " " + mOpenMRS.getUsername());
+			logoutMenuItem.setTitle(getString(R.string.action_logout) + " " + openMRS.getUsername());
 		}
 		navigationView.setNavigationItemSelectedListener(this);
 	}
@@ -233,12 +237,12 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		drawer.closeDrawer(GravityCompat.START);
 		switch (selectedId) {
 			case R.id.navItemFindPatientRecord:
-				Intent intent = new Intent(mOpenMRS.getApplicationContext(), FindPatientRecordActivity.class);
+				Intent intent = new Intent(openMRS.getApplicationContext(), FindPatientRecordActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivity(intent);
 				break;
 			case R.id.navItemPatientLists:
-				intent = new Intent(mOpenMRS.getApplicationContext(), PatientListActivity.class);
+				intent = new Intent(openMRS.getApplicationContext(), PatientListActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivity(intent);
 				break;

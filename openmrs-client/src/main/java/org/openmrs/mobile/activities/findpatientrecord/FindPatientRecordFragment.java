@@ -110,7 +110,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
-		authorizationManager = new AuthorizationManager();
+		authorizationManager = openMRS.getAuthorizationManager();
 		if (authorizationManager.isUserLoggedIn()) {
 			if (!OpenMRS.getInstance().getSearchQuery().equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
 				mPresenter.findPatient(OpenMRS.getInstance().getSearchQuery());

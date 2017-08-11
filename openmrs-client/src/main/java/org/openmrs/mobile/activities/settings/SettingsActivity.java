@@ -41,7 +41,7 @@ public class SettingsActivity extends ACBaseActivity {
 			addFragmentToActivity(getSupportFragmentManager(), settingsFragment, R.id.contentFrame);
 		}
 
-		mPresenter = new SettingsPresenter(settingsFragment, mOpenMRS);
+		mPresenter = new SettingsPresenter(settingsFragment, openMRS);
 	}
 
 	@Override

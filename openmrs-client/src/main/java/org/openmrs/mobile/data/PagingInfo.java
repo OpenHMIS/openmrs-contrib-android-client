@@ -7,6 +7,10 @@ import android.support.annotation.Nullable;
  * 1-based, defining either as 0 will cause paging to be ignored.
  */
 public class PagingInfo {
+	/**
+	 * Sets the page size to 10,000 so that all results will be included and the server-defined default limit won't be used.
+	 */
+	public static final PagingInfo ALL = new PagingInfo(1,10000);
 
 	private int page;
 	private int pageSize;

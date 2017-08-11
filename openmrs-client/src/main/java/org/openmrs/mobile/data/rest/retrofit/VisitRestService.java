@@ -1,6 +1,7 @@
 package org.openmrs.mobile.data.rest.retrofit;
 
 import org.openmrs.mobile.data.rest.RestConstants;
+import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
@@ -52,6 +53,14 @@ public interface VisitRestService {
 
 	@GET(RestConstants.REST_PATH)
 	Call<Results<Visit>> getByPatient(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("patient") String patientUuid,
+			@Query("v") String representation,
+			@Query("includeInactive") Boolean includeAll,
+			@Query("limit") int limit,
+			@Query("startIndex") int startIndex);
+
+	@GET(RestConstants.REST_PATH)
+	Call<Results<RecordInfo>> getRecordInfoByPatient(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("patient") String patientUuid,
 			@Query("v") String representation,
 			@Query("includeInactive") Boolean includeAll,

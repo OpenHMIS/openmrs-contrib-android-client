@@ -82,6 +82,9 @@ public abstract class ACBaseFragment<T extends BasePresenterContract> extends Fr
 			case ApplicationConstants.ErrorCodes.USER_NOT_FOUND:
 				message = getString(R.string.err_fetching_user_data);
 				break;
+			case ApplicationConstants.ErrorCodes.LOGOUT_DUE_TO_INACTIVITY:
+				message = getString(R.string.logout_due_to_inactivity);
+				break;
 		}
 
 		createSnackbar(message);

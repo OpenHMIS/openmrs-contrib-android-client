@@ -237,6 +237,7 @@
 	
 	<string name="snackbar_edit">EDIT</string>
 	<string name="invalid_login_or_password_message">Invalid login or password, please try again.</string>
+	<string name="logout_due_to_inactivity">You have been logged out due to inactivity.</string>
 	
 	
 	<string name="settings_application_info">Application Info</string>

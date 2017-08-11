@@ -22,7 +22,7 @@ import org.openmrs.mobile.activities.ACBaseActivity;
 
 public class LoginActivity extends ACBaseActivity {
 
-	public LoginContract.Presenter mPresenter;
+	public LoginContract.Presenter presenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class LoginActivity extends ACBaseActivity {
 					loginFragment, R.id.loginContentFrame);
 		}
 
-		mPresenter = new LoginPresenter(loginFragment, mOpenMRS);
+		presenter = new LoginPresenter(loginFragment, openMRS);
 
 	}
 

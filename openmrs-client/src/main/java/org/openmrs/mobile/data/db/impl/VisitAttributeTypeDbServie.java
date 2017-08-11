@@ -5,6 +5,7 @@ import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.db.DbService;
+import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitAttributeType_Table;
 
@@ -12,7 +13,9 @@ import javax.inject.Inject;
 
 public class VisitAttributeTypeDbServie extends BaseDbService<VisitAttributeType> implements DbService<VisitAttributeType> {
 	@Inject
-	public VisitAttributeTypeDbServie() { }
+	public VisitAttributeTypeDbServie(Repository repository) {
+		super(repository);
+	}
 
 	@Override
 	protected ModelAdapter<VisitAttributeType> getEntityTable() {

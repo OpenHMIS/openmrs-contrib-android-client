@@ -66,7 +66,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void fetchPatientData(String uuid) {
 		patientDashboardView.showPageSpinner(true);
-		patientDataService.getByUuid(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
+		patientDataService.getByUuid(uuid, QueryOptions.FULL_REP, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
 				setPatient(patient);
@@ -113,7 +113,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 				setLoading(false);
 			}
 		};
-		visitDataService.getByPatient(patient, new QueryOptions(true, true), pagingInfo, fetchVisitsCallback);
+		visitDataService.getByPatient(patient, QueryOptions.INCLUDE_ALL_FULL_REP, pagingInfo, fetchVisitsCallback);
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		patientDashboardView.showPageSpinner(true);
 		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
 		if (StringUtils.notEmpty(personUuid)) {
-			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null,
+			providerDataService.getAll(QueryOptions.FULL_REP, null,
 					new DataService.GetCallback<List<Provider>>() {
 						@Override
 						public void onCompleted(List<Provider> entities) {
@@ -170,7 +170,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 				}
 			};
 
-			locationDataService.getByUuid(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
+			locationDataService.getByUuid(locationUuid, QueryOptions.FULL_REP, locationDataServiceCallback);
 		}
 
 	}

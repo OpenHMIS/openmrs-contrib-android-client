@@ -3,8 +3,8 @@ package org.openmrs.mobile.activities;
 import android.util.Log;
 import android.view.View;
 
-import org.openmrs.mobile.dagger.DaggerDataAccess;
-import org.openmrs.mobile.dagger.DataAccess;
+import org.openmrs.mobile.dagger.DaggerDataAccessComponent;
+import org.openmrs.mobile.dagger.DataAccessComponent;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -21,25 +21,25 @@ import java.util.List;
 
 public class BaseDiagnosisPresenter {
 
-	private ConceptDataService conceptSearchDataService;
+	private ConceptDataService conceptDataService;
 	private ObsDataService obsDataService;
 	private VisitNoteDataService visitNoteDataService;
 	private int page = 0;
 	private int limit = 20;
 	private List<String> obsUuids = new ArrayList<>();
-	private DataAccess dataAccess;
+	private DataAccessComponent dataAccess;
 
 	public BaseDiagnosisPresenter() {
-		dataAccess = DaggerDataAccess.create();
+		dataAccess = DaggerDataAccessComponent.create();
 
-		this.conceptSearchDataService = dataAccess.concept();
+		this.conceptDataService = dataAccess.concept();
 		this.obsDataService = dataAccess.obs();
 		this.visitNoteDataService = dataAccess.visitNote();
 	}
 
 	public void findConcept(String searchQuery, IBaseDiagnosisFragment base) {
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
-		conceptSearchDataService.findConcept(searchQuery, QueryOptions.DEFAULT, pagingInfo, new DataService
+		conceptDataService.findConcept(searchQuery, new QueryOptions.Builder().build(), pagingInfo, new DataService
 				.GetCallback<List<Concept>>() {
 
 			@Override
@@ -71,7 +71,7 @@ public class BaseDiagnosisPresenter {
 
 	private void getObservation(Observation obs, Encounter encounter, IBaseDiagnosisFragment base) {
 		obsDataService
-				.getByUuid(obs.getUuid(), QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Observation>() {
+				.getByUuid(obs.getUuid(), QueryOptions.FULL_REP, new DataService.GetCallback<Observation>() {
 					@Override
 					public void onCompleted(Observation entity) {
 						obsUuids.add(entity.getUuid());

@@ -45,7 +45,7 @@ public class PatientListActivity extends ACBaseActivity {
 					patientListFragment, R.id.patientListContentFrame);
 		}
 
-		if (mAuthorizationManager.isUserLoggedIn()) {
+		if (authorizationManager.isUserLoggedIn()) {
 			patientListPresenter = new PatientListPresenter(patientListFragment);
 		}
 	}

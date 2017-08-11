@@ -3,32 +3,21 @@ package org.openmrs.mobile.data;
 import android.support.annotation.Nullable;
 
 import org.openmrs.mobile.data.rest.RestConstants;
+import org.openmrs.mobile.utilities.StringUtils;
 
 public class QueryOptions {
 	private static final boolean DEFAULT_INCLUDE_INACTIVE = false;
-	private static final boolean DEFAULT_LOAD_RELATED_OBJECTS = false;
 
-	public static final QueryOptions DEFAULT = new QueryOptions(false, false);
-	public static final QueryOptions INCLUDE_INACTIVE = new QueryOptions(true, false);
-	public static final QueryOptions LOAD_RELATED_OBJECTS = new QueryOptions(false, true);
+	public static final QueryOptions INCLUDE_ALL_FULL_REP =
+			new Builder().includeInactive(true).customRepresentation(RestConstants.Representations.FULL).build();
+	public static final QueryOptions FULL_REP =
+			new Builder().customRepresentation(RestConstants.Representations.FULL).build();
 
 	private String cacheKey;
 	private boolean includeInactive = DEFAULT_INCLUDE_INACTIVE;
-	private boolean loadRelatedObjects = DEFAULT_LOAD_RELATED_OBJECTS;
+	private String customRepresentation;
 
-	public QueryOptions() {
-		this(DEFAULT_INCLUDE_INACTIVE, DEFAULT_LOAD_RELATED_OBJECTS);
-	}
-
-	public QueryOptions(boolean includeInactive, boolean loadRelatedObjects) {
-		this.includeInactive = includeInactive;
-		this.loadRelatedObjects = loadRelatedObjects;
-	}
-
-	public QueryOptions(String cacheKey, boolean loadRelatedObjects) {
-		this.cacheKey = cacheKey;
-		this.loadRelatedObjects = loadRelatedObjects;
-	}
+	public QueryOptions() { }
 
 	public static String getCacheKey(@Nullable QueryOptions options) {
 		return options == null ? null : options.getCacheKey();
@@ -38,12 +27,14 @@ public class QueryOptions {
 		return options == null ? DEFAULT_INCLUDE_INACTIVE : options.includeInactive();
 	}
 
-	public static boolean getLoadRelatedObjects(@Nullable QueryOptions options) {
-		return options == null ? DEFAULT_LOAD_RELATED_OBJECTS : options.loadRelatedObjects();
-	}
-
 	public static String getRepresentation(@Nullable QueryOptions options) {
-		return getLoadRelatedObjects(options) ? RestConstants.Representations.FULL : RestConstants.Representations.DEFAULT;
+		String result = RestConstants.Representations.DEFAULT;
+
+		if (options != null && StringUtils.notEmpty(options.getCustomRepresentation())) {
+			result = options.getCustomRepresentation();
+		}
+
+		return result;
 	}
 
 	public String getCacheKey() {
@@ -62,11 +53,46 @@ public class QueryOptions {
 		this.includeInactive = includeInactive;
 	}
 
-	public boolean loadRelatedObjects() {
-		return loadRelatedObjects;
+	public String getCustomRepresentation() {
+		return customRepresentation;
 	}
 
-	public void setLoadRelatedObjects(boolean loadRelatedObjects) {
-		this.loadRelatedObjects = loadRelatedObjects;
+	public void setCustomRepresentation(String customRepresentation) {
+		this.customRepresentation = customRepresentation;
+	}
+
+	public static class Builder {
+		private boolean includeInactive = DEFAULT_INCLUDE_INACTIVE;
+		private String cacheKey;
+		private String customRepresentation;
+
+		public Builder() { }
+
+		public Builder includeInactive(boolean includeInactive) {
+			this.includeInactive = includeInactive;
+
+			return this;
+		}
+
+		public Builder cacheKey(String cacheKey) {
+			this.cacheKey = cacheKey;
+
+			return this;
+		}
+
+		public Builder customRepresentation(String customRepresentation) {
+			this.customRepresentation = customRepresentation;
+
+			return this;
+		}
+
+		public QueryOptions build() {
+			QueryOptions instance = new QueryOptions();
+			instance.setIncludeInactive(includeInactive);
+			instance.setCacheKey(cacheKey);
+			instance.setCustomRepresentation(customRepresentation);
+
+			return instance;
+		}
 	}
 }

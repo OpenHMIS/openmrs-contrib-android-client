@@ -4,9 +4,13 @@ import android.util.Log;
 
 import org.joda.time.DateTime;
 import org.joda.time.Period;
-import org.openmrs.mobile.data.db.DbService;
+import org.openmrs.mobile.data.DataOperationException;
+import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
+import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.SyncLog;
+import org.openmrs.mobile.utilities.NetworkUtils;
+import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -16,18 +20,23 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class SyncService {
+	public static final String TAG = "Sync Service";
+
 	private static final Object SYNC_LOCK = new Object();
 
-	private SyncProvider syncProvider;
-	private DbService<SyncLog> syncLogDbService;
-	private DbService<PullSubscription> subscriptionDbService;
+	private SyncLogDbService syncLogDbService;
+	private PullSubscriptionDbService subscriptionDbService;
+	private DaggerProviderHelper providerHelper;
+
+	private NetworkUtils networkUtils;
 
 	@Inject
-	public SyncService(SyncProvider syncProvider, DbService<SyncLog> syncLogDbService,
-			DbService<PullSubscription> subscriptionDbService) {
-		this.syncProvider = syncProvider;
+	public SyncService(SyncLogDbService syncLogDbService, PullSubscriptionDbService subscriptionDbService,
+			DaggerProviderHelper providerHelper, NetworkUtils networkUtils) {
 		this.syncLogDbService = syncLogDbService;
 		this.subscriptionDbService = subscriptionDbService;
+		this.providerHelper = providerHelper;
+		this.networkUtils = networkUtils;
 	}
 
 	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
@@ -46,11 +55,13 @@ public class SyncService {
 	protected void push() {
 		List<SyncLog> records = syncLogDbService.getAll(null, null);
 
+		/*
 		for (SyncLog record : records) {
 			syncProvider.sync(record);
 
 			syncLogDbService.delete(record);
 		}
+		*/
 	}
 
 	/**
@@ -72,25 +83,38 @@ public class SyncService {
 				// Try to get the cached subscription provider
 				SubscriptionProvider provider = subscriptionProviders.get(sub.getSubscriptionClass());
 				if (provider == null) {
-					// Load the provider from the class name defined as the subscription class
-					try {
-						Class<?> cls = Class.forName(sub.getSubscriptionClass());
-						provider = (SubscriptionProvider) cls.newInstance();
+					provider = providerHelper.getSubscriptionProvider(sub.getSubscriptionClass());
 
-						subscriptionProviders.put(sub.getSubscriptionClass(), provider);
-					} catch (Exception e) {
-						provider = null;
-						Log.e("Sync", "Could not load class '" + sub.getSubscriptionClass() + "'");
-					}
+					subscriptionProviders.put(sub.getSubscriptionClass(), provider);
 				}
 
 				// If the provider was instantiated then execute it
 				if (provider != null) {
-					provider.initialize(sub);
-					provider.pull(sub);
+					try {
+						// Get the date before starting the pull process so that server changes while the provider is
+						// processing don't get lost
+						Date lastSync = new Date();
 
-					// Update the last synced time to the current date time
-					sub.setLastSync(new Date());
+						provider.initialize(sub);
+						provider.pull(sub);
+
+						sub.setLastSync(lastSync);
+					} catch (DataOperationException doe) {
+						Log.w(TAG, "Data exception occurred while processing subscription provider '" +
+										sub.getSubscriptionClass() + ":" +
+										(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
+												sub.getSubscriptionKey()) + "'", doe);
+
+						// Check to see if we're still online, if not, then stop the sync
+						if (!networkUtils.hasNetwork()) {
+							break;
+						}
+					} catch (Exception ex) {
+						Log.e(TAG, "An exception occurred while processing subscription provider '" +
+										sub.getSubscriptionClass() + ":" +
+										(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
+												sub.getSubscriptionKey()) + "'", ex);
+					}
 				}
 			}
 		}
