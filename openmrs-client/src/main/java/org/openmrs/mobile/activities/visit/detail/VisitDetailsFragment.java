@@ -168,10 +168,12 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		if (visit != null) {
 			setVisitDates(visit);
 			setVisitType(visit);
-			setVitals(visit);
-			setClinicalNote(visit);
-			setDiagnoses(visit);
-			setAuditData(visit);
+			if (visit.getEncounters() != null) {
+				setVitals(visit);
+				setClinicalNote(visit);
+				setDiagnoses(visit);
+				setAuditData(visit);
+			}
 		}
 	}
 
@@ -265,17 +267,18 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	@Override
 	public void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes) {
 		visitAttributesLayout.removeAllViews();
-		if (visit.getAttributes().size() == 0) {
-			for (VisitAttributeType visitAttributeType : visitAttributeTypes) {
-				createVisitAttributeTypesLayout(visitAttributeType);
-			}
-		} else {
-			for (VisitAttribute visitAttribute : visit.getAttributes()) {
-				loadVisitAttributeType(visitAttribute, visitAttributeTypes);
-				createVisitAttributeLayout(visitAttribute);
+		if (visit.getAttributes() != null) {
+			if (visit.getAttributes().size() == 0) {
+				for (VisitAttributeType visitAttributeType : visitAttributeTypes) {
+					createVisitAttributeTypesLayout(visitAttributeType);
+				}
+			} else {
+				for (VisitAttribute visitAttribute : visit.getAttributes()) {
+					loadVisitAttributeType(visitAttribute, visitAttributeTypes);
+					createVisitAttributeLayout(visitAttribute);
+				}
 			}
 		}
-
 	}
 
 	@Override
@@ -396,7 +399,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 				if ((visit.getEncounters().get(i).getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) || visit.getEncounters()
 						.get(i).getEncounterType().getDisplay().equalsIgnoreCase(ApplicationConstants
-								.EncounterTypeDisplays.AUDITDATA)&& !visit.getEncounters().get(i).getVoided())) {
+								.EncounterTypeDisplays.AUDITDATA) && !visit.getEncounters().get(i).getVoided())) {
 
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						auditDataMetadata.setVisibility(View.VISIBLE);

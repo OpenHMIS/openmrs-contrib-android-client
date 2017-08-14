@@ -83,8 +83,10 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 	public void processRelationships() {
 		super.processRelationships();
 
-		processRelatedObjects(encounters);
-		processRelatedObjects(attributes);
+		//processRelatedObjects(encounters);
+		//processRelatedObjects(attributes);
+		processRelatedObjects(attributes, (i) -> i.setVisit(this));
+		processRelatedObjects(encounters, (j) -> j.setVisit(this));
 	}
 
 	public Patient getPatient() {

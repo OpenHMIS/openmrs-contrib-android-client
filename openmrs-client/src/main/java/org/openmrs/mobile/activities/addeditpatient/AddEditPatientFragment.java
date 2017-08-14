@@ -460,11 +460,15 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			});
 
 			Person person = patient.getPerson();
-			edfname.setText(person.getName().getGivenName());
-			edmname.setText(person.getName().getMiddleName());
-			edlname.setText(person.getName().getFamilyName());
+			if (person.getName() != null) {
+				edfname.setText(person.getName().getGivenName());
+				edmname.setText(person.getName().getMiddleName());
+				edlname.setText(person.getName().getFamilyName());
 
-			patientName = person.getName().getNameString();
+				patientName = person.getName().getNameString();
+			} else {
+				patientName = ApplicationConstants.EMPTY_STRING;
+			}
 
 			if (StringUtils.notNull(person.getBirthdate()) || StringUtils.notEmpty(person.getBirthdate())) {
 				bdt = DateUtils.convertTimeString(person.getBirthdate());
@@ -473,15 +477,18 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 						DateUtils.DEFAULT_DATE_FORMAT));
 			}
 
-			if (("M").equals(person.getGender())) {
-				gen.check(R.id.male);
-			} else if (("F").equals(person.getGender())) {
-				gen.check(R.id.female);
+			if (person.getGender() != null) {
+				if (("M").equals(person.getGender())) {
+					gen.check(R.id.male);
+				} else if (("F").equals(person.getGender())) {
+					gen.check(R.id.female);
+				}
 			}
 
 			PatientIdentifier patientIdentifier = patient.getIdentifier();
-			fileNumber.setText(patientIdentifier.getIdentifier());
-
+			if (patient.getIdentifier() != null) {
+				fileNumber.setText(patientIdentifier.getIdentifier());
+			}
 		}
 	}
 

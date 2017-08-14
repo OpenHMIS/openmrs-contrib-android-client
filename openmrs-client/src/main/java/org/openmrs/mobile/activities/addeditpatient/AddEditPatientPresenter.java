@@ -354,7 +354,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 							patientRegistrationView.loadPersonAttributeTypes(personAttributeTypes);
 							patientRegistrationView.showPageSpinner(false);
 						} else {
-							patientRegistrationView.showPageSpinner(true);
+							patientRegistrationView.showPageSpinner(false);
 							patientRegistrationView
 									.showToast(ApplicationConstants.entityName.ATTRIBUTE_TPYES + ApplicationConstants
 											.toastMessages.fetchWarningMessage, ToastUtil.ToastType.WARNING);

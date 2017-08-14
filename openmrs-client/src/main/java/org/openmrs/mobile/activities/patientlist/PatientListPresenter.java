@@ -18,7 +18,6 @@ import android.support.annotation.NonNull;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
-import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.PatientListContextDataService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.models.PatientList;
@@ -130,11 +129,13 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 						} else {
 							setViewAfterLoadData(false);
 							patientListView.updatePatientListData(entities);
-							setTotalNumberResults(pagingInfo.getTotalRecordCount());
-							if (pagingInfo.getTotalRecordCount() > 0) {
-								patientListView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
-								totalNumberPages = pagingInfo.getTotalPages();
-								patientListView.updatePagingLabel(page, totalNumberPages);
+							if (pagingInfo.getTotalRecordCount() != null) {
+								setTotalNumberResults(pagingInfo.getTotalRecordCount());
+								if (pagingInfo.getTotalRecordCount() > 0) {
+									patientListView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
+									totalNumberPages = pagingInfo.getTotalPages();
+									patientListView.updatePagingLabel(page, totalNumberPages);
+								}
 							}
 						}
 						setLoading(false);
