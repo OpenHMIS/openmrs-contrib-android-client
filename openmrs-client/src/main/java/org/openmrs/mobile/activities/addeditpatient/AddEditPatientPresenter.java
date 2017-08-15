@@ -356,7 +356,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 						} else {
 							patientRegistrationView.showPageSpinner(false);
 							patientRegistrationView
-									.showToast(ApplicationConstants.entityName.ATTRIBUTE_TPYES + ApplicationConstants
+									.showToast(ApplicationConstants.entityName.ATTRIBUTE_TYPES + ApplicationConstants
 											.toastMessages.fetchWarningMessage, ToastUtil.ToastType.WARNING);
 						}
 					}

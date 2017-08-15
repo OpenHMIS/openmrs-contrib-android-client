@@ -66,6 +66,7 @@ import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.PersonAddress;
 import org.openmrs.mobile.models.PersonAttribute;
 import org.openmrs.mobile.models.PersonAttributeType;
+import org.openmrs.mobile.models.PersonGenderEnum;
 import org.openmrs.mobile.models.PersonName;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
@@ -100,7 +101,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private RadioGroup gen;
 	private Button submitConfirm;
 	private String patientUuuid;
-	private String patientName;
+	private String patientName = ApplicationConstants.EMPTY_STRING;
 	private File output = null;
 	private OpenMRSLogger logger = new OpenMRSLogger();
 	/*
@@ -466,8 +467,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 				edlname.setText(person.getName().getFamilyName());
 
 				patientName = person.getName().getNameString();
-			} else {
-				patientName = ApplicationConstants.EMPTY_STRING;
 			}
 
 			if (StringUtils.notNull(person.getBirthdate()) || StringUtils.notEmpty(person.getBirthdate())) {
@@ -478,9 +477,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			}
 
 			if (person.getGender() != null) {
-				if (("M").equals(person.getGender())) {
+				if (PersonGenderEnum.MALE.toString().equals(person.getGender())) {
 					gen.check(R.id.male);
-				} else if (("F").equals(person.getGender())) {
+				} else if (PersonGenderEnum.FEMALE.toString().equals(person.getGender())) {
 					gen.check(R.id.female);
 				}
 			}

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.PersonGenderEnum;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 
@@ -55,8 +56,9 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 				patient.getPerson().getName().getNameString() :
 				ApplicationConstants.EMPTY_STRING);
 		if (patient.getPerson().getGender() != null) {
-			patientGender.setImageResource(patient.getPerson().getGender().equalsIgnoreCase("f") ? R.drawable.female : R
-					.drawable.male);
+			patientGender.setImageResource(
+					patient.getPerson().getGender().equalsIgnoreCase(PersonGenderEnum.FEMALE.toString()) ?
+							R.drawable.female : R.drawable.male);
 		}
 		fileNumber.setText(patient.getIdentifier() != null ?
 				patient.getIdentifier().getIdentifier() :

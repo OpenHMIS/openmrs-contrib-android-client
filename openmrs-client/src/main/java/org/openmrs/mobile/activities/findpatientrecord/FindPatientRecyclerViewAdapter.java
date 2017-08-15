@@ -27,6 +27,7 @@ import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.PersonGenderEnum;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 
@@ -71,7 +72,8 @@ class FindPatientRecyclerViewAdapter extends RecyclerView.Adapter<FindPatientRec
 
 		try {
 			holder.mGender.setImageResource(
-					patient.getPerson().getGender().equalsIgnoreCase("f") ? R.drawable.female : R.drawable.male);
+					patient.getPerson().getGender().equalsIgnoreCase(PersonGenderEnum.FEMALE.toString()) ?
+							R.drawable.female : R.drawable.male);
 
 		} catch (Exception e) {
 			holder.mGender.setImageResource(0);
