@@ -38,8 +38,6 @@ public interface PatientListContract {
 
 		void updatePatientListData(List<PatientListContext> patientListData);
 
-		void showPatientListScreen(boolean visibility);
-
 		void setSpinnerVisibility(boolean visibility);
 
 		boolean isActive();

@@ -91,7 +91,6 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 							patientLists = entities;
 							patientListView.showPatientListProgressSpinner(false);
 							patientListView.setNoPatientListsVisibility(false);
-							patientListView.showPatientListScreen(true);
 							patientListView.updatePatientLists(entities);
 							if (StringUtils.notNull(patientListUuid)) {
 								getPatientListData(patientListUuid, getPage());

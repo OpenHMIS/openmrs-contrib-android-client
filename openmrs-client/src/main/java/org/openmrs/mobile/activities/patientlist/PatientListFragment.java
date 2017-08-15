@@ -165,11 +165,6 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	}
 
 	@Override
-	public void showPatientListScreen(boolean visibility) {
-		patientListScreen.setVisibility(visibility ? View.VISIBLE : View.GONE);
-	}
-
-	@Override
 	public void setSpinnerVisibility(boolean visible) {
 		patientListLoadingProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
 		if (visible) {

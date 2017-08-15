@@ -25,6 +25,8 @@ import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
+import java.util.List;
+
 public class AuditDataPresenter extends BasePresenter implements AuditDataContract.Presenter {
 
 	private AuditDataContract.View auditDataView;
@@ -75,11 +77,12 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			@Override
 			public void onCompleted(Visit visit) {
 				auditDataView.setVisit(visit);
-				if (visit.getEncounters() != null) {
-					for (int i = 0; i < visit.getEncounters().size(); i++) {
-						if (visit.getEncounters().get(i).getEncounterType().getUuid().equalsIgnoreCase(ApplicationConstants
-								.EncounterTypeEntity.AUDIT_DATA_UUID) && !visit.getEncounters().get(i).getVoided()) {
-							fetchEncounter(visit.getEncounters().get(i).getUuid());
+				List<Encounter> encounterList = visit.getEncounters();
+				if (encounterList != null) {
+					for (int i = 0; i < encounterList.size(); i++) {
+						if (encounterList.get(i).getEncounterType().getUuid().equalsIgnoreCase(ApplicationConstants
+								.EncounterTypeEntity.AUDIT_DATA_UUID) && !encounterList.get(i).getVoided()) {
+							fetchEncounter(encounterList.get(i).getUuid());
 						}
 					}
 				}
