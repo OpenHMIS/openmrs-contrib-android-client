@@ -485,7 +485,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			}
 
 			PatientIdentifier patientIdentifier = patient.getIdentifier();
-			if (patient.getIdentifier() != null) {
+			if (patientIdentifier != null) {
 				fileNumber.setText(patientIdentifier.getIdentifier());
 			}
 		}

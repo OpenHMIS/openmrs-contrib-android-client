@@ -271,7 +271,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		};
 
 		//Just check if the identifier are the same. If not it saves the patient.
-		patientDataService.getByIdentifier(patient.getIdentifier().getIdentifier(), QueryOptions.FULL_REP, pagingInfo, callback);
+		patientDataService
+				.getByIdentifier(patient.getIdentifier().getIdentifier(), QueryOptions.FULL_REP, pagingInfo, callback);
 	}
 
 	@Override
@@ -285,7 +286,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 					} else {
 						dropdown.setPrompt(ApplicationConstants.KIN_RELATIONSHIP);
 					}
-					patientRegistrationView.updateConceptAnswerView(dropdown, concept.getAnswers());
+					if (concept.getAnswers() != null) {
+						patientRegistrationView.updateConceptAnswerView(dropdown, concept.getAnswers());
+					}
 				}
 
 			}
