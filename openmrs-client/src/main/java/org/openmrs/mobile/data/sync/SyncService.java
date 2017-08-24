@@ -20,7 +20,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class SyncService {
-	public static final String TAG = "Sync Service";
+	public static final String TAG = "Sync Service"; // Make private and use reflection for 'getSimpleName()'
 
 	private static final Object SYNC_LOCK = new Object();
 
@@ -79,7 +79,7 @@ public class SyncService {
 				seconds = p.getSeconds();
 			}
 
-			if (seconds == null || seconds < sub.getMinimumInterval()) {
+			if (seconds == null || seconds < sub.getMinimumInterval()) { // Need to update logic to say 'seconds >= sub.getMinimumInterval()' and add check to see if sub.getMinimumInterval() != null
 				// Try to get the cached subscription provider
 				SubscriptionProvider provider = subscriptionProviders.get(sub.getSubscriptionClass());
 				if (provider == null) {

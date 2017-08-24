@@ -26,7 +26,7 @@ import javax.inject.Inject;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class VisitPullProvider {
-	private static final int SYNC_VISIT_COUNT = 3;
+	private static final int SYNC_VISIT_COUNT = 3; // make this a constant from a constants file along with PatientDashboardPresenter
 
 	private VisitDbService visitDbService;
 	private VisitRestServiceImpl visitRestService;

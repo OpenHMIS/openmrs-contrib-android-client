@@ -17,7 +17,7 @@ import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class PatientListPullProvider {
+public class PatientListPullProvider { // rename class to 'PatientPullProvider'
 	private PatientDbService patientDbService;
 	private PatientRestServiceImpl patientRestService;
 
@@ -28,7 +28,7 @@ public class PatientListPullProvider {
 		this.patientRestService = patientRestService;
 	}
 
-	public void pull(@NonNull PullSubscription subscription, @NonNull List<RecordInfo> patienInfo) {
+	public void pull(@NonNull PullSubscription subscription, @NonNull List<RecordInfo> patienInfo) { // fix typo in second parameter
 		checkNotNull(subscription);
 		checkNotNull(patienInfo);
 

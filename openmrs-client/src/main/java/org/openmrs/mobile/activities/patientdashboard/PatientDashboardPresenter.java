@@ -42,7 +42,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private ProviderDataService providerDataService;
 	private int startIndex = 0;
 	private int totalNumberResults;
-	private int limit = 10;
+	private int limit = 10;  // make this a constant from a constants file along with VisitPullProvider
 	private int page;
 	private Patient patient;
 	private boolean loading;
