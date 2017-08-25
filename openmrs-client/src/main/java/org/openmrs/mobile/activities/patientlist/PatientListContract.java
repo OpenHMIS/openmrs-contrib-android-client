@@ -32,6 +32,8 @@ public interface PatientListContract {
 
 		void setNoPatientListsVisibility(boolean visibility);
 
+		void showPatientListRecyclerView(boolean visibility);
+
 		void updatePatientLists(List<PatientList> patientList);
 
 		void updatePatientListData(List<PatientListContext> patientListData);

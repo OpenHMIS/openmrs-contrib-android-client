@@ -172,7 +172,7 @@ public abstract class ApplicationConstants {
 		public static final String PATIENTS = "Patient(s)";
 		public static final String LAST_VIEWED_PATIENT = "Last Viewed Patient(s)";
 		public static final String CIVIL_STATUS = "Civil Status";
-		public static final String ATTRIBUTE_TPYES = "Attribute Type(s)";
+		public static final String ATTRIBUTE_TYPES = "Attribute Type(s)";
 		public static final String IDENTIFIER_TPYES = "Identifier Type(s)";
 		public static final String PREDEFINED_TASKS = "Predefined task(s)";
 		public static final String VISITS = "Visit(s)";

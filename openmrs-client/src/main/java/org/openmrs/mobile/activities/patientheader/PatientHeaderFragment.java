@@ -9,10 +9,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.PersonGenderEnum;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 
 public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.Presenter>
@@ -51,14 +52,26 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 
 	@Override
 	public void updatePatientHeader(Patient patient) {
-		patientDisplayName.setText(patient.getPerson().getName().getNameString());
-		patientGender.setImageResource(patient.getPerson().getGender().equalsIgnoreCase("f") ? R.drawable.female : R
-				.drawable.male);
-		fileNumber.setText(patient.getIdentifier().getIdentifier());
-		DateTime date = DateUtils.convertTimeString(patient.getPerson().getBirthdate());
-		patientAge.setText(DateUtils.calculateAge(patient.getPerson().getBirthdate()));
-		patientDob.setText(
-				DateUtils.convertTime1(patient.getPerson().getBirthdate(), DateUtils.DATE_FORMAT));
+		patientDisplayName.setText(patient.getPerson().getName() != null ?
+				patient.getPerson().getName().getNameString() :
+				ApplicationConstants.EMPTY_STRING);
+		if (patient.getPerson().getGender() != null) {
+			patientGender.setImageResource(
+					patient.getPerson().getGender().equalsIgnoreCase(PersonGenderEnum.FEMALE.toString()) ?
+							R.drawable.female : R.drawable.male);
+		}
+		fileNumber.setText(patient.getIdentifier() != null ?
+				patient.getIdentifier().getIdentifier() :
+				ApplicationConstants.EMPTY_STRING);
+		if (patient.getPerson().getBirthdate() != null) {
+			patientAge.setText(DateUtils.calculateAge(patient.getPerson().getBirthdate()));
+			patientDob.setText(
+					DateUtils.convertTime1(patient.getPerson().getBirthdate(), DateUtils.DATE_FORMAT));
+		} else {
+			patientAge.setText(ApplicationConstants.EMPTY_STRING);
+			patientDob.setText(ApplicationConstants.EMPTY_STRING);
+		}
+
 	}
 
 	@Override
