@@ -575,7 +575,13 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			if (componentType instanceof RadioButton) {
 				personAttribute.setValue(((RadioButton)componentType).isChecked());
 			} else if (componentType instanceof EditText) {
-				personAttribute.setValue(ViewUtils.getInput((EditText)componentType));
+				if(ViewUtils.isValidInput((EditText) componentType)){
+					personAttribute.setValue(ViewUtils.getInput((EditText)componentType));
+				}else{
+					String errorMessage = ((EditText) componentType).getHint().toString() +
+							"has invalid characters";
+					ToastUtil.error(errorMessage);
+				}
 			}
 
 			if (personAttribute.getValue() != null) {
