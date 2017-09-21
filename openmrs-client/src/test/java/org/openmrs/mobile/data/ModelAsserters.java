@@ -47,6 +47,21 @@ public class ModelAsserters {
 	public static final VisitAttributeAsserter VISIT_ATTRIBUTE = new VisitAttributeAsserter();
 	public static final VistTypeAsserter VISIT_TYPE = new VistTypeAsserter();
 
+	public static void assertListContainsUuid(List<? extends BaseOpenmrsObject> list, String uuid) {
+		Assert.assertNotNull(list);
+		Assert.assertNotNull(uuid);
+		Assert.assertFalse("List is empty", list.size() == 0);
+		Assert.assertFalse("Uuid is empty", uuid.isEmpty());
+
+		for (BaseOpenmrsObject obj : list) {
+			if (obj.getUuid().equalsIgnoreCase(uuid)) {
+				return;
+			}
+		}
+
+		Assert.fail("Entity with uuid '" + uuid + "' not found in list.");
+	}
+
 	public interface ModelAsserter<E> {
 		void assertModel(E expected, E actual);
 	}
@@ -75,7 +90,7 @@ public class ModelAsserters {
 				Assert.assertNotNull(actual);
 				Assert.assertEquals(expected.size(), actual.size());
 
-				for (int i = 0; i<expected.size(); i++) {
+				for (int i = 0; i < expected.size(); i++) {
 					Assert.assertNotNull(expected.get(i));
 					Assert.assertNotNull(actual.get(i));
 
@@ -91,7 +106,7 @@ public class ModelAsserters {
 				Assert.assertNotNull(actual);
 				Assert.assertEquals(expected.size(), actual.size());
 
-				for (int i = 0; i<expected.size(); i++) {
+				for (int i = 0; i < expected.size(); i++) {
 					asserter.assertModel(expected.get(i), actual.get(i));
 				}
 			}

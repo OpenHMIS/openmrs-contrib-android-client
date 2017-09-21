@@ -87,35 +87,22 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	private final static int IMAGE_REQUEST = 1;
 	private static LinearLayout.LayoutParams marginParams;
-	private LinearLayout linearLayout;
 	private LocalDate birthdate, patientEncouterDate;
 	private DateTime bdt;
-	private EditText edfname;
-	private EditText edmname;
-	private EditText edlname;
-	private EditText eddob;
-	private EditText edyr;
-	private EditText edmonth;
-	private EditText fileNumber;
+	private EditText edfname, edmname, edlname, eddob, edyr, edmonth, fileNumber;
 	private RadioGroup gen;
 	private Button submitConfirm;
-	private String patientUuuid;
-	private String patientName;
+	private String patientUuuid, patientName;
 	private File output = null;
 	private OpenMRSLogger logger = new OpenMRSLogger();
 	/*
 	*TextViews defination
 	 *  */
-	private TextView fnameerror;
-	private TextView lnameerror;
-	private TextView doberror;
-	private TextView gendererror;
-	private TextView addrerror;
-	private TextView fileNumberError;
+	private TextView fileNumberError, attributesError, fnameerror, lnameerror, doberror, gendererror, addrerror;
 	private PatientIdentifierType patientIdentifierType;
 	private Map<String, PersonAttribute> personAttributeMap = new HashMap<>();
 	private Map<View, PersonAttributeType> viewPersonAttributeTypeMap = new HashMap<>();
-	private LinearLayout personLinearLayout;
+	private LinearLayout personLinearLayout, linearLayout;
 	private ScrollView addPatientScrollView;
 	private Location loginLocation;
 	private OpenMRS instance = OpenMRS.getInstance();
@@ -146,6 +133,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		doberror = (TextView)v.findViewById(R.id.doberror);
 		gendererror = (TextView)v.findViewById(R.id.gendererror);
 		fileNumberError = (TextView)v.findViewById(R.id.fileNumberError);
+		attributesError = (TextView)v.findViewById(R.id.attributesError);
 
 		submitConfirm = (Button)v.findViewById(R.id.submitConfirm);
 		addEditPatientProgressBar = (RelativeLayout)v.findViewById(R.id.addEditPatientProgressBar);
@@ -196,7 +184,12 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		doberror.setVisibility(dayOfBirthError ? View.VISIBLE : View.GONE);
 		gendererror.setVisibility(genderError ? View.VISIBLE : View.GONE);
 		fileNumberError.setVisibility(patientFileNumberError ? View.VISIBLE : View.GONE);
-
+		if (phonenumber_Error) {
+			attributesError.setText(getString(R.string.phonenumber_required));
+			attributesError.setVisibility(View.VISIBLE);
+		} else {
+			attributesError.setVisibility(View.GONE);
+		}
 	}
 
 	private Person createPerson() {
@@ -344,6 +337,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			if (datatypeClass.equalsIgnoreCase("java.lang.Boolean")) {
 				AppCompatRadioButton booleanType = new AppCompatRadioButton(getContext());
 				booleanType.setLayoutParams(marginParams);
+				booleanType.setText(personAttributeType.getDisplay());
 
 				// set default value
 				Boolean defaultValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
@@ -393,6 +387,14 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	@Override
 	public void updateConceptAnswerView(Spinner conceptNamesDropdown, List<ConceptAnswer> conceptAnswers) {
 		PersonAttributeType personAttributeType = viewPersonAttributeTypeMap.get(conceptNamesDropdown);
+		ConceptAnswer conceptAnswer = new ConceptAnswer();
+		conceptAnswer.setUuid(ApplicationConstants.EMPTY_STRING);
+		if (conceptNamesDropdown.getPrompt().toString().equalsIgnoreCase(ApplicationConstants.CIVIL_STATUS)) {
+			conceptAnswer.setDisplay(ApplicationConstants.CIVIL_STATUS);
+		} else {
+			conceptAnswer.setDisplay(ApplicationConstants.KIN_RELATIONSHIP);
+		}
+		conceptAnswers.add(0, conceptAnswer);
 		ArrayAdapter<ConceptAnswer> conceptNameArrayAdapter = new ArrayAdapter<>(this.getActivity(),
 				android.R.layout.simple_spinner_dropdown_item, conceptAnswers);
 		conceptNamesDropdown.setAdapter(conceptNameArrayAdapter);
@@ -415,16 +417,17 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				ConceptAnswer conceptAnswer = conceptAnswers.get(position);
-				PersonAttribute personAttribute = searchPersonAttribute(personAttributeType.getUuid());
-				if (personAttribute == null) {
-					personAttribute = new PersonAttribute();
-					personAttribute.setAttributeType(personAttributeType);
-					personAttribute.setValue(conceptAnswer.getUuid());
-					personAttributeMap.put(conceptAnswer.getUuid(), personAttribute);
-				} else {
-					personAttribute.setValue(conceptAnswer.getUuid());
+				if (!conceptAnswer.getUuid().equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
+					PersonAttribute personAttribute = searchPersonAttribute(personAttributeType.getUuid());
+					if (personAttribute == null) {
+						personAttribute = new PersonAttribute();
+						personAttribute.setAttributeType(personAttributeType);
+						personAttribute.setValue(conceptAnswer.getUuid());
+						personAttributeMap.put(conceptAnswer.getUuid(), personAttribute);
+					} else {
+						personAttribute.setValue(conceptAnswer.getUuid());
+					}
 				}
-
 			}
 
 			@Override

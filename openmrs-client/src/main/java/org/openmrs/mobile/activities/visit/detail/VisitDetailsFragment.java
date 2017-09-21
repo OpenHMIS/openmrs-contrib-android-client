@@ -436,7 +436,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 				if (encounter.getEncounterType().getDisplay()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
-						setEncounterUuid(encounter.getUuid());
+						setEncounter(encounter);
 						visitNoteAuditInfo.setVisibility(View.VISIBLE);
 						visitNoteDate
 								.setText(DateUtils.convertTime(visit.getEncounters().get(i).getEncounterDatetime()
@@ -452,8 +452,8 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 						}
 					}
 
-					for (int v = 0; v < encounter.getObs().size(); v++) {
-						ArrayList<String> clinicalNote = StringUtils.splitStrings(encounter.getObs().get(v).getDisplay(),
+					for (Observation obs : encounter.getObs()) {
+						ArrayList<String> clinicalNote = StringUtils.splitStrings(obs.getDisplay(),
 								ApplicationConstants.ObservationLocators.CLINICAL_NOTE);
 						if (clinicalNote.size() > 1) {
 							initialClinicNoteHashcode = clinicalNote.get(1).hashCode();

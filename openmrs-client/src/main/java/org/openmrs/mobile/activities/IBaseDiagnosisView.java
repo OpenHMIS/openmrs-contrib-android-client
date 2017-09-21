@@ -1,6 +1,7 @@
 package org.openmrs.mobile.activities;
 
 import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterDiagnosis;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
@@ -11,7 +12,7 @@ public interface IBaseDiagnosisView {
 
 	void showTabSpinner(boolean show);
 
-	void saveVisitNote(String encounterUuid, String clinicalNote, Visit visit);
+	void saveVisitNote(Encounter encounter, String clinicalNote, Visit visit);
 
 	void createEncounterDiagnosis(Observation observation, String diagnosis, String conceptNameId, boolean loadRecyclerView);
 

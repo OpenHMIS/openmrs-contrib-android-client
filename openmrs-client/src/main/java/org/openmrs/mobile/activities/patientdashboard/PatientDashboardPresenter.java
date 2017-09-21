@@ -23,12 +23,12 @@ import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
-import org.openmrs.mobile.data.impl.ProviderDataService;
+import org.openmrs.mobile.data.impl.UserDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Provider;
+import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -42,7 +42,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private PatientDataService patientDataService;
 	private VisitDataService visitDataService;
 	private LocationDataService locationDataService;
-	private ProviderDataService providerDataService;
+	private UserDataService userDataService;
 	private int startIndex = 0;
 	private int totalNumberResults;
 	private Patient patient;
@@ -55,7 +55,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		this.openMRS = openMRS;
 		this.patientDataService = dataAccess().patient();
 		this.visitDataService = dataAccess().visit();
-		this.providerDataService = dataAccess().provider();
+		this.userDataService = dataAccess().user();
 		this.locationDataService = dataAccess().location();
 	}
 
@@ -104,8 +104,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 				patientDashboardView.patientContacts(patient);
 				patientDashboardView.patientVisits(visits);
 
-				if (!visits.isEmpty()) {
-					///patientDashboardView.showNoVisits(true);
+				if (!visits.isEmpty() && pagingInfo.getTotalRecordCount() != null) {
 					totalNumberResults = pagingInfo.getTotalRecordCount();
 				}
 				patientDashboardView.showPageSpinner(false);
@@ -139,18 +138,14 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	 * TODO: create a service to getProviderByPerson, move code to commons
 	 */
 	private void getCurrentProvider() {
-		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
-		if (StringUtils.notEmpty(personUuid)) {
-			providerDataService.getAll(QueryOptions.FULL_REP, null,
-					new DataService.GetCallback<List<Provider>>() {
+		String personUuid = openMRS.getCurrentUserUuid();
+		if (StringUtils.isNullOrEmpty(personUuid)) {
+			userDataService.getByUuid(openMRS.getLoginUserUuid(), QueryOptions.FULL_REP,
+					new DataService.GetCallback<User>() {
 						@Override
-						public void onCompleted(List<Provider> entities) {
-							for (Provider entity : entities) {
-								if (null != entity.getPerson() && personUuid
-										.equalsIgnoreCase(entity.getPerson().getUuid())) {
-									patientDashboardView.setProviderUuid(entity.getUuid());
-								}
-							}
+						public void onCompleted(User entity) {
+							openMRS.setCurrentUserUuid(entity.getPerson().getUuid());
+							patientDashboardView.setProviderUuid(entity.getPerson().getUuid());
 						}
 
 						@Override
@@ -158,6 +153,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 							ToastUtil.error(t.getMessage());
 						}
 					});
+		} else {
+			patientDashboardView.setProviderUuid(openMRS.getCurrentUserUuid());
 		}
 	}
 

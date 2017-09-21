@@ -10,6 +10,7 @@ import org.openmrs.mobile.data.CoreTestData;
 import org.openmrs.mobile.data.DBFlowRule;
 import org.openmrs.mobile.data.ModelAsserters;
 import org.openmrs.mobile.data.ModelGenerators;
+import org.openmrs.mobile.data.db.impl.RepositoryImpl;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -23,6 +24,8 @@ public abstract class BaseDbServiceTest<E extends BaseOpenmrsObject> {
 	protected BaseDbService<E> dbService;
 	protected ModelAsserters.ModelAsserter<E> asserter;
 	protected ModelGenerators.ModelGenerator<E> generator;
+
+	protected Repository repository = new RepositoryImpl();
 
 	protected abstract BaseDbService<E> getDbService();
 

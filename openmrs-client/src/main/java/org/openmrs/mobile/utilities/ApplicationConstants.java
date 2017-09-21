@@ -26,11 +26,13 @@ public abstract class ApplicationConstants {
 	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	//public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
+	//public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.210:9996/openmrs/"; This is to be used when
+	// testing this registration feature with the BK server
 	public static final String DEFAULT_OPEN_MRS_URL = "http://sandbox.openhmisafrica.org/openmrs/";
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
-	public static final String CIVIL_STATUS = "Civil Status";
-	public static final String KIN_RELATIONSHIP = "Kin Relationship";
+	public static final String CIVIL_STATUS_DISPLAY = "Civil Status";
+	public static final String CIVIL_STATUS = "Select Civil Status";
+	public static final String KIN_RELATIONSHIP = "Select Kin Relationship";
 
 	public abstract static class Preferences {
 		public static final String SHARED_PREFERENCES_NAME = "shared_preferences";
@@ -48,6 +50,7 @@ public abstract class ApplicationConstants {
 		public static final String PASSWORD = "password";
 		public static final String USER_PERSON_NAME = "userDisplay";
 		public static final String USER_UUID = "userUUID";
+		public static final String LOGIN_USER_UUID = "loginUserUUID";
 		public static final String LOGIN = "login";
 	}
 
@@ -115,7 +118,7 @@ public abstract class ApplicationConstants {
 	}
 
 	public abstract static class ObservationLocators {
-		public static final String CLINICAL_NOTE = "Text of encounter note:";
+		public static final String CLINICAL_NOTE = "Text of encounter note: ";
 		public static final String DIAGNOSES = "Visit Diagnoses";
 		public static final String PRIMARY_DIAGNOSIS = "Primary";
 		public static final String SECONDARY_DIAGNOSIS = "Secondary";
@@ -189,10 +192,12 @@ public abstract class ApplicationConstants {
 		public static final String BIRTH_PLACE_UUID = "8d8718c2-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String HEALTH_CENTER_UUID = "8d87236c-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String HEALTH_DISTRICT_UUID = "8d872150-c2cc-11de-8d13-0010c6dffd0f";
-		public static final String MOTHER_NAME_UUID = "8d871d18-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String RACE_UUID = "8d871386-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String UNKNOWN_PATIENT_UUID = "8b56eac7-5c76-4b9c-8c6f-1deab8d3fc47";
 		public static final String TEST_PATIENT_UUID = "4f07985c-88a5-4abd-aa0c-f3ec8324d8e7";
+		public static final String IS_DECEASED_UUID = "072a51fd-ef9c-4cdf-a50c-329125213d73";
+		public static final String FUNDING_SPONSOR_UUID = "69de9f94-f638-4b18-a3bb-c47ae4ae8f91";
+		public static final String FIRST_LANGUAGE_UUID = "9080b86a-3a1f-4682-a0d3-8b9ccc9520ba";
 	}
 
 	public abstract static class FORM_UUIDS {
@@ -352,5 +357,9 @@ public abstract class ApplicationConstants {
 
 	public static class PatientSummary {
 		public static final String SEARCH_PATIENT_SUMMARY_CONFLICT = "[Author";
+	}
+
+	public static class RequiredPersonAttributes{
+		public static final String TELEPHONE_NUMBER_UUID = "14d4f066-15f5-102d-96e4-000c29c2a5d7";
 	}
 }

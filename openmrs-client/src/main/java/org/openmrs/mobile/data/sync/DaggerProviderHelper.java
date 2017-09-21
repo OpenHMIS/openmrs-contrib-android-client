@@ -7,6 +7,7 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.dagger.DaggerSyncComponent;
 import org.openmrs.mobile.dagger.SyncComponent;
 import org.openmrs.mobile.dagger.SyncModule;
+import org.openmrs.mobile.data.sync.impl.ConceptAnswerSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.ConceptClassSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.DiagnosisConceptSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.EncounterTypeSubscriptionProvider;
@@ -46,6 +47,8 @@ public class DaggerProviderHelper {
 			PersonAttributeTypeSubscriptionProvider.class.getSimpleName();
 	private static final String VISIT_ATTRIBUTE_TYPE_SUBSCRIPTION =
 			VisitAttributeTypeSubscriptionProvider.class.getSimpleName();
+	private static final String CONCEPT_ANSWER_SUBSCRIPTION =
+			ConceptAnswerSubscriptionProvider.class.getSimpleName();
 	private static final String VISIT_PREDEFINED_TASK_SUBSCRIPTION =
 			VisitPredefinedTaskSubscriptionProvider.class.getSimpleName();
 	private static final String VISIT_TYPE_SUBSCRIPTION =
@@ -91,6 +94,8 @@ public class DaggerProviderHelper {
 			provider = syncComponent.visitPredefinedTaskSubscriptionProvider();
 		} else if (className.endsWith(VISIT_TYPE_SUBSCRIPTION)) {
 			provider = syncComponent.visitTypeSubscriptionProvider();
+		} else if (className.endsWith(CONCEPT_ANSWER_SUBSCRIPTION)) {
+			provider = syncComponent.conceptAnswerSubscriptionProvider();
 		}
 
 		if (provider == null) {

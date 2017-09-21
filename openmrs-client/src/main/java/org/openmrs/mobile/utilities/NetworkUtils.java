@@ -61,8 +61,9 @@ public class NetworkUtils {
 				return false;
 			}
 
-		} else
-			return false;
+		}
+
+		return false;
 
 	}
 

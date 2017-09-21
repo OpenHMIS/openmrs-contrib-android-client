@@ -412,12 +412,11 @@
 		&#8230;</string>
 	<string name="trim_starting">Updating database&#8230;</string>
 	<string name="trim_complete">Database update complete!</string>
-		
+	
 	<!-- Sync Selection texts -->
 	<string name="select_patient_lists_to_sync">Select Patient Lists to Sync</string>
 	<string name="title_select_patient_lists_to_sync">Patient List Sync Selections</string>
 	<string name="skip_patient_list_sync_selections">Skip</string>
 	<string name="save_patient_list_sync_selections">Save Selections</string>
-
->>>>>>> cf61a62e4875444c40e163f48708e3f19fb57e29
+	<string name="phonenumber_required">Telephone number is Required</string>
 </resources>

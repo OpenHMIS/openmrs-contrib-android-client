@@ -16,7 +16,7 @@ public abstract class BaseEntityDbService<E extends BaseOpenmrsEntity> extends B
 	@Override
 	public List<E> getByPatient(Patient patient, QueryOptions options, PagingInfo pagingInfo) {
 		return executeQuery(options, pagingInfo,
-				(f) -> f.where(getEntityTable().getProperty("patient_uuid").eq(patient)));
+				(f) -> f.where(getEntityTable().getProperty("patient_uuid").eq(patient.getUuid())));
 	}
 }
 

@@ -40,6 +40,13 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 					syncLogDbService.save(createSyncLog(existingVisit, SyncAction.UPDATED));
 					return result;
 				},
-				() -> restService.updateVisit(updatedVisit));
+				() -> restService.updateVisit(updatedVisit),
+				(e) -> {
+					// void existing attributes
+					dbService.voidExistingVisitAttributes(existingVisit);
+
+					// update visit
+					dbService.save(e);
+				});
 	}
 }

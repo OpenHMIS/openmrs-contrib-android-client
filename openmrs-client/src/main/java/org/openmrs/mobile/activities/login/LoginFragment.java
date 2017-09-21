@@ -331,12 +331,14 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 
 	private List<HashMap<String, String>> getLocationStringList(List<Location> locationList) {
 		List<HashMap<String, String>> locations = new ArrayList<>();
-		for (Location loc : locationList) {
-			HashMap<String, String> location = new HashMap<>();
-			location.put("uuid", loc.getUuid());
-			location.put("display", loc.getName());
-			location.put("parentlocationuuid", loc.getParentLocation().getUuid());
-			locations.add(location);
+		for (Location location : locationList) {
+			HashMap<String, String> locationHashMap = new HashMap<>();
+			locationHashMap.put("uuid", location.getUuid());
+			locationHashMap.put("display", location.getName());
+			locationHashMap.put("parentlocationuuid", location.getParentLocation() == null ?
+					ApplicationConstants.EMPTY_STRING :
+					location.getParentLocation().getUuid());
+			locations.add(locationHashMap);
 		}
 
 		return locations;

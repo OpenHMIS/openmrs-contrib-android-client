@@ -286,7 +286,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		progressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataRelativeView);
 		auditDataFormProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataFormProgressBar);
 		auditDataFormScreen = (LinearLayout)fragmentView.findViewById(R.id.auditDataFormScreen);
-		auditScrollView = (ScrollView)fragmentView.findViewById(R.id.auditDataForm);
+		auditScrollView = (ScrollView)fragmentView.findViewById(R.id.auditDataFormScrollView);
 	}
 
 	private void initObservations() {
@@ -849,7 +849,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 					break;
 
 				case CONCEPT_INPATIENT_SERVICE_TYPE:
-					if (!conceptAnswerList.isEmpty()) {
+					if (conceptAnswerList != null) {
 						for (int i = 0; i < conceptAnswerList.size(); i++) {
 							if (conceptAnswerList.get(i).getDisplay().equalsIgnoreCase(displayValue)) {
 								inpatientServiceType.setSelection(i);

@@ -27,7 +27,7 @@ public class VisitAttribute extends BaseOpenmrsEntity {
 
 	@SerializedName("attributeType")
 	@Expose
-	@ForeignKey
+	@ForeignKey(stubbedRelationship = true)
 	private VisitAttributeType attributeType;
 
 	public Visit getVisit() {

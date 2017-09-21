@@ -6,8 +6,9 @@ import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.RequestStrategy;
+import org.openmrs.mobile.data.db.impl.EncounterDbService;
+import org.openmrs.mobile.data.db.impl.ObsDbService;
 import org.openmrs.mobile.data.db.impl.VisitNoteDbService;
-import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.impl.VisitNoteRestServiceImpl;
 import org.openmrs.mobile.models.SyncAction;
 import org.openmrs.mobile.models.VisitNote;
@@ -17,16 +18,32 @@ import javax.inject.Inject;
 public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDbService, VisitNoteRestServiceImpl>
 		implements DataService<VisitNote> {
 
+	private ObsDbService obsDbService;
+	private EncounterDbService encounterDbService;
+
 	@Inject
-	public VisitNoteDataService() {}
+	public VisitNoteDataService(ObsDbService obsDbService, EncounterDbService encounterDbService) {
+		this.obsDbService = obsDbService;
+		this.encounterDbService = encounterDbService;
+	}
 
 	public void save(VisitNote visitNote, @NonNull GetCallback<VisitNote> callback) {
-		executeSingleCallback(callback, new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
+		executeSingleCallback(callback,
+				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
 				() -> {
 					VisitNote result = dbService.save(visitNote);
-					syncLogDbService.save(createSyncLog(result, SyncAction.UPDATED));
+					if (networkUtils.isOnline() != true) {
+						syncLogDbService.save(createSyncLog(result, SyncAction.UPDATED));
+					}
 					return result;
-				},
-				() -> restService.save(visitNote));
+				}, () -> restService.save(visitNote),
+				(e) -> {
+					// void existing obs
+					if(visitNote.getEncounter() != null) {
+						obsDbService.voidExistingObs(visitNote.getEncounter());
+					}
+					// save new obs
+					encounterDbService.save(e.getEncounter());
+				});
 	}
 }

@@ -283,6 +283,23 @@ public class OpenMRS extends Application {
 		return prefs.getString(ApplicationConstants.UserKeys.USER_UUID, ApplicationConstants.EMPTY_STRING);
 	}
 
+	public void setCurrentUserUuid(String uuid) {
+		SharedPreferences.Editor editor = getPreferences().edit();
+		editor.putString(ApplicationConstants.UserKeys.USER_UUID, uuid);
+		editor.commit();
+	}
+
+	public void setLoginUserUuid(String uuid) {
+		SharedPreferences.Editor editor = instance.getPreferences().edit();
+		editor.putString(ApplicationConstants.UserKeys.LOGIN_USER_UUID, uuid);
+		editor.commit();
+	}
+
+	public String getLoginUserUuid() {
+		SharedPreferences sharedPreferences = instance.getPreferences();
+		return sharedPreferences.getString(ApplicationConstants.UserKeys.LOGIN_USER_UUID, ApplicationConstants.EMPTY_STRING);
+	}
+
 	public String getSearchQuery() {
 		SharedPreferences prefs = getPreferences();
 		return prefs.getString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, ApplicationConstants.EMPTY_STRING);

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.IBaseDiagnosisView;
+import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterDiagnosis;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -23,15 +24,16 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 	private Activity context;
 	private IBaseDiagnosisView visitDetailsView;
 	private List<EncounterDiagnosis> diagnoses;
-	private String encounterUuid, clinicalNote;
+	private String clinicalNote;
 	private Visit visit;
+	private Encounter encounter;
 
 	public DiagnosisRecyclerViewAdapter(Activity context,
-			List<EncounterDiagnosis> diagnoses, String encounterUuid,
+			List<EncounterDiagnosis> diagnoses, Encounter encounter,
 			String clinicalNote, Visit visit, IBaseDiagnosisView visitDetailsView) {
 		this.context = context;
 		this.diagnoses = diagnoses;
-		this.encounterUuid = encounterUuid;
+		this.encounter = encounter;
 		this.clinicalNote = clinicalNote;
 		this.visit = visit;
 		this.visitDetailsView = visitDetailsView;
@@ -83,7 +85,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 					visitDetailsView.setSecondaryDiagnosis(encounterDiagnosis);
 				}
 
-				visitDetailsView.saveVisitNote(encounterUuid, clinicalNote, visit);
+				visitDetailsView.saveVisitNote(encounter, clinicalNote, visit);
 			}
 		});
 
@@ -98,7 +100,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 					visitDetailsView.setDiagnosisCertainty(encounterDiagnosis);
 				}
 
-				visitDetailsView.saveVisitNote(encounterUuid, clinicalNote, visit);
+				visitDetailsView.saveVisitNote(encounter, clinicalNote, visit);
 			}
 		});
 
@@ -108,7 +110,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 			public boolean onLongClick(View v) {
 				visitDetailsView.removeDiagnosis(encounterDiagnosis, diagnosisOrder);
 
-				visitDetailsView.saveVisitNote(encounterUuid, clinicalNote, visit);
+				visitDetailsView.saveVisitNote(encounter, clinicalNote, visit);
 
 				return true;
 			}

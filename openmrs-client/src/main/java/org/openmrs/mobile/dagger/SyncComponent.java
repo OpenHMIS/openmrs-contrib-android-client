@@ -2,6 +2,7 @@ package org.openmrs.mobile.dagger;
 
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.sync.SyncService;
+import org.openmrs.mobile.data.sync.impl.ConceptAnswerSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.ConceptClassSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.DiagnosisConceptSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.EncounterTypeSubscriptionProvider;
@@ -52,6 +53,8 @@ public interface SyncComponent {
 	PersonAttributeTypeSubscriptionProvider personAttributeTypeSubscriptionProvider();
 
 	VisitAttributeTypeSubscriptionProvider visitAttributeTypeSubscriptionProvider();
+
+	ConceptAnswerSubscriptionProvider conceptAnswerSubscriptionProvider();
 
 	VisitPredefinedTaskSubscriptionProvider visitPredefinedTaskSubscriptionProvider();
 

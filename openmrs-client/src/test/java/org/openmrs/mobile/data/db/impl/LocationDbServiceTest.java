@@ -11,7 +11,7 @@ import java.util.UUID;
 public class LocationDbServiceTest extends BaseMetadataDbServiceTest<Location> {
 	@Override
 	protected BaseDbService<Location> getDbService() {
-		return new LocationDbService(new RepositoryImpl());
+		return new LocationDbService(repository);
 	}
 
 	@Override

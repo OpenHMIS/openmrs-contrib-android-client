@@ -194,7 +194,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 						if (!encounter.getVoided()) {
 							tempEncounter = encounter;
 							if (activeVisit == visit) {
-								baseDiagnosisFragment.setEncounterUuid(encounter.getUuid());
+								baseDiagnosisFragment.setEncounter(encounter);
 								break;
 							}
 						}
@@ -249,9 +249,9 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		}
 	}
 
-	public void updateClinicalNoteObs(Observation observation, String encounterUuid) {
-		if (null == baseDiagnosisFragment.getEncounterUuid()) {
-			baseDiagnosisFragment.setEncounterUuid(encounterUuid);
+	public void updateClinicalNoteObs(Observation observation, Encounter encounter) {
+		if (baseDiagnosisFragment.getEncounter() == null) {
+			baseDiagnosisFragment.setEncounter(encounter);
 		}
 	}
 

@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
+import org.openmrs.mobile.data.sync.impl.ConceptAnswerSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.ConceptClassSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.DiagnosisConceptSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.EncounterTypeSubscriptionProvider;
@@ -100,6 +101,9 @@ public class AppDatabase {
 					newPullSub(VisitTypeSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
 							INT_SECONDS_PER_DAY)
 			);
+			pullSubscriptions.add(
+					newPullSub(ConceptAnswerSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
+							INT_SECONDS_PER_DAY));
 
 
 			FlowManager.getModelAdapter(PullSubscription.class).saveAll(pullSubscriptions, database);

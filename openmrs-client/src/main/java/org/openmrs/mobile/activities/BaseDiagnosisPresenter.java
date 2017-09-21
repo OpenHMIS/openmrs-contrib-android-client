@@ -76,14 +76,13 @@ public class BaseDiagnosisPresenter {
 		visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
 			@Override
 			public void onCompleted(VisitNote entity) {
-				base.setEncounterUuid(entity.getEncounterId());
+				base.setEncounter(entity.getEncounter());
 
 				if (entity.getObservationUuid() != null) {
 					base.setObservationUuid(entity.getObservationUuid());
 				}
 
 				if (entity.getW12() != null) {
-					base.getClinicalNoteView().setText(entity.getW12());
 					base.createPatientSummaryMergeDialog(entity.getW12());
 				}
 			}

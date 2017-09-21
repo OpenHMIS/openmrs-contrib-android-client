@@ -19,6 +19,7 @@ import android.content.Context;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.activities.IBaseDiagnosisView;
+import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
@@ -48,7 +49,7 @@ public interface PatientDashboardContract {
 
 		void showNoVisits(boolean visibility);
 
-		void updateClinicVisitNote(Observation observation, String encounterUuid);
+		void updateClinicVisitNote(Observation observation, Encounter encounter);
 
 		void showNoPatientData(boolean visible);
 

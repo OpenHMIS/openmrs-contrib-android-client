@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Visit;
 
 public interface IBaseDiagnosisFragment {
@@ -43,8 +44,8 @@ public interface IBaseDiagnosisFragment {
 	void setDiagnosesContent(LinearLayout view);
 	LinearLayout getDiagnosesContent();
 
-	void setEncounterUuid(String encounterUuid);
-	String getEncounterUuid();
+	void setEncounter(Encounter encounter);
+	Encounter getEncounter();
 
 	void setVisit(Visit visit);
 	Visit getVisit();

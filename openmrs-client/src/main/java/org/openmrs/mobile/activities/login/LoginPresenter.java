@@ -109,32 +109,6 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 		if (openMRS.getNetworkUtils().isOnline() || storedSessionIsEmpty) {
 			wipeRequired = wipeDatabase;
-			DataService.GetCallback<List<User>> loginUsersFoundCallback =
-					new DataService.GetCallback<List<User>>() {
-						@Override
-						public void onCompleted(List<User> users) {
-							boolean matchFound = false;
-							if (!users.isEmpty()) {
-								for (User user : users) {
-									if (user.getDisplay().toUpperCase().equals(username.toUpperCase())) {
-										matchFound = true;
-										fetchFullUserInformation(user.getUuid());
-									}
-								}
-							}
-
-							if (!matchFound) {
-								loginView.showMessage(USER_NOT_FOUND);
-							}
-						}
-
-						@Override
-						public void onError(Throwable t) {
-							loginView.showMessage(SERVER_ERROR);
-						}
-					};
-
-			PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
 			DataService.GetCallback<Session> loginUserCallback = new DataService.GetCallback<Session>() {
 				@Override
 				public void onCompleted(Session session) {
@@ -156,8 +130,8 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 						RestServiceBuilder.applyDefaultBaseUrl();
 						//Instantiate the user service  here to use our new session
 						//userService = new UserDataService();
-						userService.getByUsername(username, QueryOptions.FULL_REP, pagingInfo,
-								loginUsersFoundCallback);
+						openMRS.setLoginUserUuid(session.getUser().getUuid());
+						fetchFullUserInformation(session.getUser().getUuid());
 						loginView.userAuthenticated(isFirstAccessOfNewUrl);
 						loginView.finishLoginActivity();
 
@@ -207,7 +181,8 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				Map<String, String> userInfo = new HashMap<>();
 				userInfo.put(ApplicationConstants.UserKeys.USER_PERSON_NAME, user.getPerson().getDisplay());
 				userInfo.put(ApplicationConstants.UserKeys.USER_UUID, user.getPerson().getUuid());
-				OpenMRS.getInstance().setCurrentUserInformation(userInfo);
+				openMRS.setCurrentUserInformation(userInfo);
+				openMRS.setLoginUserUuid(ApplicationConstants.EMPTY_STRING);
 			}
 
 			@Override
@@ -231,19 +206,19 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	public void loadLocations(String url) {
 		loginView.setProgressBarVisibility(true);
 		RestServiceBuilder.setBaseUrl(url);
-		DataService.GetCallback<List<Location>> locationDataServiceCallback = new DataService.GetCallback<List<Location>>
-				() {
-			@Override
-			public void onCompleted(List<Location> locations) {
-				openMRS.setServerUrl(url);
-				loginView.updateLoginFormLocations(locations, url);
-			}
+		DataService.GetCallback<List<Location>> locationDataServiceCallback =
+				new DataService.GetCallback<List<Location>>() {
+					@Override
+					public void onCompleted(List<Location> locations) {
+						openMRS.setServerUrl(url);
+						loginView.updateLoginFormLocations(locations, url);
+					}
 
-			@Override
-			public void onError(Throwable t) {
-				loginView.showMessage(SERVER_ERROR);
-			}
-		};
+					@Override
+					public void onError(Throwable t) {
+						loginView.showMessage(SERVER_ERROR);
+					}
+				};
 
 		try {
 			locationDataService.getLoginLocations(url, locationDataServiceCallback);

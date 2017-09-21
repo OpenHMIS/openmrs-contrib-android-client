@@ -38,11 +38,12 @@ public class VisitNoteRestServiceImpl extends BaseRestService<VisitNote, VisitNo
 		params.put("createVisit", visitNote.getCreateVisit());
 		params.put("formModifiedTimestamp", visitNote.getFormModifiedTimestamp());
 		params.put("encounterModifiedTimestamp", visitNote.getEncounterModifiedTimestamp());
-		params.put("visitId", visitNote.getVisitId());
+		params.put("visitId", visitNote.getVisit().getUuid());
 		params.put("returnUrl", visitNote.getReturnUrl());
 		params.put("closeAfterSubmission", visitNote.getCloseAfterSubmission());
 		params.put("encounterDiagnoses", gson.toJson(visitNote.getEncounterDiagnoses()));
-		params.put("encounterId", visitNote.getEncounterId());
+		params.put("encounterId", visitNote.getEncounter() != null ? visitNote.getEncounter().getUuid() :
+				ApplicationConstants.EMPTY_STRING);
 		params.put("w1", visitNote.getW1());
 		params.put("w3", visitNote.getW3());
 		params.put("w5", visitNote.getW5());

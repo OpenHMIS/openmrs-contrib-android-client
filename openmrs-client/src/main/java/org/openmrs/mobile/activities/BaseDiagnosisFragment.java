@@ -48,12 +48,13 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	protected TextInputEditText clinicalNoteView;
 	protected BaseDiagnosisPresenter diagnosisPresenter = new BaseDiagnosisPresenter();
 	private Timer timer;
-	private String encounterUuid, observationUuid;
+	private String observationUuid;
 	private Visit visit;
 	private boolean firstTimeEdit;
 	private long lastTextEdit = 0;
 	private CustomFragmentDialog mergePatientSummaryDialog;
 	private TextWatcher clinicalNoteListener;
+	private Encounter encounter;
 
 	@Override
 	public void initializeListeners() {
@@ -111,7 +112,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 					createEncounterDiagnosis(null, ViewUtils.getInput(searchDiagnosis), concept.getValue(),
 							true);
 
-					getDiagnosisView().saveVisitNote(encounterUuid, clinicalNoteView.getText().toString(), visit);
+					getDiagnosisView().saveVisitNote(getEncounter(), clinicalNoteView.getText().toString(), visit);
 				}
 			}
 		});
@@ -123,7 +124,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		Handler handler = new Handler();
 		Runnable inputCompleteChecker = () -> {
 			if (System.currentTimeMillis() > (lastTextEdit + SAVE_CLINICAL_NOTE_DELAY)) {
-				saveVisitNote(getEncounterUuid(), clinicalNoteView.getText().toString(), visit);
+				saveVisitNote(getEncounter(), clinicalNoteView.getText().toString(), visit);
 			}
 		};
 
@@ -160,7 +161,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 	public void mergePatientSummary() {
 		String updatedPatientSummary = mergePatientSummaryDialog.getEditNoteTextValue();
-		saveVisitNote(getEncounterUuid(), updatedPatientSummary, visit);
+		saveVisitNote(getEncounter(), updatedPatientSummary, visit);
 		clinicalNoteView.setText(updatedPatientSummary);
 	}
 
@@ -240,7 +241,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 		for (Concept diagnosis : searchDiagnosis) {
 			for (String existingDiagnosis : existingDiagnoses) {
-				if (null != diagnosis.getName() &&
+				if (diagnosis.getName() != null && diagnosis.getName().getName() != null &&
 						diagnosis.getName().getName().equalsIgnoreCase(existingDiagnosis)
 						|| diagnosis.toString().equalsIgnoreCase(existingDiagnosis)) {
 					diagnoses.remove(diagnosis);
@@ -371,11 +372,11 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		}
 
 		primaryDiagnosesRecycler.setAdapter(
-				new DiagnosisRecyclerViewAdapter(getActivity(), primaryDiagnoses, getEncounterUuid(),
+				new DiagnosisRecyclerViewAdapter(getActivity(), primaryDiagnoses, getEncounter(),
 						getClinicalNoteView().getText().toString(), visit, getDiagnosisView()));
 
 		secondaryDiagnosesRecycler.setAdapter(
-				new DiagnosisRecyclerViewAdapter(getActivity(), secondaryDiagnoses, getEncounterUuid(),
+				new DiagnosisRecyclerViewAdapter(getActivity(), secondaryDiagnoses, getEncounter(),
 						getClinicalNoteView().getText().toString(), visit, getDiagnosisView()));
 
 		// clear auto-complete input field
@@ -388,11 +389,11 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		diagnosisPresenter.saveVisitNote(visitNote, getIBaseDiagnosisFragment());
 	}
 
-	public void saveVisitNote(String encounterUuid, String clinicalNote, Visit visit) {
-		saveVisitNote(createVisitNote(encounterUuid, clinicalNote, visit));
+	public void saveVisitNote(Encounter encounter, String clinicalNote, Visit visit) {
+		saveVisitNote(createVisitNote(encounter, clinicalNote, visit));
 	}
 
-	protected VisitNote createVisitNote(String encounterUuid, String clinicalNote, Visit visit) {
+	protected VisitNote createVisitNote(Encounter encounter, String clinicalNote, Visit visit) {
 		List<EncounterDiagnosis> encounterDiagnoses = new ArrayList<>();
 		VisitNote visitNote = new VisitNote();
 		visitNote.setPersonId(visit.getPatient().getUuid());
@@ -400,10 +401,10 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		visitNote.setCreateVisit("false");
 		visitNote.setFormModifiedTimestamp(String.valueOf(System.currentTimeMillis()));
 		visitNote.setEncounterModifiedTimestamp("0");
-		visitNote.setVisitId(visit.getUuid());
+		visitNote.setVisit(visit);
 		visitNote.setReturnUrl(ApplicationConstants.EMPTY_STRING);
 		visitNote.setCloseAfterSubmission(ApplicationConstants.EMPTY_STRING);
-		visitNote.setEncounterId(encounterUuid == null ? ApplicationConstants.EMPTY_STRING : encounterUuid);
+		visitNote.setEncounter(encounter);
 		visitNote.setW1(OpenMRS.getInstance().getCurrentUserUuid());
 		visitNote.setW3(OpenMRS.getInstance().getParentLocationUuid());
 		visitNote.setW5(DateUtils.convertTime(visit.getStartDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_FORMAT));
@@ -525,13 +526,13 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	@Override
-	public String getEncounterUuid() {
-		return encounterUuid;
+	public Encounter getEncounter() {
+		return encounter;
 	}
 
 	@Override
-	public void setEncounterUuid(String encounterUuid) {
-		this.encounterUuid = encounterUuid;
+	public void setEncounter(Encounter encounter) {
+		this.encounter = encounter;
 	}
 
 	@Override

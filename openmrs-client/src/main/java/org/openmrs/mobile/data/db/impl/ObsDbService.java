@@ -22,6 +22,12 @@ import javax.inject.Inject;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ObsDbService extends BaseDbService<Observation> implements DbService<Observation> {
+	private static Observation_Table observationTable;
+
+	static {
+		observationTable = (Observation_Table)FlowManager.getInstanceAdapter(Observation.class);
+	}
+
 	@Inject
 	public ObsDbService(Repository repository) {
 		super(repository);
@@ -42,5 +48,9 @@ public class ObsDbService extends BaseDbService<Observation> implements DbServic
 
 		return executeQuery(options, pagingInfo,
 				(f) -> f.where(Observation_Table.encounter_uuid.eq(encounter.getUuid())));
+	}
+
+	public void voidExistingObs(@NonNull Encounter encounter) {
+		repository.deleteAll(observationTable, Observation_Table.encounter_uuid.eq(encounter.getUuid()));
 	}
 }

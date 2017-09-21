@@ -87,7 +87,6 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "obs", isVariablePrivate = true)
 	List<Observation> loadObservations() {
 		obs = loadRelatedObject(Observation.class, obs, () -> Observation_Table.encounter_uuid.eq(getUuid()));
-
 		return obs;
 	}
 
@@ -98,7 +97,8 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 		if (form != null) {
 			form.processRelationships();
 		}
-		processRelatedObjects(obs);
+
+		processRelatedObjects(obs, (e) -> e.setEncounter(this));
 	}
 
 	/**

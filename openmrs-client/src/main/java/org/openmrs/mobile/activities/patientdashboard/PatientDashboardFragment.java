@@ -35,6 +35,7 @@ import org.openmrs.mobile.activities.IBaseDiagnosisView;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
@@ -265,8 +266,8 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	}
 
 	@Override
-	public void updateClinicVisitNote(Observation observation, String encounterUuid) {
-		patientVisitsRecyclerAdapter.updateClinicalNoteObs(observation, encounterUuid);
+	public void updateClinicVisitNote(Observation observation, Encounter encounter) {
+		patientVisitsRecyclerAdapter.updateClinicalNoteObs(observation, encounter);
 	}
 
 	@Override

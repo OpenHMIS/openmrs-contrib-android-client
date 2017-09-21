@@ -11,9 +11,9 @@ import org.openmrs.mobile.models.VisitAttributeType_Table;
 
 import javax.inject.Inject;
 
-public class VisitAttributeTypeDbServie extends BaseDbService<VisitAttributeType> implements DbService<VisitAttributeType> {
+public class VisitAttributeTypeDbService extends BaseDbService<VisitAttributeType> implements DbService<VisitAttributeType> {
 	@Inject
-	public VisitAttributeTypeDbServie(Repository repository) {
+	public VisitAttributeTypeDbService(Repository repository) {
 		super(repository);
 	}
 

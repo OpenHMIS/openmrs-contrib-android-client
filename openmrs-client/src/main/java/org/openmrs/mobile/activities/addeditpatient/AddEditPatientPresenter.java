@@ -136,6 +136,21 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			patientFileNumberError = true;
 		}
 
+		// Validate telephone number
+		if (patient.getPerson().getAttributes() != null && patient.getPerson().getAttributes().size() > 0) {
+			for (PersonAttribute personAttribute : patient.getPerson().getAttributes()) {
+				if (personAttribute.getAttributeType().getUuid().equalsIgnoreCase(ApplicationConstants
+						.RequiredPersonAttributes.TELEPHONE_NUMBER_UUID)) {
+					phonenumberError = personAttribute.getValue() == null;
+					break;
+				} else {
+					phonenumberError = true;
+				}
+			}
+		} else {
+			phonenumberError = true;
+		}
+
 		boolean result =
 				!familyNameError && !lastNameError && !dateOfBirthError && !countyError && !genderError
 						&& !patientFileNumberError && !civilStatusError && !occupationError && !subCountyError &&
@@ -283,7 +298,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			@Override
 			public void onCompleted(Concept concept) {
 				if (concept != null) {
-					if (concept.getDisplay().equalsIgnoreCase(ApplicationConstants.CIVIL_STATUS)) {
+					if (concept.getDisplay().equalsIgnoreCase(ApplicationConstants.CIVIL_STATUS_DISPLAY)) {
 						dropdown.setPrompt(ApplicationConstants.CIVIL_STATUS);
 					} else {
 						dropdown.setPrompt(ApplicationConstants.KIN_RELATIONSHIP);
@@ -438,8 +453,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.RACE_UUID);
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.HEALTH_CENTER_UUID);
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.HEALTH_DISTRICT_UUID);
-		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.MOTHER_NAME_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.FUNDING_SPONSOR_UUID);
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.BIRTH_PLACE_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.IS_DECEASED_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.FIRST_LANGUAGE_UUID);
 
 		return unwantedPersonAttributes;
 	}

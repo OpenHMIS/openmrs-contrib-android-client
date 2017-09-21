@@ -34,7 +34,7 @@ public class PatientDbServiceTest extends BaseAuditableDbServiceTest<Patient> {
 
 	@Override
 	protected BaseDbService<Patient> getDbService() {
-		return new PatientDbService(new RepositoryImpl());
+		return new PatientDbService(repository);
 	}
 
 	@Override

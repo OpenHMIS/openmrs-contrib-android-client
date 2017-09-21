@@ -2,6 +2,7 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.Table;
 
@@ -33,8 +34,8 @@ public class VisitNote extends BaseOpenmrsEntity {
 	private String encounterModifiedTimestamp;
 
 	@Expose
-	@Column
-	private String visitId;
+	@ForeignKey(stubbedRelationship = true)
+	private Visit visit;
 
 	@Expose
 	@Column
@@ -48,8 +49,8 @@ public class VisitNote extends BaseOpenmrsEntity {
 	private List<EncounterDiagnosis> encounterDiagnoses;
 
 	@Expose
-	@Column
-	private String encounterId;
+	@ForeignKey(stubbedRelationship = true)
+	private Encounter encounter;
 
 	@Expose
 	@Column
@@ -130,12 +131,12 @@ public class VisitNote extends BaseOpenmrsEntity {
 		this.encounterModifiedTimestamp = encounterModifiedTimestamp;
 	}
 
-	public String getVisitId() {
-		return visitId;
+	public Visit getVisit() {
+		return visit;
 	}
 
-	public void setVisitId(String visitId) {
-		this.visitId = visitId;
+	public void setVisit(Visit visit) {
+		this.visit = visit;
 	}
 
 	public String getReturnUrl() {
@@ -202,12 +203,12 @@ public class VisitNote extends BaseOpenmrsEntity {
 		this.w12 = w12;
 	}
 
-	public String getEncounterId() {
-		return encounterId;
+	public Encounter getEncounter() {
+		return encounter;
 	}
 
-	public void setEncounterId(String encounterId) {
-		this.encounterId = encounterId;
+	public void setEncounter(Encounter encounter) {
+		this.encounter = encounter;
 	}
 
 	public void addEncounterDiagnosis(EncounterDiagnosis encounterDiagnosis){

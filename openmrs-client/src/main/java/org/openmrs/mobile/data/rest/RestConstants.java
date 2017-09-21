@@ -21,13 +21,14 @@ public class RestConstants {
 		public static final String DIAGNOSIS_CONCEPT = "custom:(uuid,display,name:(uuid,display,name),conceptClass:"
 				+ "(uuid,display),retired,mappings:(uuid,display,conceptReferenceTerm:(uuid,display,code)),dateCreated,"
 				+ "dateChanged,value)";
-		public static final String PATIENT_LIST_PATIENTS_CONTEXT = "custom:(uuid,patient:(uuid,dateChanged),patientList:(uuid,"
-				+ "display),headerContent,bodyContent)";
+		public static final String PATIENT_LIST_PATIENTS_CONTEXT =
+				"custom:(uuid,patient:(uuid,dateChanged),patientList:(uuid,display),headerContent,bodyContent)";
 		public static final String PATIENT_LIST_PATIENTS = "custom:(uuid,patient,visit,patientList:(uuid,display),"
 				+ "headerContent,bodyContent)";
 		public static final String VISIT_ENCOUNTER = "custom:(uuid,display,encounterDatetime,patient:ref,location:ref,"
-				+ "form:ref,encounterType:ref,obs,creator:ref,dateCreated,changedBy:ref,dateChanged)";
-		public static final String OBSERVATION = "custom:(uuid,display,value,groupMembers,concept,encounter,dateCreated,"
+				+ "form:ref,encounterType:ref,obs,creator:ref,dateCreated,changedBy:ref,dateChanged,voided,visit)";
+		public static final String OBSERVATION = "custom:(uuid,display,value,groupMembers,concept:(uuid,display),encounter,"
+				+ "dateCreated,"
 				+ "creator:(uuid,display))";
 		public static final String VISIT_TASKS = "custom:(uuid,status,name,closedOn)";
 	}
