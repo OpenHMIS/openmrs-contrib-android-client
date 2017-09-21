@@ -22,12 +22,12 @@ public class ViewUtils {
 
 	/**
 	 * Validate input fields by checking for non-alphanumeric characters,
-	 * @param editText the input field containing text
+	 * @param value the string to be validated
 	 * @return validity status of the input value
 	 */
-	public static boolean isValidInput(EditText editText){
+	public static boolean isValidInput(String value){
 		String validCharacters = "[a-zA-Z0-9]";
-		return Pattern.matches(validCharacters,editText.getText().toString().trim());
+		return Pattern.matches(validCharacters,value.trim());
 	}
 
 }

@@ -38,6 +38,7 @@ import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
+import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,12 +107,14 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		boolean kinRelationshipError = false;
 		boolean kinPhonenumberError = false;
 		boolean kinResidenceError = false;
+		boolean invalidCharactersError = false;
+		String  invalidFieldEntry = "";
 
 		patientRegistrationView
 				.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, countyError, genderError,
 						patientFileNumberError, civilStatusError, occupationError, subCountyError, nationalityError,
 						patientIdNoError, clinicError, wardError, phonenumberError, kinNameError, kinRelationshipError,
-						kinPhonenumberError, kinResidenceError);
+						kinPhonenumberError, kinResidenceError,invalidCharactersError);
 
 		// Validate names
 		if (StringUtils.isBlank(patient.getPerson().getName().getGivenName())) {
@@ -151,6 +154,20 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			phonenumberError = true;
 		}
 
+		//remove all invalid characters in the form fields
+		if(patient.getPerson().getAttributes() != null){
+			for(PersonAttribute attribute : patient.getPerson().getAttributes()){
+                if(attribute.getStringValue().length() > 0){
+                    if(!ViewUtils.isValidInput(attribute.getValue().toString())){
+						invalidFieldEntry += attribute.getDisplay();
+                    }
+                }
+			}
+			if(invalidFieldEntry.length() > 0){
+				invalidCharactersError = true;
+			}
+		}
+
 		boolean result =
 				!familyNameError && !lastNameError && !dateOfBirthError && !countyError && !genderError
 						&& !patientFileNumberError && !civilStatusError && !occupationError && !subCountyError &&
@@ -164,7 +181,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 					.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, countyError, genderError,
 							patientFileNumberError, civilStatusError, occupationError, subCountyError, nationalityError,
 							patientIdNoError, clinicError, wardError, phonenumberError, kinNameError, kinRelationshipError,
-							kinPhonenumberError, kinResidenceError);
+							kinPhonenumberError, kinResidenceError,invalidCharactersError);
 			return false;
 		}
 	}

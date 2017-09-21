@@ -39,7 +39,7 @@ public interface AddEditPatientContract {
 				boolean civilStatusError, boolean occupationError, boolean subCounty_Error, boolean nationality_Error,
 				boolean patientIdNo_Error, boolean clinic_Error, boolean ward_Error, boolean phonenumber_Error,
 				boolean kinName_Error, boolean kinRelationship_Error, boolean kinPhonenumber_Error,
-				boolean kinResidence_Error
+				boolean kinResidence_Error,boolean invalidCharactersError
 		);
 
 		void scrollToTop();
