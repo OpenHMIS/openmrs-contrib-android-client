@@ -20,6 +20,7 @@ import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitPhotoDataService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
@@ -58,8 +59,10 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 
 	private void getPhotoMetadata() {
 		visitPhotoView.showTabSpinner(true);
+		QueryOptions options =
+				new QueryOptions.Builder().customRepresentation(RestConstants.Representations.OBSERVATION).build();
 		// download all photo metadata
-		visitPhotoDataService.downloadPhotoMetadata(patientUuid, null, obsDataService,
+		visitPhotoDataService.downloadPhotoMetadata(patientUuid, options, obsDataService,
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {
@@ -69,12 +72,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 								VisitPhoto visitPhoto = new VisitPhoto();
 								visitPhoto.setFileCaption(observation.getComment());
 								visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
-
-								User creator = new User();
-								creator.setPerson(observation.getPerson());
-								visitPhoto.setCreator(creator);
 								visitPhoto.setCreator(observation.getCreator());
-
 								visitPhoto.setObservation(observation);
 
 								// download photo bytes
@@ -170,7 +168,8 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	}
 
 	@Override
-	public void unsubscribe() {}
+	public void unsubscribe() {
+	}
 
 	@Override
 	public void deleteImage(VisitPhoto visitPhoto) {

@@ -187,6 +187,8 @@ public abstract class ApplicationConstants {
 
 	public static class ConceptSets {
 		public static final String ICPC_DIAGNOSES = "160167AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String VISIT_DOCUMENT_UUID =
+				"7cac8397-53cd-4f00-a6fe-028e8d743f8e,42ed45fd-f3f6-44b6-bfc2-8bde1bb41e00";
 	}
 
 	public static class toastMessages {

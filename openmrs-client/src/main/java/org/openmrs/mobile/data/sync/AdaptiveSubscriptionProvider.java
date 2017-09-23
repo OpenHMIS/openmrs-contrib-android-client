@@ -1,11 +1,9 @@
 package org.openmrs.mobile.data.sync;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.sql.language.property.Property;
 import com.raizlabs.android.dbflow.sql.language.property.PropertyFactory;
 import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
@@ -35,7 +33,7 @@ import java.util.List;
 /**
  * Base class for subscription providers that attempt an incremental pull but can switch to a table pull if too
  * many records have changed.
- * @param <E> The entity class
+ * @param <E>  The entity class
  * @param <DS> The db service class
  * @param <RS> The rest service class
  */

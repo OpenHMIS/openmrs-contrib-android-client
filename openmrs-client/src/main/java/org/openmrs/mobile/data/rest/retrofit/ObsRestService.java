@@ -2,6 +2,7 @@ package org.openmrs.mobile.data.rest.retrofit;
 
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Observation;
+import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Results;
 
 import retrofit2.Call;
@@ -44,5 +45,12 @@ public interface ObsRestService {
 	@DELETE(RestConstants.GET_BY_UUID)
 	Call<Observation> purge(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid);
+
+	@GET(RestConstants.GET_ALL)
+	Call<Results<RecordInfo>> getVisitDocumentsObsRecordInfoByPatientAndConceptList(
+			@Path(value = "restPath", encoded = true) String restPath,
+			@Query("patient") String patientUuid,
+			@Query("conceptList") String conceptList,
+			@Query("v") String representation);
 
 }

@@ -1,54 +1,82 @@
 package org.openmrs.mobile.data.sync.impl;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 
 import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
+import org.openmrs.mobile.data.db.impl.ObsDbService;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
+import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
 import org.openmrs.mobile.data.db.impl.VisitTaskDbService;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.impl.EncounterRestServiceImpl;
+import org.openmrs.mobile.data.rest.impl.ObsRestServiceImpl;
+import org.openmrs.mobile.data.rest.impl.VisitPhotoRestServiceImpl;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
 import org.openmrs.mobile.data.rest.impl.VisitTaskRestServiceImpl;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Encounter_Table;
+import org.openmrs.mobile.models.Observation;
+import org.openmrs.mobile.models.Observation_Table;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.models.VisitTask_Table;
 import org.openmrs.mobile.models.Visit_Table;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.DateUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import okhttp3.ResponseBody;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class VisitPullProvider {
+	private static final String TAG = VisitPullProvider.class.getSimpleName();
+
 	private VisitDbService visitDbService;
 	private VisitRestServiceImpl visitRestService;
 	private EncounterDbService encounterDbService;
 	private EncounterRestServiceImpl encounterRestService;
+	private ObsDbService obsDbService;
+	private ObsRestServiceImpl obsRestService;
+	private VisitPhotoDbService visitPhotoDbService;
+	private VisitPhotoRestServiceImpl visitPhotoRestService;
 	private VisitTaskDbService visitTaskDbService;
 	private VisitTaskRestServiceImpl visitTaskRestService;
 
 	private DatabaseHelper databaseHelper;
 
 	@Inject
-	public VisitPullProvider(VisitDbService visitDbService, VisitRestServiceImpl visitRestService,
-			EncounterDbService encounterDbService, EncounterRestServiceImpl encounterRestService,
+	public VisitPullProvider(VisitDbService visitDbService,
+			VisitRestServiceImpl visitRestService, EncounterDbService encounterDbService,
+			EncounterRestServiceImpl encounterRestService, ObsDbService obsDbService, ObsRestServiceImpl obsRestService,
+			VisitPhotoDbService visitPhotoDbService, VisitPhotoRestServiceImpl visitPhotoRestService,
 			VisitTaskDbService visitTaskDbService, VisitTaskRestServiceImpl visitTaskRestService,
 			DatabaseHelper databaseHelper) {
 		this.visitDbService = visitDbService;
 		this.visitRestService = visitRestService;
 		this.encounterDbService = encounterDbService;
 		this.encounterRestService = encounterRestService;
+		this.obsDbService = obsDbService;
+		this.obsRestService = obsRestService;
+		this.visitPhotoDbService = visitPhotoDbService;
+		this.visitPhotoRestService = visitPhotoRestService;
 		this.visitTaskDbService = visitTaskDbService;
 		this.visitTaskRestService = visitTaskRestService;
 		this.databaseHelper = databaseHelper;
@@ -129,10 +157,65 @@ public class VisitPullProvider {
 	}
 
 	protected void pullVisitDocuments(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {
-		// TODO: Implement after researching visit document services and image storage
+		QueryOptions options =
+				new QueryOptions.Builder().customRepresentation(RestConstants.Representations.OBSERVATION).build();
+
+		for (RecordInfo recordInfo : visitInfo) {
+			List<RecordInfo> observationInfo = RestHelper.getCallListValue(obsRestService
+					.getVisitDocumentsObsRecordInfoByPatientAndConceptList(patientRecord.getUuid()));
+
+			List<SQLOperator> observationsOperators = new ArrayList<>();
+			observationsOperators.add(Observation_Table.uuid.eq(recordInfo.getUuid()));
+			observationsOperators.add(Observation_Table.concept_uuid.in(Arrays.asList(ApplicationConstants.ConceptSets
+					.VISIT_DOCUMENT_UUID.split(","))));
+
+			databaseHelper
+					.diffDelete(Observation.class, observationsOperators, observationInfo);
+
+			List<VisitPhoto> visitPhotos = new ArrayList<>();
+			List<Observation> observations = new ArrayList<>();
+			for (RecordInfo observationRecord : observationInfo) {
+				if (observationRecord.isUpdatedSince(subscription)) {
+					Observation observation =
+							RestHelper.getCallValue(obsRestService.getByUuid(observationRecord.getUuid(), options));
+					observation.processRelationships();
+					observations.add(observation);
+
+					Visit visit = new Visit();
+					visit.setUuid(recordInfo.getUuid());
+
+					VisitPhoto visitPhoto = new VisitPhoto();
+					visitPhoto.setVisit(visit);
+					visitPhoto.setObservation(observation);
+					visitPhoto.setFileCaption(observation.getComment());
+					visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
+					visitPhoto.setCreator(observation.getCreator());
+					visitPhotos.add(visitPhoto);
+				}
+			}
+
+			if (!observations.isEmpty()) {
+				obsDbService.saveAll(observations);
+			}
+
+			for (VisitPhoto visitPhotoRecord : visitPhotos) {
+				ResponseBody image = RestHelper.getCallValue(
+						visitPhotoRestService.downloadPhoto(visitPhotoRecord.getObservation().getUuid(), null));
+				try {
+					visitPhotoRecord.setImage(image.bytes());
+				} catch (IOException ex) {
+					Log.e(TAG, "Visit image could not be saved.", ex);
+				}
+			}
+
+			if (!visitPhotos.isEmpty()) {
+				visitPhotoDbService.saveAll(visitPhotos);
+			}
+		}
 	}
 
-	protected void pullVisitEncounters(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {
+	protected void pullVisitEncounters(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo>
+			visitInfo) {
 		QueryOptions options = new QueryOptions.Builder()
 				.customRepresentation(RestConstants.Representations.VISIT_ENCOUNTER)
 				.build();
