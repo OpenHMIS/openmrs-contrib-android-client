@@ -272,6 +272,7 @@
 	<string name="visit_type">Visit Type:</string>
 	<string name="enter_caption">Enter caption</string>
 	<string name="visit_photo">Visit Photo</string>
+	<string name="invalid_characters_error">%$s has invalid characters</string>
 	
 	<string name="findPatientsTitle">Search patients</string>
 	<string name="patientNotFound">Patient not found</string>

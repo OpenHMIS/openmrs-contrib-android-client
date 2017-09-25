@@ -1,13 +1,37 @@
 package org.openmrs.mobile.data.db.impl;
 
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.OperatorGroup;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.openmrs.mobile.data.ModelAsserters;
 import org.openmrs.mobile.data.ModelGenerators;
 import org.openmrs.mobile.data.db.BaseAuditableDbServiceTest;
 import org.openmrs.mobile.data.db.BaseDbService;
+import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.Patient_Table;
+import org.openmrs.mobile.models.PersonName;
+import org.openmrs.mobile.models.PersonName_Table;
+
+import java.util.List;
+
+import static org.mockito.Mockito.mock;
 
 public class PatientDbServiceTest extends BaseAuditableDbServiceTest<Patient> {
+		@InjectMocks private Repository repository;
+	private Patient_Table patientTable;
+
+	@Before
+	public void beforeTests(){
+		patientTable = (Patient_Table) FlowManager.getInstanceAdapter(Patient.class);
+	}
+
 	@Override
 	protected BaseDbService<Patient> getDbService() {
 		return new PatientDbService(repository);
@@ -25,7 +49,27 @@ public class PatientDbServiceTest extends BaseAuditableDbServiceTest<Patient> {
 
 	@Test
 	public void getByName_shouldSearchByNameWithFullWildcard() throws Exception {
+		repository = mock(RepositoryImpl.class);
+		PatientDbService patientDbService = new PatientDbService(repository);
+		List<Patient> patientSearchResults;
 
+		Patient p1 = ModelGenerators.PATIENT.generate(true);
+		Patient p2 = ModelGenerators.PATIENT.generate(true);
+		Patient p3 = ModelGenerators.PATIENT.generate(true);
+
+		p1.getPerson().getName().setMiddleName("Mishi");
+		p2.getPerson().getName().setGivenName("Mika");
+		p3.getPerson().getName().setFamilyName("Mistari");
+
+		repository.save(patientTable,p1);
+		repository.save(patientTable,p2);
+		repository.save(patientTable,p3);
+
+		Assert.assertNotNull(p3);
+		patientSearchResults = patientDbService.getByName("Mishi", null, null);
+		Assert.assertNotNull(patientSearchResults);
+		Assert.assertEquals(3, patientSearchResults.size());
+		Assert.assertEquals("Mishi", patientSearchResults.get(0).getPerson().getName().getGivenName());
 	}
 
 	@Test
@@ -117,4 +161,5 @@ public class PatientDbServiceTest extends BaseAuditableDbServiceTest<Patient> {
 	public void getByNameOrIdentifier_shouldThrowExceptionWhenNameOrIdIsNull() throws Exception {
 
 	}
+
 }

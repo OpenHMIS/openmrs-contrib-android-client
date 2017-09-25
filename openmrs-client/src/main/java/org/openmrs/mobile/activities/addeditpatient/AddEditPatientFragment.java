@@ -177,7 +177,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			boolean county_Error, boolean genderError, boolean patientFileNumberError, boolean civilStatusError,
 			boolean occuaptionerror, boolean subCounty_Error, boolean nationality_Error, boolean patientIdNo_Error,
 			boolean clinic_Error, boolean ward_Error, boolean phonenumber_Error, boolean kinName_Error,
-			boolean kinRelationship_Error, boolean kinPhonenumber_Error, boolean kinResidence_Error
+			boolean kinRelationship_Error, boolean kinPhonenumber_Error, boolean kinResidence_Error, boolean invalidCharacters
 	) {
 		fnameerror.setVisibility(givenNameError ? View.VISIBLE : View.INVISIBLE);
 		lnameerror.setVisibility(familyNameError ? View.VISIBLE : View.INVISIBLE);
@@ -187,7 +187,11 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		if (phonenumber_Error) {
 			attributesError.setText(getString(R.string.phonenumber_required));
 			attributesError.setVisibility(View.VISIBLE);
-		} else {
+		}else if(invalidCharacters){
+			attributesError.setText(R.string.invalid_characters_error);
+			attributesError.setVisibility(View.VISIBLE);
+		}
+		else {
 			attributesError.setVisibility(View.GONE);
 		}
 	}
@@ -574,13 +578,11 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			View componentType = set.getKey();
 			PersonAttribute personAttribute = new PersonAttribute();
 			personAttribute.setAttributeType(set.getValue());
-
 			if (componentType instanceof RadioButton) {
 				personAttribute.setValue(((RadioButton)componentType).isChecked());
 			} else if (componentType instanceof EditText) {
-				personAttribute.setValue(ViewUtils.getInput((EditText)componentType));
+					personAttribute.setValue(ViewUtils.getInput((EditText)componentType));
 			}
-
 			if (personAttribute.getValue() != null) {
 				personAttributeMap.put(set.getValue().getUuid(), personAttribute);
 
