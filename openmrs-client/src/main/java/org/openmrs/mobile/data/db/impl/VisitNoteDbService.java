@@ -12,8 +12,11 @@ import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.EncounterDiagnosis;
 import org.openmrs.mobile.models.EncounterDiagnosis_Table;
 import org.openmrs.mobile.models.Resource;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.models.VisitNote_Table;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -41,5 +44,9 @@ public class VisitNoteDbService extends BaseDbService<VisitNote> implements DbSe
 
 		repository.deleteAll(encounterDiagnosisTable, EncounterDiagnosis_Table.visitNote_uuid.eq(visitNote.getUuid()),
 				new Method("LENGTH", EncounterDiagnosis_Table.uuid).lessThanOrEq(Resource.LOCAL_UUID_LENGTH));
+	}
+
+	public VisitNote getByVisit(Visit visit) {
+		return repository.querySingle(getEntityTable(), VisitNote_Table.visit_uuid.eq(visit.getUuid()));
 	}
 }

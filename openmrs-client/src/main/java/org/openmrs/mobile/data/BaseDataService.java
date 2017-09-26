@@ -12,6 +12,7 @@ import org.openmrs.mobile.data.cache.CacheService;
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.data.rest.BaseRestService;
+import org.openmrs.mobile.data.sync.SyncLogService;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.models.Results;
@@ -63,7 +64,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	protected NetworkUtils networkUtils;
 
 	@Inject
-	protected SyncLogDbService syncLogDbService;
+	protected SyncLogService syncLogService;
 
 	private Class<E> entityClass;
 
@@ -97,7 +98,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 				() -> {
 					entity.processRelationships();
 					E result = dbService.save(entity);
-					syncLogDbService.save(createSyncLog(result, SyncAction.NEW));
+					syncLogService.save(result, SyncAction.NEW);
 					return result;
 				},
 				() -> restService.create(entity));
@@ -113,7 +114,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 				() -> {
 					entity.processRelationships();
 					E result = dbService.save(entity);
-					syncLogDbService.save(createSyncLog(result, SyncAction.UPDATED));
+					syncLogService.save(result, SyncAction.UPDATED);
 					return result;
 				},
 				() -> restService.update(entity));
@@ -421,18 +422,6 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 				}
 			}
 		});
-	}
-
-	protected SyncLog createSyncLog(@NonNull E entity, @NonNull SyncAction action) {
-		checkNotNull(entity);
-		checkNotNull(action);
-
-		SyncLog syncLog = new SyncLog();
-		syncLog.setAction(action);
-		syncLog.setKey(entity.getUuid());
-		syncLog.setType(entity.getClass().getSimpleName());
-
-		return syncLog;
 	}
 
 	protected <T> boolean getCachedResult(GetCallback<T> callback, QueryOptions options) {

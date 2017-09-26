@@ -11,6 +11,7 @@ import org.openmrs.mobile.data.db.impl.ObsDbService;
 import org.openmrs.mobile.data.db.impl.VisitNoteDbService;
 import org.openmrs.mobile.data.rest.impl.VisitNoteRestServiceImpl;
 import org.openmrs.mobile.models.SyncAction;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitNote;
 
 import javax.inject.Inject;
@@ -33,9 +34,7 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 				() -> {
 					visitNote.processRelationships();
 					VisitNote result = dbService.save(visitNote);
-					if (networkUtils.isOnline() != true) {
-						syncLogDbService.save(createSyncLog(result, SyncAction.UPDATED));
-					}
+					syncLogService.save(result, SyncAction.UPDATED);
 					return result;
 				}, () -> restService.save(visitNote),
 				(e) -> {
@@ -46,5 +45,9 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 					// save new obs
 					encounterDbService.save(e.getEncounter());
 				});
+	}
+
+	public VisitNote getByVisit(Visit visit) {
+		return dbService.getByVisit(visit);
 	}
 }

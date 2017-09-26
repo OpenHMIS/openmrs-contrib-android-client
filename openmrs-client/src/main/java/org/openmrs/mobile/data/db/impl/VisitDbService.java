@@ -48,9 +48,9 @@ public class VisitDbService extends BaseEntityDbService<Visit> implements Entity
 
 		if (visit.getStopDatetime() == null) {
 			visit.setStopDatetime(new Date());
-
-			visit = save(visit);
 		}
+
+		visit = save(visit);
 
 		return visit;
 	}

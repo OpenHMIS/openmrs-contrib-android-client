@@ -168,8 +168,7 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
                 ((DataService.GetCallback<Visit>) invocation.getArguments()[2]).onCompleted(visit);
                 return null;
             }
-        }).when(visitDataService).endVisit(anyString(), any(Visit.class), any(QueryOptions.class),
-                any(DataService.GetCallback.class));
+        }).when(visitDataService).endVisit(anyString(), any(Visit.class), any(DataService.GetCallback.class));
 
     }
 

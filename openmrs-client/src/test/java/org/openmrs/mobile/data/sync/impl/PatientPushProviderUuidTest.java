@@ -11,6 +11,9 @@ import org.openmrs.mobile.data.RelatedObject;
 import org.openmrs.mobile.data.db.impl.PatientDbService;
 import org.openmrs.mobile.data.db.impl.PersonDbService;
 import org.openmrs.mobile.data.db.impl.SyncLogDbService;
+import org.openmrs.mobile.data.db.impl.VisitDbService;
+import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
+import org.openmrs.mobile.data.db.impl.VisitTaskDbService;
 import org.openmrs.mobile.data.rest.impl.PatientRestServiceImpl;
 import org.openmrs.mobile.data.sync.PushProviderUuidTest;
 import org.openmrs.mobile.models.Patient;
@@ -49,7 +52,9 @@ public class PatientPushProviderUuidTest extends PushProviderUuidTest<Patient> {
 		super.before();
 
 		patientPushProvider = new PatientPushProvider(new PatientDbService(repository), patientRestService,
-				new PersonDbService(repository));
+				new PersonDbService(repository), new VisitDbService(repository),
+				new VisitTaskDbService(repository),
+				new VisitPhotoDbService(repository));
 	}
 
 	@Override

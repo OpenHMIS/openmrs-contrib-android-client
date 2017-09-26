@@ -9,6 +9,8 @@ import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.models.VisitPhoto_Table;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 public class VisitPhotoDbService extends BaseDbService<VisitPhoto> implements DbService<VisitPhoto> {
@@ -20,6 +22,14 @@ public class VisitPhotoDbService extends BaseDbService<VisitPhoto> implements Db
 	@Override
 	protected ModelAdapter<VisitPhoto> getEntityTable() {
 		return (VisitPhoto_Table)FlowManager.getInstanceAdapter(VisitPhoto.class);
+	}
+
+	public List<VisitPhoto> getByVisit(String uuid) {
+		return repository.query(getEntityTable(), VisitPhoto_Table.visit_uuid.eq(uuid));
+	}
+
+	public List<VisitPhoto> getByPatient(String uuid) {
+		return repository.query(getEntityTable(), VisitPhoto_Table.patient_uuid.eq(uuid));
 	}
 }
 

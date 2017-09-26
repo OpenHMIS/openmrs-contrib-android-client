@@ -15,6 +15,7 @@ import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitNote;
 
 import java.util.ArrayList;
@@ -63,6 +64,10 @@ public class BaseDiagnosisPresenter {
 				Log.e(TAG, "Error finding concept: " + t.getLocalizedMessage(), t);
 			}
 		});
+	}
+
+	public VisitNote getVisitNote(Visit visit) {
+		return visitNoteDataService.getByVisit(visit);
 	}
 
 	public void loadObs(Encounter encounter, IBaseDiagnosisFragment base) {

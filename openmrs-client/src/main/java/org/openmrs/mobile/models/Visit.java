@@ -68,6 +68,10 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 		this.uuid = visitUuid;
 	}
 
+	public Visit(Date stopDatetime) {
+		this.stopDatetime = stopDatetime;
+	}
+
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "encounters", isVariablePrivate = true)
 	List<Encounter> loadEncounters() {
 		encounters = loadRelatedObject(Encounter.class, encounters, () -> Encounter_Table.visit_uuid.eq(getUuid()));

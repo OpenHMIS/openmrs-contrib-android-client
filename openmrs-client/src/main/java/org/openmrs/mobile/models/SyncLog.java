@@ -16,6 +16,9 @@ public class SyncLog extends BaseOpenmrsObject {
 	@Column
 	SyncAction action;
 
+	@Column
+	Integer order;
+
 	public String getType() {
 		return type;
 	}
@@ -38,5 +41,13 @@ public class SyncLog extends BaseOpenmrsObject {
 
 	public void setAction(SyncAction action) {
 		this.action = action;
+	}
+
+	public Integer getOrder() {
+		return order;
+	}
+
+	public void setOrder(Integer order) {
+		this.order = order;
 	}
 }

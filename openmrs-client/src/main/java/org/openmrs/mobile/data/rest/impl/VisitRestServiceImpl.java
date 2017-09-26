@@ -30,8 +30,8 @@ public class VisitRestServiceImpl extends BaseEntityRestService<Visit, VisitRest
 		return "visit";
 	}
 
-	public Call<Visit> endVisit(String uuid, Visit visit, QueryOptions options) {
-		return restService.endVisit(buildRestRequestPath(), uuid, visit);
+	public Call<Visit> endVisit(String uuid, Visit visit) {
+		return restService.endVisit(buildRestRequestPath(), uuid, new Visit(visit.getStopDatetime()));
 	}
 
 	public Call<Visit> updateVisit(Visit updatedVisit) {

@@ -5,6 +5,7 @@ import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterDiagnosis;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitNote;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ public interface IBaseDiagnosisView {
 	void saveVisitNote(Encounter encounter, String clinicalNote, Visit visit);
 
 	void createEncounterDiagnosis(Observation observation, String diagnosis, String conceptNameId, boolean loadRecyclerView);
+
+	void updateEncounterDiagnosis(VisitNote visitNote);
 
 	void setPrimaryDiagnosis(EncounterDiagnosis primaryDiagnosis);
 

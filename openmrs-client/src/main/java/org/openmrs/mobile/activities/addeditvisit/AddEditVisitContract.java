@@ -69,7 +69,7 @@ public interface AddEditVisitContract {
 
 		void setProcessing(boolean processing);
 
-		void endVisit(Visit visit);
+		void endVisit();
 
 		boolean isEndVisit();
 	}

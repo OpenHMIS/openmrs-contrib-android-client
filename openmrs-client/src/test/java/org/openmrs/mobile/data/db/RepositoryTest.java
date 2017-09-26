@@ -1,6 +1,9 @@
 package org.openmrs.mobile.data.db;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.Method;
+import com.raizlabs.android.dbflow.sql.language.OperatorGroup;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -8,11 +11,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.openmrs.mobile.BuildConfig;
 import org.openmrs.mobile.data.CoreTestData;
 import org.openmrs.mobile.data.DBFlowRule;
 import org.openmrs.mobile.data.ModelAsserters;
 import org.openmrs.mobile.data.ModelGenerators;
+import org.openmrs.mobile.data.db.impl.PatientDbService;
+import org.openmrs.mobile.data.db.impl.PatientDbServiceTest;
 import org.openmrs.mobile.data.db.impl.RepositoryImpl;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Encounter_Table;

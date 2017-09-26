@@ -275,7 +275,7 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	 * @return The entity
 	 */
 	protected E getByUuidRest(String uuid) {
-		return RestHelper.getCallValue(restService.getByUuid(uuid, null));
+		return RestHelper.getCallValue(restService.getByUuid(uuid, QueryOptions.FULL_REP));
 	}
 
 	/**

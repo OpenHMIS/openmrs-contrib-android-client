@@ -342,8 +342,17 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 	private void loadVisitAttributeType(VisitAttribute visitAttribute, List<VisitAttributeType> attributeTypes) {
 		for (VisitAttributeType type : attributeTypes) {
-			if (type.getUuid().equalsIgnoreCase(visitAttribute.getAttributeType().getUuid())) {
-				visitAttribute.setAttributeType(type);
+			if (visitAttribute.getAttributeType() != null) {
+				if (type.getUuid().equalsIgnoreCase(visitAttribute.getAttributeType().getUuid())) {
+					visitAttribute.setAttributeType(type);
+				}
+			} else {
+				String[] visitAttributeTypeAndValue = visitAttribute.getDisplay().split(": ");
+				if (visitAttributeTypeAndValue.length > 1 &&
+						visitAttribute.getDisplay().contains(visitAttributeTypeAndValue[0])) {
+					visitAttribute.setAttributeType(type);
+					visitAttribute.setValue(visitAttributeTypeAndValue[1]);
+				}
 			}
 		}
 	}
@@ -397,7 +406,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 				if ((visit.getEncounters().get(i).getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) || visit.getEncounters()
 						.get(i).getEncounterType().getDisplay().equalsIgnoreCase(ApplicationConstants
-								.EncounterTypeDisplays.AUDITDATA)&& !visit.getEncounters().get(i).getVoided())) {
+								.EncounterTypeDisplays.AUDITDATA) && !visit.getEncounters().get(i).getVoided())) {
 
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						auditDataMetadata.setVisibility(View.VISIBLE);

@@ -4,8 +4,10 @@ import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.Method;
+import com.raizlabs.android.dbflow.sql.language.OperatorGroup;
 import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.property.Property;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.openmrs.mobile.data.PagingInfo;
@@ -93,24 +95,21 @@ public class PatientDbService extends BaseDbService<Patient> implements DbServic
 
 	private SQLOperator findByNameFragment(@NonNull String name) {
 		checkNotNull(name);
-
+		name = name.trim();
 		if (!name.startsWith("%")) {
 			name = "%" + name;
 		}
 		if (!name.endsWith("%")) {
 			name = name + "%";
 		}
-
 		return Patient_Table.person_uuid.in(
-				SQLite.select(PersonName_Table.person_uuid)
-						.from(PersonName.class)
-						.where(Method.group_concat(
-								PersonName_Table.givenName,
-								PersonName_Table.middleName,
-								PersonName_Table.familyName)
-							.like(name)
-						)
-		);
+
+				SQLite.select(PersonName_Table.person_uuid).from(PersonName.class).
+						where(OperatorGroup.clause()
+								.or(PersonName_Table.givenName.like(name))
+								.or(PersonName_Table.middleName.like(name))
+								.or(PersonName_Table.familyName.like(name))
+						));
 	}
 
 	private SQLOperator findById(String id) {

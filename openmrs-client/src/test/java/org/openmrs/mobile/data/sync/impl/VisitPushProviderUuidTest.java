@@ -8,7 +8,11 @@ import org.openmrs.mobile.data.ModelAsserters;
 import org.openmrs.mobile.data.ModelGenerators;
 import org.openmrs.mobile.data.RelatedObject;
 import org.openmrs.mobile.data.CoreTestData;
+import org.openmrs.mobile.data.db.impl.EncounterDbService;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
+import org.openmrs.mobile.data.db.impl.VisitNoteDbService;
+import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
+import org.openmrs.mobile.data.db.impl.VisitTaskDbService;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
 import org.openmrs.mobile.data.sync.PushProviderUuidTest;
 import org.openmrs.mobile.models.Location;
@@ -38,7 +42,10 @@ public class VisitPushProviderUuidTest extends PushProviderUuidTest<Visit> {
 	public void before() {
 		super.before();
 
-		visitPushProvider = new VisitPushProvider(new VisitDbService(repository), visitRestService);
+		visitPushProvider = new VisitPushProvider(
+				new VisitDbService(repository), visitRestService,
+				new VisitTaskDbService(repository), new EncounterDbService(repository),
+				new VisitPhotoDbService(repository), new VisitNoteDbService(repository));
 	}
 
 	@Override

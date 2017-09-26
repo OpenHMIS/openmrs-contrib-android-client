@@ -77,7 +77,7 @@ public class SyncService {
 	 */
 	protected void push() {
 		// Get synclog records that need to be pushed
-		List<SyncLog> records = syncLogDbService.getAll(null, null);
+		List<SyncLog> records = syncLogDbService.getOrderedList();
 		eventBus.post(new SyncPushEvent(ApplicationConstants.EventMessages.Sync.Push.TOTAL_RECORDS,
 				ApplicationConstants.EventMessages.Sync.SyncType.RECORD, records.size()));
 

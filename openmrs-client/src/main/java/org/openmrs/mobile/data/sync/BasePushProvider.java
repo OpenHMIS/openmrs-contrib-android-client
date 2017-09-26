@@ -60,7 +60,11 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 				// The local uuid can be removed when sent to the REST service so add the original uuid back if blank
 				// Note: this entity won't be saved to the db and so this uuid will not be used except to delete/update
 				// old records
-				entity.setUuid(syncLog.getKey());
+
+				// This won't work for underlying entities which have been created.
+				// A good example is creating a patient -> person -> names
+				//entity.setUuid(syncLog.getKey());
+				entity = dbService.getByUuid(syncLog.getKey(), QueryOptions.FULL_REP);
 			}
 
 			// Delete any related records with local uuids, records with the server-generated uuids will be saved when

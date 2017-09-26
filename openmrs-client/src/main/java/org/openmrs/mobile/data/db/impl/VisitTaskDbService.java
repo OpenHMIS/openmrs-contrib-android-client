@@ -46,5 +46,18 @@ public class VisitTaskDbService extends BaseEntityDbService<VisitTask> implement
 
 		return results;
 	}
+
+	public List<VisitTask> getByVisit(String visitUuid, QueryOptions options, PagingInfo pagingInfo) {
+		List<VisitTask> results;
+
+		try {
+			results = executeQuery(options, pagingInfo,
+					(f) -> f.where(VisitTask_Table.visit_uuid.eq(visitUuid)));
+		} catch (Exception ex) {
+			results = null;
+		}
+
+		return results;
+	}
 }
 

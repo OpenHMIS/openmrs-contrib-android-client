@@ -190,6 +190,12 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 			this.visit = visit;
 		}
 
+		VisitNote visitNote = diagnosisPresenter.getVisitNote(visit);
+		if (visitNote != null) {
+			updateEncounterDiagnosis(visitNote);
+			return;
+		}
+
 		if (visit.getEncounters().size() != 0) {
 			for (Encounter encounter : visit.getEncounters()) {
 				if (encounter.getVoided() != null && encounter.getVoided()) {
@@ -248,6 +254,20 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 				}
 			}
 		}
+	}
+
+	public void updateEncounterDiagnosis(VisitNote visitNote) {
+		for (EncounterDiagnosis diagnosis : visitNote.getEncounterDiagnoses()) {
+			if (diagnosis.getOrder().equalsIgnoreCase(ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER)) {
+				primaryDiagnoses.add(diagnosis);
+			} else {
+				secondaryDiagnoses.add(diagnosis);
+			}
+		}
+
+		clinicalNoteView.setText(visitNote.getW12());
+
+		setRecyclerViews();
 	}
 
 	public void createEncounterDiagnosis(Observation observation, String diagnosis, String conceptNameId,
@@ -394,8 +414,10 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	protected VisitNote createVisitNote(Encounter encounter, String clinicalNote, Visit visit) {
+		String s = clinicalNoteView.getText().toString();
 		List<EncounterDiagnosis> encounterDiagnoses = new ArrayList<>();
 		VisitNote visitNote = new VisitNote();
+		visitNote.setUuid(visit.getUuid());
 		visitNote.setPersonId(visit.getPatient().getUuid());
 		visitNote.setHtmlFormId(ApplicationConstants.EncounterTypeEntity.VISIT_NOTE_FORM_ID);
 		visitNote.setCreateVisit("false");
