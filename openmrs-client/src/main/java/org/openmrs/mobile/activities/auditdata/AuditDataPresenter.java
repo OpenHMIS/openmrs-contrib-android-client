@@ -75,10 +75,11 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			@Override
 			public void onCompleted(Visit visit) {
 				auditDataView.setVisit(visit);
-				for (int i = 0; i < visit.getEncounters().size(); i++) {
-					if (visit.getEncounters().get(i).getEncounterType().getUuid().equalsIgnoreCase(ApplicationConstants
-							.EncounterTypeEntity.AUDIT_DATA_UUID) && !visit.getEncounters().get(i).getVoided()) {
-						fetchEncounter(visit.getEncounters().get(i).getUuid());
+				for (Encounter encounter : visit.getEncounters()) {
+					if (encounter.getEncounterType().getUuid()
+							.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID)
+							&& !encounter.getVoided()) {
+						fetchEncounter(encounter.getUuid());
 					}
 				}
 				auditDataView.showPageSpinner(false);

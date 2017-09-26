@@ -27,6 +27,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.utilities.strategy.ObservationExclusionStrategy;
@@ -143,8 +144,9 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 	}
 
 	private void isLocalUuid(Resource src) {
-		if (Resource.isLocalUuid(src.getUuid())) {
+		if (Resource.isLocalUuid(src.getUuid()) && OpenMRS.getInstance().getNetworkUtils().hasNetwork()) {
 			src.setUuid(null);
+			src.setDisplay(null);
 		}
 	}
 }

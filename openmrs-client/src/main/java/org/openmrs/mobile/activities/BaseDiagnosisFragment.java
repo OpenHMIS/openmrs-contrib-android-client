@@ -192,7 +192,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 		if (visit.getEncounters().size() != 0) {
 			for (Encounter encounter : visit.getEncounters()) {
-				if (encounter.getVoided()) {
+				if (encounter.getVoided() != null && encounter.getVoided()) {
 					continue;
 				}
 

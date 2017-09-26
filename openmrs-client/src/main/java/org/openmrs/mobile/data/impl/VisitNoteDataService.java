@@ -31,6 +31,7 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 		executeSingleCallback(callback,
 				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
 				() -> {
+					visitNote.processRelationships();
 					VisitNote result = dbService.save(visitNote);
 					if (networkUtils.isOnline() != true) {
 						syncLogDbService.save(createSyncLog(result, SyncAction.UPDATED));

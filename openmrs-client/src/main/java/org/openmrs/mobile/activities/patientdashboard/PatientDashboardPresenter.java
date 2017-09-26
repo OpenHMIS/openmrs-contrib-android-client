@@ -144,8 +144,10 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 					new DataService.GetCallback<User>() {
 						@Override
 						public void onCompleted(User entity) {
-							openMRS.setCurrentUserUuid(entity.getPerson().getUuid());
-							patientDashboardView.setProviderUuid(entity.getPerson().getUuid());
+							if(entity != null) {
+								openMRS.setCurrentUserUuid(entity.getPerson().getUuid());
+								patientDashboardView.setProviderUuid(entity.getPerson().getUuid());
+							}
 						}
 
 						@Override

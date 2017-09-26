@@ -14,7 +14,7 @@ public class BaseOpenmrsEntity extends BaseOpenmrsAuditableObject implements Ser
 	@Expose
 	@Column
 	@SerializedName("voided")
-	private Boolean voided;
+	private Boolean voided = false;
 
 	@Expose
 	@Column

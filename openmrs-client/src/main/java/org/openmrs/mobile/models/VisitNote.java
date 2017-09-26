@@ -88,7 +88,7 @@ public class VisitNote extends BaseOpenmrsEntity {
 	public void processRelationships() {
 		super.processRelationships();
 
-		processRelatedObjects(encounterDiagnoses);
+		processRelatedObjects(encounterDiagnoses, (e) -> e.setVisitNote(this));
 	}
 
 	public String getPersonId() {

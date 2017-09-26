@@ -18,10 +18,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
@@ -29,7 +30,11 @@ import org.openmrs.mobile.models.PatientIdentifier;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.PersonName;
 import org.openmrs.mobile.utilities.DateUtils;
+import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.ResourceSerializer;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Arrays;
 
@@ -39,11 +44,25 @@ import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@PrepareForTest({OpenMRS.class, NetworkUtils.class})
+@RunWith(PowerMockRunner.class)
 public class ResourceSerializerTest {
 
     @Mock
     private JsonSerializationContext context;
+
+    @Mock
+    private OpenMRS openMRS;
+
+    @Mock
+    private NetworkUtils networkUtils;
+
+    @Before
+    public void setUp(){
+        PowerMockito.mockStatic(OpenMRS.class);
+        PowerMockito.when(OpenMRS.getInstance()).thenReturn(openMRS);
+        PowerMockito.when(OpenMRS.getInstance().getNetworkUtils()).thenReturn(networkUtils);
+    }
 
     @Test
     public void shouldSerializeResourceFieldAsFullWhenNoUuidPresent(){

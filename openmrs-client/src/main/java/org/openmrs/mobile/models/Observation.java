@@ -83,7 +83,8 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 
 	@SerializedName("value")
 	@Expose
-	private Object value;
+	@Column
+	private String value;
 
 	@Expose
 	@ForeignKey(stubbedRelationship = true)
@@ -264,15 +265,11 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 		this.resourceVersion = resourceVersion;
 	}
 
-	public Object getValue() {
+	public String getValue() {
 		return value;
 	}
 
 	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public void setValue(Object value) {
 		this.value = value;
 	}
 

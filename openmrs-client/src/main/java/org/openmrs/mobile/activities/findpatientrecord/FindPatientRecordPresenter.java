@@ -21,7 +21,9 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.impl.PatientDataService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -81,8 +83,14 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 				findPatientView.setProgressBarVisibility(false);
 			}
 		};
-		patientDataService.getByNameOrIdentifier(query, QueryOptions.FULL_REP, pagingInfo,
-				getMultipleCallback);
+
+		QueryOptions options = new QueryOptions.Builder()
+				.includeInactive(true)
+				.customRepresentation(RestConstants.Representations.FULL)
+				.requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL)
+				.build();
+
+		patientDataService.getByNameOrIdentifier(query, options, pagingInfo, getMultipleCallback);
 	}
 
 	public void getLastViewed() {

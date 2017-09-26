@@ -1,5 +1,7 @@
 package org.openmrs.mobile.data.impl;
 
+import android.support.annotation.NonNull;
+
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -20,6 +22,10 @@ public class UserDataService extends BaseDataService<User, UserDbService, UserRe
 		executeMultipleCallback(callback, options, pagingInfo,
 				() -> dbService.getByUsername(username, options, pagingInfo),
 				() -> restService.getByUsername(username, options, pagingInfo));
+	}
+
+	public void save(@NonNull User user) {
+		dbService.save(user);
 	}
 }
 

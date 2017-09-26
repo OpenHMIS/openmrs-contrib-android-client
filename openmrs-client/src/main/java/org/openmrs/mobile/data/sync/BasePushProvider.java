@@ -43,7 +43,6 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 		Call<E> call = null;
 		switch (syncLog.getAction()) {
 			case NEW:
-				entity.setUuid(null);
 				call = create(entity);
 				break;
 			case UPDATED:

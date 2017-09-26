@@ -95,6 +95,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		QueryOptions options = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build();
 		executeSingleCallback(callback, options,
 				() -> {
+					entity.processRelationships();
 					E result = dbService.save(entity);
 					syncLogDbService.save(createSyncLog(result, SyncAction.NEW));
 					return result;
@@ -110,6 +111,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		QueryOptions options = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build();
 		executeSingleCallback(callback, options,
 				() -> {
+					entity.processRelationships();
 					E result = dbService.save(entity);
 					syncLogDbService.save(createSyncLog(result, SyncAction.UPDATED));
 					return result;

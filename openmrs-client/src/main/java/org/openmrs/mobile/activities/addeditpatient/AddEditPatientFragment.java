@@ -306,7 +306,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	public void startPatientDashboardActivity(Patient patient) {
 		//check for patient id if it's empty patient has just been added, open the dashboard
 		Intent intent = new Intent(getActivity(), PatientDashboardActivity.class);
-		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getPerson().getUuid());
+		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getUuid());
 		startActivity(intent);
 		showPageSpinner(false);
 	}

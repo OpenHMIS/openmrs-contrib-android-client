@@ -96,6 +96,7 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcept
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_SURGERY_HOSPITAL_STAY;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_WARD_STAY_DURING_ADMISSION;
+import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeDisplays.AUDITDATA;
 import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID;
 import static org.openmrs.mobile.utilities.ApplicationConstants.FORM_UUIDS.AUDIT_DATA_FORM_UUID;
 
@@ -189,9 +190,9 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				ConceptAnswer conceptAnswer = conceptAnswerList.get(position);
 				inpatientServiceTypeSelectedUuid = conceptAnswer.getUuid();
-				inpatientServiceTypeObservation =
-						setObservationFields(inpatientServiceTypeObservation, CONCEPT_INPATIENT_SERVICE_TYPE,
-								conceptAnswer.getUuid());
+				inpatientServiceTypeObservation = setObservationFields(inpatientServiceTypeObservation,
+						CONCEPT_INPATIENT_SERVICE_TYPE, conceptAnswer.getUuid(),
+						ApplicationConstants.ObservationLocators.TYPE_OF_INPATIENT_SERVICE + conceptAnswer.getDisplay());
 			}
 
 			@Override
@@ -318,119 +319,155 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		switch (id) {
 			case R.id.is_death_in_hospital_yes:
 				deathInHospitalObservation = setObservationFields(deathInHospitalObservation, CONCEPT_DEATH_IN_HOSPITAL,
-						CONCEPT_ANSWER_YES);
+						CONCEPT_ANSWER_YES, ApplicationConstants.ObservationLocators.HOSPITAL_DEATH +
+								ApplicationConstants.ObservationLocators.YES);
 				break;
 
 			case R.id.is_death_in_hospital_no:
 				deathInHospitalObservation = setObservationFields(deathInHospitalObservation, CONCEPT_DEATH_IN_HOSPITAL,
-						CONCEPT_ANSWER_NO);
+						CONCEPT_ANSWER_NO, ApplicationConstants.ObservationLocators.HOSPITAL_DEATH +
+								ApplicationConstants.ObservationLocators.NO);
 				break;
 
 			case R.id.is_palliative_consult_yes:
 				palliativeConsultObservation = setObservationFields(palliativeConsultObservation,
-						CONCEPT_PALLIATIVE_CONSULT, CONCEPT_ANSWER_YES);
+						CONCEPT_PALLIATIVE_CONSULT, CONCEPT_ANSWER_YES,
+						ApplicationConstants.ObservationLocators.PALLIATIVE_CARE_CONSULT +
+								ApplicationConstants.ObservationLocators.YES);
 
 				break;
 
 			case R.id.is_palliative_consult_no:
 				palliativeConsultObservation = setObservationFields(palliativeConsultObservation,
 						CONCEPT_PALLIATIVE_CONSULT,
-						CONCEPT_ANSWER_NO);
+						CONCEPT_ANSWER_NO, ApplicationConstants.ObservationLocators.PALLIATIVE_CARE_CONSULT +
+								ApplicationConstants.ObservationLocators.NO);
 				break;
 
 			case R.id.is_palliative_consult_unknown:
 				palliativeConsultObservation = setObservationFields(palliativeConsultObservation,
 						CONCEPT_PALLIATIVE_CONSULT,
-						CONCEPT_ANSWER_UNKNOWN);
+						CONCEPT_ANSWER_UNKNOWN,
+						ApplicationConstants.ObservationLocators.PALLIATIVE_CARE_CONSULT +
+								ApplicationConstants.ObservationLocators.UNKNOWN);
 				break;
 
 			case R.id.is_preop_risk_assessment_only_yes:
 				preopRiskAssessmentObservation = setObservationFields(preopRiskAssessmentObservation,
-						CONCEPT_PREOP_RISK_ASSESMENT, CONCEPT_ANSWER_YES);
+						CONCEPT_PREOP_RISK_ASSESMENT, CONCEPT_ANSWER_YES,
+						ApplicationConstants.ObservationLocators.PREOP_RISK_ASSESSMENT +
+								ApplicationConstants.ObservationLocators.YES);
 				break;
 
 			case R.id.is_preop_risk_assessment_only_no:
 				preopRiskAssessmentObservation = setObservationFields(preopRiskAssessmentObservation,
-						CONCEPT_PREOP_RISK_ASSESMENT, CONCEPT_ANSWER_NO);
+						CONCEPT_PREOP_RISK_ASSESMENT, CONCEPT_ANSWER_NO,
+						ApplicationConstants.ObservationLocators.PREOP_RISK_ASSESSMENT + ApplicationConstants
+								.ObservationLocators.NO);
 				break;
 
 			case R.id.is_preop_risk_assessment_only_unknown:
 				preopRiskAssessmentObservation = setObservationFields(preopRiskAssessmentObservation,
-						CONCEPT_PREOP_RISK_ASSESMENT, CONCEPT_ANSWER_UNKNOWN);
+						CONCEPT_PREOP_RISK_ASSESMENT, CONCEPT_ANSWER_UNKNOWN,
+						ApplicationConstants.ObservationLocators.PREOP_RISK_ASSESSMENT +
+								ApplicationConstants.ObservationLocators.UNKNOWN);
 				break;
 
 			case R.id.is_icu_stay_yes:
 				icuStayObservation = setObservationFields(icuStayObservation,
-						CONCEPT_ICU_STAY, CONCEPT_ANSWER_YES);
+						CONCEPT_ICU_STAY, CONCEPT_ANSWER_YES,
+						ApplicationConstants.ObservationLocators.ICU_STAY_DURING_ADMISSION +
+								ApplicationConstants.ObservationLocators.YES);
 				showAnimateView(true, extraFormAdditions);
 				break;
 
 			case R.id.is_icu_stay_no:
 				icuStayObservation = setObservationFields(icuStayObservation,
-						CONCEPT_ICU_STAY, CONCEPT_ANSWER_NO);
+						CONCEPT_ICU_STAY, CONCEPT_ANSWER_NO,
+						ApplicationConstants.ObservationLocators.ICU_STAY_DURING_ADMISSION +
+								ApplicationConstants.ObservationLocators.NO);
 				showAnimateView(false, extraFormAdditions);
 				voidExtraICUObservations();
 				break;
 
 			case R.id.is_icu_stay_unknown:
 				icuStayObservation = setObservationFields(icuStayObservation,
-						CONCEPT_ICU_STAY, CONCEPT_ANSWER_UNKNOWN);
+						CONCEPT_ICU_STAY, CONCEPT_ANSWER_UNKNOWN,
+						ApplicationConstants.ObservationLocators.ICU_STAY_DURING_ADMISSION +
+								ApplicationConstants.ObservationLocators.UNKNOWN);
 				showAnimateView(false, extraFormAdditions);
 				voidExtraICUObservations();
 				break;
 
 			case R.id.is_hdu_stay_yes:
 				hduStayObservation = setObservationFields(hduStayObservation,
-						CONCEPT_HDU_STAY, CONCEPT_ANSWER_YES);
+						CONCEPT_HDU_STAY, CONCEPT_ANSWER_YES,
+						ApplicationConstants.ObservationLocators.HDU_STAY_DURING_ADMISSION +
+								ApplicationConstants.ObservationLocators.YES);
 				showAnimateView(true, hduCoManage);
 				break;
 
 			case R.id.is_hdu_stay_no:
 				hduStayObservation = setObservationFields(hduStayObservation,
-						CONCEPT_HDU_STAY, CONCEPT_ANSWER_NO);
+						CONCEPT_HDU_STAY, CONCEPT_ANSWER_NO,
+						ApplicationConstants.ObservationLocators.HDU_STAY_DURING_ADMISSION +
+								ApplicationConstants.ObservationLocators.NO);
 				showAnimateView(false, hduCoManage);
 				setObservationVoided(hduComgmtObservation);
 				break;
 
 			case R.id.is_hdu_stay_unknown:
-				hduStayObservation = setObservationFields(hduStayObservation, CONCEPT_HDU_STAY, CONCEPT_ANSWER_UNKNOWN);
+				hduStayObservation = setObservationFields(hduStayObservation,
+						CONCEPT_HDU_STAY, CONCEPT_ANSWER_UNKNOWN,
+						ApplicationConstants.ObservationLocators.HDU_STAY_DURING_ADMISSION +
+								ApplicationConstants.ObservationLocators.UNKNOWN);
 				showAnimateView(false, hduCoManage);
 				setObservationVoided(hduComgmtObservation);
 				break;
 
 			case R.id.is_hdu_comgmt_yes:
 				hduComgmtObservation = setObservationFields(hduComgmtObservation,
-						CONCEPT_HDU_COMGMT, CONCEPT_ANSWER_YES);
+						CONCEPT_HDU_COMGMT, CONCEPT_ANSWER_YES,
+						ApplicationConstants.ObservationLocators.HDU_COMGMT +
+								ApplicationConstants.ObservationLocators.YES);
 				break;
 
 			case R.id.is_hdu_comgmt_no:
 				hduComgmtObservation = setObservationFields(hduComgmtObservation,
-						CONCEPT_HDU_COMGMT, CONCEPT_ANSWER_NO);
+						CONCEPT_HDU_COMGMT, CONCEPT_ANSWER_NO,
+						ApplicationConstants.ObservationLocators.HDU_COMGMT +
+								ApplicationConstants.ObservationLocators.NO);
 
 				break;
 			case R.id.is_hdu_comgmt_unknown:
 				hduComgmtObservation = setObservationFields(hduComgmtObservation,
-						CONCEPT_HDU_COMGMT, CONCEPT_ANSWER_UNKNOWN);
+						CONCEPT_HDU_COMGMT, CONCEPT_ANSWER_UNKNOWN,
+						ApplicationConstants.ObservationLocators.HDU_COMGMT +
+								ApplicationConstants.ObservationLocators.UNKNOWN);
 
 				break;
 
 			case R.id.is_hiv_positive_yes:
 				hivPositiveObservation =
 						setObservationFields(hivPositiveObservation, CONCEPT_HIV_STATUS,
-								CONCEPT_ANSWER_POSITIVE);
+								CONCEPT_ANSWER_POSITIVE, ApplicationConstants.ObservationLocators.HIV_INFECTED +
+										"POSITIVE");
 				showAnimateView(true, cd4TextInputLayout);
 				break;
 
 			case R.id.is_hiv_positive_no:
 				hivPositiveObservation = setObservationFields(hivPositiveObservation,
-						CONCEPT_HIV_STATUS, CONCEPT_ANSWER_NEGATIVE);
+						CONCEPT_HIV_STATUS, CONCEPT_ANSWER_NEGATIVE,
+						ApplicationConstants.ObservationLocators.HIV_INFECTED + "NEGATIVE");
 				showAnimateView(false, cd4TextInputLayout);
 				setObservationVoided(cd4Observation);
 				break;
 
 			case R.id.is_hiv_positive_unknown:
 				hivPositiveObservation = setObservationFields(hivPositiveObservation,
-						CONCEPT_HIV_STATUS, CONCEPT_ANSWER_UNKNOWN);
+						CONCEPT_HIV_STATUS, CONCEPT_ANSWER_UNKNOWN,
+						ApplicationConstants.ObservationLocators.HIV_INFECTED +
+								ApplicationConstants.ObservationLocators.UNKNOWN);
 				showAnimateView(false, cd4TextInputLayout);
 				setObservationVoided(cd4Observation);
 				break;
@@ -438,157 +475,201 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			case R.id.mechanical_ventilation_yes:
 				mechanicalVentilationObservation =
 						setObservationFields(mechanicalVentilationObservation, CONCEPT_MECHANICAL_VENTILATIN,
-								CONCEPT_ANSWER_YES);
+								CONCEPT_ANSWER_YES, ApplicationConstants.ObservationLocators.MECHANICAL_VENTILATION +
+										ApplicationConstants.ObservationLocators.YES);
 				break;
 
 			case R.id.mechanical_ventilation_no:
 				mechanicalVentilationObservation =
 						setObservationFields(mechanicalVentilationObservation, CONCEPT_MECHANICAL_VENTILATIN,
-								CONCEPT_ANSWER_NO);
+								CONCEPT_ANSWER_NO, ApplicationConstants.ObservationLocators.MECHANICAL_VENTILATION +
+										ApplicationConstants.ObservationLocators.NO);
 				break;
 
 			case R.id.mechanical_ventilation_unknown:
 				mechanicalVentilationObservation =
 						setObservationFields(mechanicalVentilationObservation, CONCEPT_MECHANICAL_VENTILATIN,
-								CONCEPT_ANSWER_UNKNOWN);
+								CONCEPT_ANSWER_UNKNOWN, ApplicationConstants.ObservationLocators.MECHANICAL_VENTILATION +
+										ApplicationConstants.ObservationLocators.UNKNOWN);
 				break;
 
 			case R.id.confirmed_infection_yes:
 				confirmedInfectionObservation =
 						setObservationFields(confirmedInfectionObservation, CONCEPT_INFECTION_CONFIRMED_SUSPECTED,
-								CONCEPT_ANSWER_YES);
+								CONCEPT_ANSWER_YES,
+								ApplicationConstants.ObservationLocators.INFECTION_CONFIRMED_SUSPECTED +
+										ApplicationConstants.ObservationLocators.YES);
 				break;
 
 			case R.id.confirmed_infection_no:
 				confirmedInfectionObservation =
 						setObservationFields(confirmedInfectionObservation, CONCEPT_INFECTION_CONFIRMED_SUSPECTED,
-								CONCEPT_ANSWER_NO);
+								CONCEPT_ANSWER_NO,
+								ApplicationConstants.ObservationLocators.INFECTION_CONFIRMED_SUSPECTED +
+										ApplicationConstants.ObservationLocators.NO);
 				break;
 
 			case R.id.confirmed_infection_unknown:
 				confirmedInfectionObservation =
 						setObservationFields(confirmedInfectionObservation, CONCEPT_INFECTION_CONFIRMED_SUSPECTED,
-								CONCEPT_ANSWER_UNKNOWN);
+								CONCEPT_ANSWER_UNKNOWN,
+								ApplicationConstants.ObservationLocators.INFECTION_CONFIRMED_SUSPECTED +
+										ApplicationConstants.ObservationLocators.UNKNOWN);
 				break;
 
 			case R.id.vaospressors_yes:
 				vaospressorsObservation =
 						setObservationFields(vaospressorsObservation, CONCEPT_RECIEVED_VAOSPRESSORS,
-								CONCEPT_ANSWER_YES);
+								CONCEPT_ANSWER_YES, ApplicationConstants.ObservationLocators.RECEIVED_VAOSPRESSORS +
+										ApplicationConstants.ObservationLocators.YES);
 				break;
 
 			case R.id.vaospressors_no:
 				vaospressorsObservation =
 						setObservationFields(vaospressorsObservation, CONCEPT_RECIEVED_VAOSPRESSORS,
-								CONCEPT_ANSWER_NO);
+								CONCEPT_ANSWER_NO, ApplicationConstants.ObservationLocators.RECEIVED_VAOSPRESSORS +
+										ApplicationConstants.ObservationLocators.NO);
 				break;
 
 			case R.id.vaospressors_unknown:
 				vaospressorsObservation =
 						setObservationFields(vaospressorsObservation, CONCEPT_RECIEVED_VAOSPRESSORS,
-								CONCEPT_ANSWER_UNKNOWN);
+								CONCEPT_ANSWER_UNKNOWN,
+								ApplicationConstants.ObservationLocators.RECEIVED_VAOSPRESSORS +
+										ApplicationConstants.ObservationLocators.UNKNOWN);
 				break;
 
 			case R.id.first_sbp_yes:
 				firstSbpObservation =
 						setObservationFields(firstSbpObservation, CONCEPT_FIRST_SBP_ICU,
-								CONCEPT_ANSWER_YES);
+								CONCEPT_ANSWER_YES, ApplicationConstants.ObservationLocators.FIRST_SBP_ICU +
+										ApplicationConstants.ObservationLocators.YES);
 				break;
 
 			case R.id.first_sbp_no:
 				firstSbpObservation =
-						setObservationFields(firstSbpObservation, CONCEPT_FIRST_SBP_ICU, CONCEPT_ANSWER_NO);
+						setObservationFields(firstSbpObservation, CONCEPT_FIRST_SBP_ICU, CONCEPT_ANSWER_NO,
+								ApplicationConstants.ObservationLocators.FIRST_SBP_ICU +
+										ApplicationConstants.ObservationLocators.NO);
 				break;
 
 			case R.id.first_sbp_unknown:
 				firstSbpObservation =
-						setObservationFields(firstSbpObservation, CONCEPT_FIRST_SBP_ICU, CONCEPT_ANSWER_UNKNOWN);
+						setObservationFields(firstSbpObservation, CONCEPT_FIRST_SBP_ICU, CONCEPT_ANSWER_UNKNOWN,
+								ApplicationConstants.ObservationLocators.FIRST_SBP_ICU +
+										ApplicationConstants.ObservationLocators.UNKNOWN);
 				break;
 
 			case R.id.any_prior_sedetion_yes:
 				priorSedetionObservation =
 						setObservationFields(priorSedetionObservation, CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU,
-								CONCEPT_ANSWER_YES);
+								CONCEPT_ANSWER_YES,
+								ApplicationConstants.ObservationLocators.SEDETION_PRIOR_FIRST_GCS_SCORE_ICU +
+										ApplicationConstants.ObservationLocators.YES);
 				break;
 
 			case R.id.any_prior_sedetion_no:
 				priorSedetionObservation =
 						setObservationFields(priorSedetionObservation, CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU,
-								CONCEPT_ANSWER_NO);
+								CONCEPT_ANSWER_NO,
+								ApplicationConstants.ObservationLocators.SEDETION_PRIOR_FIRST_GCS_SCORE_ICU +
+										ApplicationConstants.ObservationLocators.NO);
 				break;
 
 			case R.id.any_prior_sedetion_unknown:
 				priorSedetionObservation =
 						setObservationFields(priorSedetionObservation, CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU,
-								CONCEPT_ANSWER_UNKNOWN);
+								CONCEPT_ANSWER_UNKNOWN,
+								ApplicationConstants.ObservationLocators.SEDETION_PRIOR_FIRST_GCS_SCORE_ICU +
+										ApplicationConstants.ObservationLocators.UNKNOWN);
 				break;
 
 			case R.id.surgery_na:
 				surgeryObservation =
 						setObservationFields(surgeryObservation, CONCEPT_SURGERY_HOSPITAL_STAY,
-								CONCEPT_ANSWER_NA);
+								CONCEPT_ANSWER_NA,
+								ApplicationConstants.ObservationLocators.SURGERY_DURING_HOSPITAL_STAY + "NA");
 				break;
 
 			case R.id.surgery_planned:
 				surgeryObservation =
-						setObservationFields(surgeryObservation, CONCEPT_SURGERY_HOSPITAL_STAY, CONCEPT_ANSWER_PLANNED);
+						setObservationFields(surgeryObservation, CONCEPT_SURGERY_HOSPITAL_STAY, CONCEPT_ANSWER_PLANNED,
+								ApplicationConstants.ObservationLocators.SURGERY_DURING_HOSPITAL_STAY + "Planned");
 				break;
 
 			case R.id.surgery_unplanned:
 				surgeryObservation =
-						setObservationFields(surgeryObservation, CONCEPT_SURGERY_HOSPITAL_STAY, CONCEPT_ANSWER_UNPLANNED);
+						setObservationFields(surgeryObservation, CONCEPT_SURGERY_HOSPITAL_STAY, CONCEPT_ANSWER_UNPLANNED,
+								ApplicationConstants.ObservationLocators.SURGERY_DURING_HOSPITAL_STAY + "Unplanned");
 				break;
 
 			case R.id.first_map_yes:
 				firstMapObservation =
 						setObservationFields(firstMapObservation, CONCEPT_FIRST_MAP_ICU,
-								CONCEPT_ANSWER_YES);
+								CONCEPT_ANSWER_YES, ApplicationConstants.ObservationLocators.FIRST_MAP +
+										ApplicationConstants.ObservationLocators.YES);
 				break;
 
 			case R.id.first_map_no:
 				firstMapObservation =
-						setObservationFields(firstMapObservation, CONCEPT_FIRST_MAP_ICU, CONCEPT_ANSWER_NO);
+						setObservationFields(firstMapObservation, CONCEPT_FIRST_MAP_ICU, CONCEPT_ANSWER_NO,
+								ApplicationConstants.ObservationLocators.FIRST_MAP +
+										ApplicationConstants.ObservationLocators.NO);
 				break;
 
 			case R.id.first_map_unknown:
 				firstMapObservation =
-						setObservationFields(firstMapObservation, CONCEPT_FIRST_MAP_ICU, CONCEPT_ANSWER_UNKNOWN);
+						setObservationFields(firstMapObservation, CONCEPT_FIRST_MAP_ICU, CONCEPT_ANSWER_UNKNOWN,
+								ApplicationConstants.ObservationLocators.FIRST_MAP +
+										ApplicationConstants.ObservationLocators.UNKNOWN);
 				break;
 
 			case R.id.ward_stay_admission_yes:
 				firstMapObservation =
 						setObservationFields(wardStayAdmissionObservation, CONCEPT_WARD_STAY_DURING_ADMISSION,
-								CONCEPT_ANSWER_YES);
+								CONCEPT_ANSWER_YES,
+								ApplicationConstants.ObservationLocators.WARD_STAY_DURING_ADMISSION +
+										ApplicationConstants.ObservationLocators.YES);
 				break;
 
 			case R.id.ward_stay_admission_no:
 				firstMapObservation =
 						setObservationFields(wardStayAdmissionObservation, CONCEPT_WARD_STAY_DURING_ADMISSION,
-								CONCEPT_ANSWER_NO);
+								CONCEPT_ANSWER_NO,
+								ApplicationConstants.ObservationLocators.WARD_STAY_DURING_ADMISSION +
+										ApplicationConstants.ObservationLocators.NO);
 				break;
 
 			case R.id.ward_stay_admission_unknown:
 				firstMapObservation =
 						setObservationFields(wardStayAdmissionObservation, CONCEPT_WARD_STAY_DURING_ADMISSION,
-								CONCEPT_ANSWER_UNKNOWN);
+								CONCEPT_ANSWER_UNKNOWN,
+								ApplicationConstants.ObservationLocators.WARD_STAY_DURING_ADMISSION +
+										ApplicationConstants.ObservationLocators.UNKNOWN);
 				break;
 			case R.id.patient_diabetic_yes:
 				firstMapObservation =
 						setObservationFields(patientDiabeticObservation, CONCEPT_PATIENT_DIABETIC,
-								CONCEPT_ANSWER_YES);
+								CONCEPT_ANSWER_YES,
+								ApplicationConstants.ObservationLocators.PATIENT_DIABETIC +
+										ApplicationConstants.ObservationLocators.YES);
 				showAnimateView(true, hba1cTextLayout);
 				break;
 
 			case R.id.patient_diabetic_no:
 				firstMapObservation =
-						setObservationFields(patientDiabeticObservation, CONCEPT_PATIENT_DIABETIC, CONCEPT_ANSWER_NO);
+						setObservationFields(patientDiabeticObservation, CONCEPT_PATIENT_DIABETIC, CONCEPT_ANSWER_NO,
+								ApplicationConstants.ObservationLocators.PATIENT_DIABETIC +
+										ApplicationConstants.ObservationLocators.NO);
 				showAnimateView(false, hba1cTextLayout);
 				setObservationVoided(hBa1cObservation);
 				break;
 
 			case R.id.patient_diabetic_unknown:
 				firstMapObservation =
-						setObservationFields(patientDiabeticObservation, CONCEPT_PATIENT_DIABETIC, CONCEPT_ANSWER_UNKNOWN);
+						setObservationFields(patientDiabeticObservation, CONCEPT_PATIENT_DIABETIC, CONCEPT_ANSWER_UNKNOWN,
+								ApplicationConstants.ObservationLocators.PATIENT_DIABETIC +
+										ApplicationConstants.ObservationLocators.UNKNOWN);
 				showAnimateView(false, hba1cTextLayout);
 				setObservationVoided(hBa1cObservation);
 				break;
@@ -597,15 +678,19 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 	}
 
+	private Observation setObservationFields(Observation observation,
+			String questionConceptUuid, String answerConceptUuid) {
+		return setObservationFields(observation, questionConceptUuid, answerConceptUuid, null);
+	}
+
 	/**
 	 * This function  assigns values to an Observation object
 	 * @param observation         the observation that you want to set the values
 	 * @param questionConceptUuid The uuid of the Concept that the is used a question
 	 * @param answerConceptUuid   The uuid of the Concept that the user has selected as the answer
 	 */
-
-	private Observation setObservationFields(Observation observation, String questionConceptUuid, String
-			answerConceptUuid) {
+	private Observation setObservationFields(Observation observation,
+			String questionConceptUuid, String answerConceptUuid, String display) {
 
 		if (observation == null) {
 			observation = new Observation();
@@ -625,6 +710,10 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		observation.setPerson(person);
 		observation.setValue(answerConceptUuid);
 		observation.setObsDatetime(timeString);
+
+		if (display != null) {
+			observation.setDisplay(display);
+		}
 
 		return observation;
 	}
@@ -694,6 +783,9 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		for (Observation observation : encounter.getObs()) {
 			ArrayList displayString = StringUtils.splitStrings(observation.getDisplay().toLowerCase(), ":");
 			String displayValue = displayString.get(1).toString().trim();
+			if (observation.getConcept() == null) {
+				continue;
+			}
 
 			switch (observation.getConcept().getUuid()) {
 				case CONCEPT_DEATH_IN_HOSPITAL:
@@ -859,6 +951,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 					}
 					inpatientServiceTypeObservation = setObservationFields(observation, CONCEPT_INPATIENT_SERVICE_TYPE,
 							inpatientServiceTypeSelectedUuid);
+
 					break;
 
 				case CONCEPT_AUDIT_COMPLETE:
@@ -871,6 +964,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 						auditCompleteObservation =
 								setObservationFields(observation, CONCEPT_AUDIT_COMPLETE, CONCEPT_ANSWER_NO);
 					}
+
 					break;
 
 				case CONCEPT_FIRST_HEART_RATE_ICU:
@@ -959,7 +1053,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 						confirmedInfectionObservation =
 								setObservationFields(observation, CONCEPT_INFECTION_CONFIRMED_SUSPECTED,
 										CONCEPT_ANSWER_UNKNOWN);
-
 					}
 
 					break;
@@ -1091,6 +1184,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		//create encountertype
 		EncounterType auditFormEncounterType = new EncounterType();
 		auditFormEncounterType.setUuid(AUDIT_DATA_UUID);
+		auditFormEncounterType.setDisplay(AUDITDATA);
 
 		//create provider
 		Provider provider = new Provider();
@@ -1159,7 +1253,9 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 					&& Float.valueOf(firstIcuHeartRate.getText().toString()) <= 240) {
 				firstIcuHeartRateObservation =
 						setObservationFields(firstIcuHeartRateObservation, CONCEPT_FIRST_HEART_RATE_ICU,
-								firstIcuHeartRate.getText().toString());
+								firstIcuHeartRate.getText().toString(),
+								ApplicationConstants.ObservationLocators.FIRST_HEART_RATE + firstIcuHeartRate.getText()
+										.toString());
 				observations.add(firstIcuHeartRateObservation);
 			}
 		}
@@ -1168,7 +1264,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			if (Float.valueOf(firstGcsScore.getText().toString()) >= 1
 					&& Float.valueOf(firstGcsScore.getText().toString()) <= 15) {
 				firstGcsScoreObservation = setObservationFields(firstGcsScoreObservation, CONCEPT_FIRST_GCS_SCORE_ICU,
-						firstGcsScore.getText().toString());
+						firstGcsScore.getText().toString(),
+						ApplicationConstants.ObservationLocators.FIRST_GCS_SCORE + firstGcsScore.getText().toString());
 				observations.add(firstGcsScoreObservation);
 			}
 		}
@@ -1179,7 +1276,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 
 		if (hBa1c.getText().length() > 0) {
-			hBa1cObservation = setObservationFields(hBa1cObservation, CONCEPT_HBA1C, hBa1c.getText().toString());
+			hBa1cObservation = setObservationFields(hBa1cObservation, CONCEPT_HBA1C, hBa1c.getText().toString(),
+					ApplicationConstants.ObservationLocators.GLYCOSYLATED_HEMOGLOBIN + hBa1c.getText().toString());
 			observations.add(hBa1cObservation);
 		}
 
@@ -1191,11 +1289,14 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		if (auditComplete.isChecked()) {
 			auditCompleteObservation = setObservationFields(auditCompleteObservation,
-					CONCEPT_AUDIT_COMPLETE, CONCEPT_ANSWER_YES);
+					CONCEPT_AUDIT_COMPLETE, CONCEPT_ANSWER_YES,
+					ApplicationConstants.ObservationLocators.AUDIT_DATA_COMPLETE + "Yes");
 		} else {
 			auditCompleteObservation = setObservationFields(auditCompleteObservation,
-					CONCEPT_AUDIT_COMPLETE, CONCEPT_ANSWER_NO);
+					CONCEPT_AUDIT_COMPLETE, CONCEPT_ANSWER_NO,
+					ApplicationConstants.ObservationLocators.AUDIT_DATA_COMPLETE + "No");
 		}
+
 		observations.add(auditCompleteObservation);
 
 		boolean isNewEncounter = false;

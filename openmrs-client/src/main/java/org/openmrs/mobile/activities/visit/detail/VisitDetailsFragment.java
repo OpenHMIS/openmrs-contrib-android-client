@@ -170,7 +170,6 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 			OpenMRS.getInstance().setVisitUuid(visit.getUuid());
 			setVisitDates(visit);
 			setVisitType(visit);
-			setVitals(visit);
 			setClinicalNote(visit);
 			setDiagnoses(visit);
 			setAuditData(visit);
@@ -403,8 +402,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						auditDataMetadata.setVisibility(View.VISIBLE);
 						auditDataMetadataDate.setText(
-								DATE_FORMAT.format(visit.getEncounters().get(i).getEncounterDatetime()))
-						;
+								DATE_FORMAT.format(visit.getEncounters().get(i).getEncounterDatetime()));
 
 						for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
 							if (v == 0) {
@@ -430,7 +428,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		if (visit.getEncounters().size() != 0) {
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
 				Encounter encounter = visit.getEncounters().get(i);
-				if (encounter.getVoided())
+				if (encounter.getVoided() != null && encounter.getVoided())
 					continue;
 
 				if (encounter.getEncounterType().getDisplay()

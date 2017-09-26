@@ -36,6 +36,7 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 	public void updateVisit(Visit existingVisit, Visit updatedVisit, GetCallback<Visit> callback) {
 		executeSingleCallback(callback, new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
 				() -> {
+					existingVisit.processRelationships();
 					Visit result = dbService.save(existingVisit);
 					syncLogDbService.save(createSyncLog(existingVisit, SyncAction.UPDATED));
 					return result;

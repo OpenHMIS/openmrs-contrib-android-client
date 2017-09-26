@@ -105,9 +105,17 @@ public final class DateUtils {
 	public static DateTime convertTimeString(String dateAsString) {
 		DateTime date = null;
 		if (StringUtils.notNull(dateAsString)) {
-			DateTimeFormatter originalFormat = DateTimeFormat.forPattern(DateUtils.OPEN_MRS_REQUEST_FORMAT);
-			date = originalFormat.parseDateTime(dateAsString);
+			try {
+
+				DateTimeFormatter originalFormat = DateTimeFormat.forPattern(OPEN_MRS_REQUEST_FORMAT);
+				date = originalFormat.parseDateTime(dateAsString);
+
+			} catch (Exception ex) {
+				DateTimeFormatter originalFormat = DateTimeFormat.forPattern(OPEN_MRS_REQUEST_PATIENT_FORMAT);
+				date = originalFormat.parseDateTime(dateAsString);
+			}
 		}
+
 		return date;
 	}
 
