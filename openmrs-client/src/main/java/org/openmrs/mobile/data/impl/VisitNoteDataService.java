@@ -39,11 +39,15 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 				}, () -> restService.save(visitNote),
 				(e) -> {
 					// void existing obs
-					if(visitNote.getEncounter() != null) {
+					if (visitNote.getEncounter() != null) {
 						obsDbService.voidExistingObs(visitNote.getEncounter());
 					}
 					// save new obs
+					e.getEncounter().processRelationships();
 					encounterDbService.save(e.getEncounter());
+					// visit note no longer required
+					dbService.deleteLocalRelatedObjects(visitNote);
+					dbService.delete(visitNote.getUuid());
 				});
 	}
 

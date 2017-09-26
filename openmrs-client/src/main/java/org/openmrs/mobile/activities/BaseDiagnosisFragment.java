@@ -319,36 +319,32 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	public void setPrimaryDiagnosis(EncounterDiagnosis primaryDiagnosis) {
-		for (int i = 0; i < secondaryDiagnoses.size(); i++) {
-			if (secondaryDiagnoses.get(i) == primaryDiagnosis) {
-				secondaryDiagnoses.remove(i);
-				primaryDiagnoses.add(primaryDiagnosis);
-			}
+		if (removeDiagnosis(primaryDiagnosis, secondaryDiagnoses)) {
+			primaryDiagnoses.add(primaryDiagnosis);
 		}
+
 		setRecyclerViews();
 	}
 
 	public void setSecondaryDiagnosis(EncounterDiagnosis secondaryDiagnosis) {
-		for (int i = 0; i < primaryDiagnoses.size(); i++) {
-			if (primaryDiagnoses.get(i) == secondaryDiagnosis) {
-				primaryDiagnoses.remove(i);
-				secondaryDiagnoses.add(secondaryDiagnosis);
-			}
+		if (removeDiagnosis(secondaryDiagnosis, primaryDiagnoses)) {
+			secondaryDiagnoses.add(secondaryDiagnosis);
 		}
+
 		setRecyclerViews();
 	}
 
 	public void setDiagnosisCertainty(EncounterDiagnosis diagnosisCertainty) {
 		if (diagnosisCertainty.getOrder().equalsIgnoreCase(ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER)) {
 			for (int i = 0; i < primaryDiagnoses.size(); i++) {
-				if (primaryDiagnoses.get(i) == diagnosisCertainty) {
+				if (primaryDiagnoses.get(i).getUuid().equalsIgnoreCase(diagnosisCertainty.getUuid())) {
 					primaryDiagnoses.remove(i);
 					primaryDiagnoses.add(i, diagnosisCertainty);
 				}
 			}
 		} else {
 			for (int i = 0; i < secondaryDiagnoses.size(); i++) {
-				if (secondaryDiagnoses.get(i) == diagnosisCertainty) {
+				if (secondaryDiagnoses.get(i).getUuid().equalsIgnoreCase(diagnosisCertainty.getUuid())) {
 					secondaryDiagnoses.remove(i);
 					secondaryDiagnoses.add(i, diagnosisCertainty);
 				}
@@ -359,19 +355,28 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 	public void removeDiagnosis(EncounterDiagnosis removeDiagnosis, String order) {
 		if (order.equalsIgnoreCase(ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER)) {
-			for (int i = 0; i < primaryDiagnoses.size(); i++) {
-				if (primaryDiagnoses.get(i) == removeDiagnosis) {
-					primaryDiagnoses.remove(i);
-				}
-			}
+			removeDiagnosis(removeDiagnosis, primaryDiagnoses);
 		} else {
-			for (int i = 0; i < secondaryDiagnoses.size(); i++) {
-				if (secondaryDiagnoses.get(i) == removeDiagnosis) {
-					secondaryDiagnoses.remove(i);
-				}
+			removeDiagnosis(removeDiagnosis, secondaryDiagnoses);
+		}
+
+		setRecyclerViews();
+	}
+
+	private boolean removeDiagnosis(EncounterDiagnosis removeDiagnosis, List<EncounterDiagnosis> diagnoses) {
+		int index = -1;
+		for (EncounterDiagnosis encounterDiagnosis : diagnoses) {
+			if (encounterDiagnosis.getUuid().equalsIgnoreCase(removeDiagnosis.getUuid())) {
+				index = diagnoses.indexOf(removeDiagnosis);
 			}
 		}
-		setRecyclerViews();
+
+		if (index > -1) {
+			diagnoses.remove(index);
+			return true;
+		}
+
+		return false;
 	}
 
 	private void setRecyclerViews() {
@@ -414,7 +419,6 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	protected VisitNote createVisitNote(Encounter encounter, String clinicalNote, Visit visit) {
-		String s = clinicalNoteView.getText().toString();
 		List<EncounterDiagnosis> encounterDiagnoses = new ArrayList<>();
 		VisitNote visitNote = new VisitNote();
 		visitNote.setUuid(visit.getUuid());

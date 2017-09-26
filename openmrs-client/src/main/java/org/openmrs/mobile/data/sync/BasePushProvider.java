@@ -3,8 +3,6 @@ package org.openmrs.mobile.data.sync;
 import org.openmrs.mobile.data.DataOperationException;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.DbService;
-import org.openmrs.mobile.data.db.Repository;
-import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.RestService;
 import org.openmrs.mobile.models.BaseOpenmrsAuditableObject;
@@ -55,28 +53,8 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 
 		// Perform rest call
 		E restEntity = RestHelper.getCallValue(call);
-		if (restEntity != null) {
-			if (StringUtils.isNullOrEmpty(entity.getUuid())) {
-				// The local uuid can be removed when sent to the REST service so add the original uuid back if blank
-				// Note: this entity won't be saved to the db and so this uuid will not be used except to delete/update
-				// old records
 
-				// This won't work for underlying entities which have been created.
-				// A good example is creating a patient -> person -> names
-				//entity.setUuid(syncLog.getKey());
-				entity = dbService.getByUuid(syncLog.getKey(), QueryOptions.FULL_REP);
-			}
-
-			// Delete any related records with local uuids, records with the server-generated uuids will be saved when
-			// saving the entity below
-			deleteLocalRelatedRecords(entity, restEntity);
-
-			// Check if uuid has changed
-			if (!entity.getUuid().equalsIgnoreCase(restEntity.getUuid())) {
-				// This will update the uuid for the current entity and also save any related objects
-				dbService.update(entity.getUuid(), restEntity);
-			}
-		}
+		postProcess(entity, restEntity, syncLog);
 	}
 
 	protected Call<E> create(E entity) {
@@ -89,5 +67,30 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 
 	protected Call<E> purge(E entity) {
 		return restService.purge(entity.getUuid());
+	}
+
+	protected void postProcess(E originalEntity, E restEntity, SyncLog syncLog) {
+		if (restEntity != null) {
+			if (StringUtils.isNullOrEmpty(originalEntity.getUuid())) {
+				// The local uuid can be removed when sent to the REST service so add the original uuid back if blank
+				// Note: this entity won't be saved to the db and so this uuid will not be used except to delete/update
+				// old records
+
+				// This won't work for underlying entities which have been created.
+				// A good example is creating a patient -> person -> names
+				//entity.setUuid(syncLog.getKey());
+				originalEntity = dbService.getByUuid(syncLog.getKey(), QueryOptions.FULL_REP);
+			}
+
+			// Delete any related records with local uuids, records with the server-generated uuids will be saved when
+			// saving the entity below
+			deleteLocalRelatedRecords(originalEntity, restEntity);
+
+			// Check if uuid has changed
+			if (!originalEntity.getUuid().equalsIgnoreCase(restEntity.getUuid())) {
+				// This will update the uuid for the current entity and also save any related objects
+				dbService.update(originalEntity.getUuid(), restEntity);
+			}
+		}
 	}
 }

@@ -345,13 +345,15 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 			if (visitAttribute.getAttributeType() != null) {
 				if (type.getUuid().equalsIgnoreCase(visitAttribute.getAttributeType().getUuid())) {
 					visitAttribute.setAttributeType(type);
+					break;
 				}
 			} else {
 				String[] visitAttributeTypeAndValue = visitAttribute.getDisplay().split(": ");
 				if (visitAttributeTypeAndValue.length > 1 &&
-						visitAttribute.getDisplay().contains(visitAttributeTypeAndValue[0])) {
+						type.getDisplay().contains(visitAttributeTypeAndValue[0])) {
 					visitAttribute.setAttributeType(type);
 					visitAttribute.setValue(visitAttributeTypeAndValue[1]);
+					break;
 				}
 			}
 		}
