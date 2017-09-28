@@ -28,8 +28,7 @@ public class RestConstants {
 		public static final String VISIT_ENCOUNTER = "custom:(uuid,display,encounterDatetime,patient:ref,location:ref,"
 				+ "form:ref,encounterType:ref,obs,creator:ref,dateCreated,changedBy:ref,dateChanged,voided,visit)";
 		public static final String OBSERVATION = "custom:(uuid,display,value,groupMembers,concept:(uuid,display),encounter,"
-				+ "dateCreated,"
-				+ "creator:(uuid,display))";
+				+ "dateCreated,creator:(uuid,display))";
 		public static final String VISIT_TASKS = "custom:(uuid,status,name,closedOn)";
 	}
 }
