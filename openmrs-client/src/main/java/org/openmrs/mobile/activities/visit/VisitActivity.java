@@ -186,7 +186,6 @@ public class VisitActivity extends ACBaseActivity {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
 		}
-		goToDashboard();
 		super.onBackPressed();
 	}
 
@@ -195,7 +194,7 @@ public class VisitActivity extends ACBaseActivity {
 		// Handle item selection
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				goToDashboard();
+				onBackPressed();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -272,14 +271,5 @@ public class VisitActivity extends ACBaseActivity {
 		//VisitDetailsFragment.refreshVitalsDetails();
 
 		super.onRestart();
-	}
-
-	private void goToDashboard() {
-		finish();
-		Intent intent = new Intent(getApplicationContext(), PatientDashboardActivity.class);
-		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-		//fix for now
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		getApplicationContext().startActivity(intent);
 	}
 }

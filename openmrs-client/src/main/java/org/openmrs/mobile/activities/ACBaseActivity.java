@@ -291,6 +291,9 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	}
 
 	public static void hideSoftKeyboard(Activity activity) {
+		if (activity == null) {
+			return;
+		}
 		InputMethodManager inputMethodManager =
 				(InputMethodManager)activity.getSystemService(
 						Activity.INPUT_METHOD_SERVICE);

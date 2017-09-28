@@ -39,7 +39,7 @@
 	<LinearLayout
 			android:id="@+id/syncSelectionScreen"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="match_parent"
 			android:orientation="vertical"
 			android:layout_margin="@dimen/nav_title_margin">
 
@@ -48,24 +48,16 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:id="@+id/syncSelectionSectionTitle"
-				android:layout_weight="1"
 				android:textColor="@color/color_primary"
 				tools:textColor="@color/color_primary_dark"
 				android:layout_marginBottom="@dimen/nav_title_margin"/>
 
-		<LinearLayout
-				android:id="@+id/syncSelectionRecyclerView"
+		<android.support.v7.widget.RecyclerView
+				android:id="@+id/syncSelectionModelRecyclerView"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:orientation="vertical"
-				android:visibility="visible">
-
-			<android.support.v7.widget.RecyclerView
-					android:id="@+id/syncSelectionModelRecyclerView"
-					android:layout_width="match_parent"
-					android:layout_height="match_parent"
-					android:layout_gravity="left|bottom"/>
-		</LinearLayout>
+				android:layout_gravity="left|bottom"
+				android:layout_weight="1"/>
 
 		<RelativeLayout
 				android:id="@+id/syncSelectionLoadingProgressBar"
@@ -78,21 +70,30 @@
 					android:layout_width="wrap_content"
 					android:layout_height="match_parent"
 					android:layout_centerInParent="true"
-					android:layout_gravity="center"/>
+					android:layout_gravity="center"
+					/>
 
 		</RelativeLayout>
 
-	</LinearLayout>
+		<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:weightSum="10"
+				android:gravity="center_horizontal">
 
-	<Button
-			android:text="@string/skip_patient_list_sync_selections"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:id="@+id/moveForwardButton"
-			android:background="@color/color_primary_dark"
-			android:textColor="@color/color_white"
-			android:layout_marginRight="@dimen/avatar_size"
-			android:layout_marginLeft="@dimen/avatar_size"
-			/>
+			<Button
+					android:text="@string/skip_patient_list_sync_selections"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:id="@+id/moveForwardButton"
+					android:background="@color/color_primary_dark"
+					android:textColor="@color/color_white"
+					android:layout_alignParentBottom="true"
+					android:layout_gravity="center_horizontal"
+					android:layout_weight="5"/>
+		</LinearLayout>
+
+	</LinearLayout>
 
 </LinearLayout>

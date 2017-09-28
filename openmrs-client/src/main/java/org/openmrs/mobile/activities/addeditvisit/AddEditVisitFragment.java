@@ -42,7 +42,6 @@ import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Resource;
-import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitType;
@@ -222,9 +221,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			if (Resource.isLocalUuid(mPresenter.getVisit().getUuid())) {
 				mPresenter.startVisit(new ArrayList<>(visitAttributeMap.values()));
 			} else {
-				List<VisitAttribute> attributes = new ArrayList<>(visitAttributeMap.values());
-				mPresenter.getVisit().setAttributes(attributes);
-				mPresenter.updateVisit(attributes);
+				mPresenter.updateVisit(new ArrayList<>(visitAttributeMap.values()));
 			}
 		}
 	}
