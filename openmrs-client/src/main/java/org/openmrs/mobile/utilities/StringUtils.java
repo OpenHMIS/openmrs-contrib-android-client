@@ -137,4 +137,12 @@ public final class StringUtils {
 
 		return diagnosisStringSix;
 	}
+
+	public static String extractDisplayValue(String display, int index) {
+		if (isNullOrEmpty(display)) {
+			return ApplicationConstants.EMPTY_STRING;
+		}
+
+		return display.split("=")[index].trim();
+	}
 }

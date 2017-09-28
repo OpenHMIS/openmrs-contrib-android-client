@@ -416,10 +416,30 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public <T> T searchPersonAttributeValueByType(PersonAttributeType personAttributeType) {
-		if (null != getPatient() && null != getPatient().getPerson().getAttributes()) {
+		if (getPatient() != null && getPatient().getPerson().getAttributes() != null) {
 			for (PersonAttribute personAttribute : getPatient().getPerson().getAttributes()) {
-				if (personAttribute.getAttributeType().getUuid().equalsIgnoreCase(personAttributeType.getUuid())) {
-					return (T)personAttribute.getValue();
+				if (personAttribute.getAttributeType() != null) {
+					if (personAttribute.getAttributeType().getUuid()
+							.equalsIgnoreCase(personAttributeType.getUuid())) {
+						if (personAttribute.getValue() == null) {
+							if (personAttribute.getDisplay() != null) {
+								return (T)StringUtils.extractDisplayValue(personAttribute.getDisplay(), 1);
+							}
+
+							if (personAttribute.getStringValue() != null) {
+								return (T)personAttribute.getStringValue();
+							}
+						}
+
+						return (T)personAttribute.getValue();
+					}
+				} else {
+					if (personAttributeType.getDisplay()
+							.equalsIgnoreCase(
+									StringUtils.extractDisplayValue(
+											personAttribute.getDisplay(), 0))) {
+						return (T)StringUtils.extractDisplayValue(personAttribute.getDisplay(), 1);
+					}
 				}
 			}
 		}

@@ -37,6 +37,8 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 			throw new DataOperationException("Entity not found");
 		}
 
+		preProcess(entity);
+
 		// Prepare rest call
 		Call<E> call = null;
 		switch (syncLog.getAction()) {
@@ -67,6 +69,9 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 
 	protected Call<E> purge(E entity) {
 		return restService.purge(entity.getUuid());
+	}
+
+	protected void preProcess(E entity) {
 	}
 
 	protected void postProcess(E originalEntity, E restEntity, SyncLog syncLog) {
