@@ -70,13 +70,15 @@ public class PatientPushProvider extends BasePushProvider<Patient, PatientDbServ
 
 	@Override
 	protected void preProcess(Patient entity) {
-		List<PersonAttribute> attributes = entity.getPerson().getAttributes();
-		for (PersonAttribute attribute : attributes) {
-			if (attribute.getValue() == null) {
-				if (attribute.getStringValue() != null) {
-					attribute.setValue(attribute.getStringValue());
-				} else if (attribute.getConceptValue() != null) {
-					attribute.setValue(attribute.getConceptValue());
+		if (entity.getPerson() != null && entity.getPerson().getAttributes() != null) {
+			List<PersonAttribute> attributes = entity.getPerson().getAttributes();
+			for (PersonAttribute attribute : attributes) {
+				if (attribute.getValue() == null) {
+					if (attribute.getStringValue() != null) {
+						attribute.setValue(attribute.getStringValue());
+					} else if (attribute.getConceptValue() != null) {
+						attribute.setValue(attribute.getConceptValue());
+					}
 				}
 			}
 		}
