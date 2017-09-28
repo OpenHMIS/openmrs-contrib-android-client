@@ -280,7 +280,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	@Override
 	public void startVisit(List<VisitAttribute> attributes) {
-		visit.setAttributes(attributes);
+		updateExistingAttributes(attributes);
 		if (location != null) {
 			visit.setLocation(location.getParentLocation());
 		}
@@ -316,6 +316,8 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			updatedVisit.setStopDatetime(visit.getStopDatetime());
 		}
 
+		updateExistingAttributes(attributes);
+
 		setProcessing(true);
 		visitDataService.updateVisit(visit, updatedVisit, new DataService.GetCallback<Visit>() {
 			@Override
@@ -330,6 +332,16 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 				addEditVisitView.showVisitDetails(null, false);
 			}
 		});
+	}
+
+	private void updateExistingAttributes(List<VisitAttribute> attributes) {
+		// void existing attributes
+		for (VisitAttribute visitAttribute : visit.getAttributes()) {
+			visitAttribute.setVoided(true);
+		}
+
+		// append new attributes
+		visit.getAttributes().addAll(attributes);
 	}
 
 	@Override

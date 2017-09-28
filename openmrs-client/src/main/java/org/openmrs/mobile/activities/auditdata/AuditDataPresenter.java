@@ -22,8 +22,11 @@ import org.openmrs.mobile.data.impl.EncounterDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+
+import java.util.List;
 
 public class AuditDataPresenter extends BasePresenter implements AuditDataContract.Presenter {
 
@@ -76,9 +79,12 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			public void onCompleted(Visit visit) {
 				auditDataView.setVisit(visit);
 				for (Encounter encounter : visit.getEncounters()) {
+					if (encounter.getVoided() != null && encounter.getVoided()) {
+						continue;
+					}
+
 					if (encounter.getEncounterType().getUuid()
-							.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID)
-							&& !encounter.getVoided()) {
+							.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID)) {
 						fetchEncounter(encounter.getUuid());
 					}
 				}
@@ -142,6 +148,5 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			encounterDataService.update(encounter, serverResponceCallback);
 		}
 	}
-
 }
 

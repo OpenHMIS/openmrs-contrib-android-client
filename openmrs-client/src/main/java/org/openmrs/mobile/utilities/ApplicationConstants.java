@@ -142,10 +142,8 @@ public abstract class ApplicationConstants {
 		public static final String INFECTION_CONFIRMED_SUSPECTED = "Suspected or confirmed infection within 24 hours of ICU admission (e.g Abx ordered): ";
 		public static final String SEDETION_PRIOR_FIRST_GCS_SCORE_ICU =
 				"had patient received any sedation prior to 1st GCS score at ICU admission?: ";
-
-
-
 		public static final String CLINICAL_NOTE = "Text of encounter note: ";
+		public static final String CD4_COUNT = "CD4 COUNT: ";
 		public static final String DIAGNOSES = "Visit Diagnoses";
 		public static final String PRIMARY_DIAGNOSIS = "Primary";
 		public static final String SECONDARY_DIAGNOSIS = "Secondary";

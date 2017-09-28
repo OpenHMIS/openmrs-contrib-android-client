@@ -49,6 +49,7 @@ import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
+import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
@@ -272,11 +273,12 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 			}
 		} else {
 			for (VisitAttribute visitAttribute : visit.getAttributes()) {
-				loadVisitAttributeType(visitAttribute, visitAttributeTypes);
-				createVisitAttributeLayout(visitAttribute);
+				if (!visitAttribute.getVoided()) {
+					loadVisitAttributeType(visitAttribute, visitAttributeTypes);
+					createVisitAttributeLayout(visitAttribute);
+				}
 			}
 		}
-
 	}
 
 	@Override
@@ -404,32 +406,30 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 	public void setAuditData(Visit visit) {
 		if (visit.getEncounters().size() > 0) {
-			for (int i = 0; i < visit.getEncounters().size(); i++) {
-				if ((visit.getEncounters().get(i).getEncounterType().getUuid()
-						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) || visit.getEncounters()
-						.get(i).getEncounterType().getDisplay().equalsIgnoreCase(ApplicationConstants
-								.EncounterTypeDisplays.AUDITDATA) && !visit.getEncounters().get(i).getVoided())) {
+			for (Encounter encounter : visit.getEncounters()) {
+				if ((encounter.getEncounterType().getUuid()
+						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) ||
+						encounter.getEncounterType().getDisplay()
+								.equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.AUDITDATA) &&
+								!encounter.getVoided())) {
 
-					if (visit.getEncounters().get(i).getObs().size() != 0) {
+					if (!encounter.getObs().isEmpty()) {
 						auditDataMetadata.setVisibility(View.VISIBLE);
 						auditDataMetadataDate.setText(
-								DATE_FORMAT.format(visit.getEncounters().get(i).getEncounterDatetime()));
+								DATE_FORMAT.format(encounter.getEncounterDatetime()));
 
-						for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
-							if (v == 0) {
-
-								ArrayList names = StringUtils.splitStrings(
-										visit.getEncounters().get(i).getEncounterProviders().get(v).getDisplay(), ":");
-								auditDataMetadataProvider.setText(names.get(0).toString());
-							}
+						for (Provider provider : encounter.getEncounterProviders()) {
+							ArrayList names = StringUtils.splitStrings(provider.getDisplay(), ":");
+							auditDataMetadataProvider.setText(names.get(0).toString());
+							break;
 						}
-
-						noAuditData.setVisibility(View.GONE);
-						addAuditData.setVisibility(View.GONE);
-						auditInfoTableLayout.setVisibility(View.VISIBLE);
-						auditInfoTableLayout.removeAllViews();
-						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.AUDIT_DATA);
 					}
+
+					noAuditData.setVisibility(View.GONE);
+					addAuditData.setVisibility(View.GONE);
+					auditInfoTableLayout.setVisibility(View.VISIBLE);
+					auditInfoTableLayout.removeAllViews();
+					loadObservationFields(encounter.getObs(), EncounterTypeData.AUDIT_DATA);
 				}
 			}
 		}

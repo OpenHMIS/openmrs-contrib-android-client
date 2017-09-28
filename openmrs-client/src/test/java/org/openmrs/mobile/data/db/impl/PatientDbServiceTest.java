@@ -1,30 +1,21 @@
 package org.openmrs.mobile.data.db.impl;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.language.OperatorGroup;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
 import org.openmrs.mobile.data.ModelAsserters;
 import org.openmrs.mobile.data.ModelGenerators;
 import org.openmrs.mobile.data.db.BaseAuditableDbServiceTest;
 import org.openmrs.mobile.data.db.BaseDbService;
-import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Patient_Table;
-import org.openmrs.mobile.models.PersonName;
-import org.openmrs.mobile.models.PersonName_Table;
 
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
-
 public class PatientDbServiceTest extends BaseAuditableDbServiceTest<Patient> {
-		@InjectMocks private Repository repository;
+	private PatientDbService patientDbService;
 	private Patient_Table patientTable;
 
 	@Before
@@ -34,7 +25,9 @@ public class PatientDbServiceTest extends BaseAuditableDbServiceTest<Patient> {
 
 	@Override
 	protected BaseDbService<Patient> getDbService() {
-		return new PatientDbService(repository);
+		patientDbService = new PatientDbService(repository);
+
+		return patientDbService;
 	}
 
 	@Override
@@ -49,8 +42,6 @@ public class PatientDbServiceTest extends BaseAuditableDbServiceTest<Patient> {
 
 	@Test
 	public void getByName_shouldSearchByNameWithFullWildcard() throws Exception {
-		repository = new RepositoryImpl();
-		PatientDbService patientDbService = new PatientDbService(repository);
 		List<Patient> patientSearchResults;
 
 		Patient p1 = ModelGenerators.PATIENT.generate(true);

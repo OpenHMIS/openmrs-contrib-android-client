@@ -8,8 +8,12 @@ import org.openmrs.mobile.data.rest.retrofit.VisitRestService;
 import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -37,7 +41,18 @@ public class VisitRestServiceImpl extends BaseEntityRestService<Visit, VisitRest
 	public Call<Visit> updateVisit(Visit updatedVisit) {
 		final String stopDateTime;
 		final String visitUuid = updatedVisit.getUuid();
-		updatedVisit.setUuid(null);
+		// remove voided attributes
+		if(!updatedVisit.getAttributes().isEmpty()) {
+			List<VisitAttribute> attributes = new ArrayList<>();
+			for (VisitAttribute visitAttribute : updatedVisit.getAttributes()) {
+				if (visitAttribute.getVoided() == false) {
+					attributes.add(visitAttribute);
+				}
+			}
+
+			updatedVisit.setAttributes(attributes);
+		}
+
 		if (updatedVisit.getStopDatetime() != null) {
 			stopDateTime = DateUtils.convertTime(
 					updatedVisit.getStopDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT);
