@@ -72,11 +72,13 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 							VisitPhoto visitPhoto = new VisitPhoto();
 							visitPhoto.setFileCaption(observation.getComment());
 							visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
-
-							User creator = new User();
-							creator.setPerson(observation.getPerson());
-							visitPhoto.setCreator(creator);
-							visitPhoto.setCreator(observation.getCreator());
+							if (observation.getCreator() != null) {
+								visitPhoto.setCreator(observation.getCreator());
+							} else {
+								User user = new User();
+								user.setUsername(ApplicationConstants.EMPTY_STRING);
+								visitPhoto.setCreator(user);
+							}
 
 							visitPhoto.setObservation(observation);
 
