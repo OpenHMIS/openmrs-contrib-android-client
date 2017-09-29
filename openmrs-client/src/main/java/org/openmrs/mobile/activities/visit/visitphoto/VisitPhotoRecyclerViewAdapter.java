@@ -87,12 +87,12 @@ public class VisitPhotoRecyclerViewAdapter
 					expandImage.setLayoutParams(layoutParams);
 					expandImage.setImageBitmap(
 							BitmapFactory.decodeByteArray(
-									visitPhoto.getImageColumn().getBlob(), 0, visitPhoto.getImageColumn().getBlob()
-											.length));
+									visitPhoto.getImageColumn().getBlob(), 0, visitPhoto.getImageColumn().getBlob().length));
 
 					TextView descriptionView = new TextView(context);
 					descriptionView.setText(view.formatVisitImageDescription(visitPhoto.getFileCaption(),
-							DateUtils.calculateRelativeDate(visitPhoto.getDateCreated()),
+							(visitPhoto.getDateCreated() == null
+									? DateUtils.calculateRelativeDate(visitPhoto.getDateCreated()) : ""),
 							visitPhoto.getCreator().getUsername()));
 					descriptionView.setPadding(10, 10, 10, 10);
 
