@@ -325,7 +325,7 @@
 	<string name="no_vitals">No vitals recorded for this visit</string>
 	<string name="no_visit_tasks">No tasks for this visit</string>
 	<string name="add_diagnosis">Enter Diagnosis</string>
-	<string name="visit_image_description">Description: %1$s \r\n Uploaded: %2$s \r\n Patient: %3$s</string>
+	<string name="visit_image_description">Description: %1$s \r\nUploaded: %2$s \r\nUploaded By: %3$s</string>
 	<string name="add_patient">Add Patient</string>
 	<string name="telephone">Telephone:</string>
 	<string name="no_primary_diagnosis">No Primary Diagnosis</string>
