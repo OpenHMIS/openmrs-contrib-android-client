@@ -30,6 +30,7 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 	private boolean arePushing = false;
 	private boolean arePulling = false;
 	private boolean trimHasBeenCompleted = false;
+	private TimerTask measureConnectivityTimerTask;
 
 	private final int DELAY = 500;
 	private final double SMOOTHING_FACTOR = 0.005;
@@ -182,21 +183,23 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 	public void startMeasuringConnectivity() {
 		averageNetworkSpeed = null;
 		networkConnectionIsFast = null;
-		if (networkConnectivityCheckTimer == null) {
-			networkConnectivityCheckTimer = new Timer();
-		}
-		networkConnectivityCheckTimer.schedule(new TimerTask() {
+		measureConnectivityTimerTask = new TimerTask() {
 			@Override
 			public void run() {
 				calculateNewAverageNetworkSpeed();
 				Boolean previousConnectionSpeedIsFast = networkConnectionIsFast;
 				determineNetworkConnectionSpeed();
-				if (previousConnectionSpeedIsFast == null || (previousConnectionSpeedIsFast && !networkConnectionIsFast)
+				if (previousConnectionSpeedIsFast == null
+						|| (previousConnectionSpeedIsFast && !networkConnectionIsFast)
 						|| (!previousConnectionSpeedIsFast && networkConnectionIsFast)) {
 					view.runOnUIThread(() -> notifyViewToUpdateConnectionDisplay());
 				}
 			}
-		}, DELAY, DELAY);
+		};
+		if (networkConnectivityCheckTimer == null) {
+			networkConnectivityCheckTimer = new Timer();
+		}
+		networkConnectivityCheckTimer.schedule(measureConnectivityTimerTask, DELAY, DELAY);
 	}
 
 	private void determineNetworkConnectionSpeed() {
@@ -240,7 +243,7 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 	}
 
 	public void stopMeasuringConnectivity() {
-		networkConnectivityCheckTimer.cancel();
+		measureConnectivityTimerTask.cancel();
 	}
 
 	private void calculateNewAverageNetworkSpeed() {

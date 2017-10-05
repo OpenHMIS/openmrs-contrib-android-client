@@ -50,6 +50,19 @@ public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presente
 		super.onStop();
 	}
 
+	@Override
+	public void onPause(){
+		super.onPause();
+		mPresenter.stopMeasuringConnectivity();
+	}
+
+	@Override
+	public void onResume(){
+		mPresenter.startMeasuringConnectivity();
+		super.onResume();
+
+	}
+
 	private void initViewFields() {
 		pushProgressBar = (ProgressBar) rootView.findViewById(R.id.pushProgressBar);
 		pushProgressText = (TextView) rootView.findViewById(R.id.pushProgressText);
