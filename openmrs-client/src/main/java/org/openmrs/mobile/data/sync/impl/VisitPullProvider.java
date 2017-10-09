@@ -11,6 +11,7 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
 import org.openmrs.mobile.data.db.impl.ObsDbService;
+import org.openmrs.mobile.data.db.impl.PatientDbService;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
 import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
 import org.openmrs.mobile.data.db.impl.VisitTaskDbService;
@@ -25,6 +26,7 @@ import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Encounter_Table;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Observation_Table;
+import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Visit;
@@ -58,6 +60,7 @@ public class VisitPullProvider {
 	private VisitPhotoRestServiceImpl visitPhotoRestService;
 	private VisitTaskDbService visitTaskDbService;
 	private VisitTaskRestServiceImpl visitTaskRestService;
+	private PatientDbService patientDbService;
 
 	private DatabaseHelper databaseHelper;
 
@@ -67,7 +70,7 @@ public class VisitPullProvider {
 			EncounterRestServiceImpl encounterRestService, ObsDbService obsDbService, ObsRestServiceImpl obsRestService,
 			VisitPhotoDbService visitPhotoDbService, VisitPhotoRestServiceImpl visitPhotoRestService,
 			VisitTaskDbService visitTaskDbService, VisitTaskRestServiceImpl visitTaskRestService,
-			DatabaseHelper databaseHelper) {
+			DatabaseHelper databaseHelper, PatientDbService patientDbService) {
 		this.visitDbService = visitDbService;
 		this.visitRestService = visitRestService;
 		this.encounterDbService = encounterDbService;
@@ -79,6 +82,7 @@ public class VisitPullProvider {
 		this.visitTaskDbService = visitTaskDbService;
 		this.visitTaskRestService = visitTaskRestService;
 		this.databaseHelper = databaseHelper;
+		this.patientDbService = patientDbService;
 	}
 
 	public void pull(@NonNull PullSubscription subscription, @NonNull List<RecordInfo> patientInfo) {
@@ -133,9 +137,13 @@ public class VisitPullProvider {
 		QueryOptions options = new QueryOptions.Builder().customRepresentation(RestConstants.Representations.VISIT_TASKS)
 				.build();
 
+		Patient patient = patientDbService.getByUuid(patientRecord.getUuid(), null);
+
 		for (RecordInfo visitRecord : visitInfo) {
 			List<RecordInfo> visitTasks = RestHelper.getCallListValue(visitTaskRestService.getRecordInfoByVisit
 					(visitRecord.getUuid(), null, PagingInfo.ALL));
+
+			Visit visit = visitDbService.getByUuid(visitRecord.getUuid(), null);
 
 			databaseHelper.diffDelete(VisitTask.class, VisitTask_Table.visit_uuid.eq(visitRecord.getUuid()), visitTasks);
 
@@ -144,6 +152,8 @@ public class VisitPullProvider {
 				if (visitTasksRecord.isUpdatedSince(subscription)) {
 					VisitTask visitTask = RestHelper.getCallValue(visitTaskRestService.getByUuid(visitTasksRecord.getUuid
 							(), options));
+					visitTask.setVisit(visit);
+					visitTask.setPatient(patient);
 					visitTask.processRelationships();
 					visitTaskList.add(visitTask);
 				}

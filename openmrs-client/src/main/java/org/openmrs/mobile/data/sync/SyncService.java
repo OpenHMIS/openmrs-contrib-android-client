@@ -9,6 +9,7 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataOperationException;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.db.impl.SyncLogDbService;
+import org.openmrs.mobile.data.sync.impl.PatientListContextSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.PatientTrimProvider;
 import org.openmrs.mobile.event.SyncEvent;
 import org.openmrs.mobile.event.SyncPullEvent;
@@ -68,6 +69,23 @@ public class SyncService {
 
 			// Trim patient data that is not subscribed
 			trim();
+		}
+	}
+
+	public void clearSyncHistory() {
+		// Synchronize access so that only one thread is resetting at a time
+		synchronized (SYNC_LOCK) {
+			resetPatientListSyncHistory();
+		}
+	}
+
+	private void resetPatientListSyncHistory() {
+		// Get subscriptions
+		List<PullSubscription> patientListSubscriptions =
+				subscriptionDbService.getBySubscriptionClass(PatientListContextSubscriptionProvider.class.getSimpleName());
+		for (PullSubscription patientListSubscription : patientListSubscriptions) {
+			patientListSubscription.setLastSync(null);
+			subscriptionDbService.save(patientListSubscription);
 		}
 	}
 

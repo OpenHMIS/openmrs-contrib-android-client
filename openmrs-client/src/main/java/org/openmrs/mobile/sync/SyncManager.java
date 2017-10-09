@@ -98,4 +98,9 @@ public class SyncManager {
 			patientListContextDbService.delete(patientListContextToDelete);
 		}
 	}
+
+	public void clearSyncHistory() {
+		hasInitialSyncBeenRequested = false;
+		syncService.clearSyncHistory();
+	}
 }

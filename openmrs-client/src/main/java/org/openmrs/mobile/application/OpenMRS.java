@@ -411,6 +411,7 @@ public class OpenMRS extends Application {
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.remove(ApplicationConstants.UserKeys.USER_PERSON_NAME);
 		editor.remove(ApplicationConstants.UserKeys.USER_UUID);
+		syncManager.clearSyncHistory();
 	}
 
 	public OpenMRSLogger getOpenMRSLogger() {

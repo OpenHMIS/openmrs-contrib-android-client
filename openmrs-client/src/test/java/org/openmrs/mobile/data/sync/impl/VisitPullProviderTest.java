@@ -18,6 +18,7 @@ import org.openmrs.mobile.data.ModelGenerators;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
 import org.openmrs.mobile.data.db.impl.ObsDbService;
+import org.openmrs.mobile.data.db.impl.PatientDbService;
 import org.openmrs.mobile.data.db.impl.RepositoryImpl;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
 import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
@@ -69,6 +70,8 @@ public class VisitPullProviderTest {
 	@Mock ObsRestServiceImpl obsRestService;
 	@Mock VisitPhotoDbService visitPhotoDbService;
 	@Mock VisitPhotoRestServiceImpl visitPhotoRestService;
+	@Mock PatientDbService patientDbService;
+
 	Repository repository = new RepositoryImpl();
 
 	private VisitPullProvider provider;
@@ -81,7 +84,7 @@ public class VisitPullProviderTest {
 
 		provider = new VisitPullProvider(visitDbService, visitRestService, encounterDbService, encounterRestService,
 				obsDbService, obsRestService, visitPhotoDbService, visitPhotoRestService, visitTaskDbService,
-				visitTaskRestService, databaseHelper);
+				visitTaskRestService, databaseHelper, patientDbService);
 	}
 
 	@After
