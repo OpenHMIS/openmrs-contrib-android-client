@@ -1,4 +1,4 @@
-#gradle 
+#gradle
 import-summary.txt
 
 target/
@@ -6,6 +6,7 @@ pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.next
 release.properties
+keystore.properties
 
 #android project
 build/*
