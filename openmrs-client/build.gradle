@@ -20,14 +20,20 @@ def version = "1.0.0"
 def dbflow_version = "4.1.1"
 def sqlcipher_version = "3.5.7"
 
-// Create a variable called keystorePropertiesFile, and initialize it to your
-// keystore.properties file, in the rootProject folder.
-def keystorePropertiesFile = rootProject.file(".gradle/gradle.properties")
+def keystoreFile = "bandahealth.jks"
 
-// Initialize a new Properties() object called keystoreProperties.
+// Get the keystore.properties file location, first looking for the environment property
+def keystorePropertiesFilePath = System.getenv('BANDA_IM_KEYSTORE_FILE')
+if (keystorePropertiesFilePath == null || keystorePropertiesFilePath.toString().length() == 0) {
+	// If the environment property is not defined then assume that the file in the root project folder has been configured
+	keystorePropertiesFilePath = "keystore.properties"
+}
+
+// Create a variable called keystorePropertiesFile, and initialize it to the keystore.properties file
+def keystorePropertiesFile = rootProject.file(keystorePropertiesFilePath)
+
+// Initialize a new Properties() object and fill with keystore properties
 def keystoreProperties = new Properties()
-
-// Load your keystore.properties file into the keystoreProperties object.
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
@@ -35,7 +41,7 @@ android {
 		release {
 			keyAlias keystoreProperties['keyAlias']
 			keyPassword keystoreProperties['keyPassword']
-			storeFile file(keystoreProperties['storeFile'])
+			storeFile file(keystoreFile)
 			storePassword keystoreProperties['storePassword']
 		}
 	}
@@ -66,7 +72,7 @@ android {
 			release {
 				keyAlias keystoreProperties['keyAlias']
 				keyPassword keystoreProperties['keyPassword']
-				storeFile file(keystoreProperties['storeFile'])
+				storeFile file(keystoreFile)
 				storePassword keystoreProperties['storePassword']
 			}
 		}
