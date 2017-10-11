@@ -25,19 +25,24 @@ android {
 	buildToolsVersion '25.0.0'
 	useLibrary 'org.apache.http.legacy'
 
+	def teamCityBuildNumber = System.getenv("TEAMCITY_BUILD_NUMBER")
+	def buildNumber = (teamCityBuildNumber) ? (teamCityBuildNumber as int) : 1
+
 	def applicationVersion = version;
+	def gitTag = System.getenv("GIT_TAG")
+	def buildVersionName = (gitTag) ? gitTag : applicationVersion + "-debug." + buildNumber
 
 	defaultConfig {
 		applicationId "org.openmrs.bandahealth.im"
-		versionName applicationVersion
-		versionCode 1
+		versionName buildVersionName
+		versionCode buildNumber
 
 		minSdkVersion 14
 		targetSdkVersion 23
 
 		defaultConfig {
 			applicationId "org.openmrs.bandahealth.im"
-			versionName applicationVersion
+			versionName buildVersionName
 			minSdkVersion 15
 			targetSdkVersion 23
 			testApplicationId "org.openmrs.mobile.test"
