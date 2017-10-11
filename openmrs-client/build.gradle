@@ -20,25 +20,28 @@ def version = "1.0.0"
 def dbflow_version = "4.1.1"
 def sqlcipher_version = "3.5.7"
 
-// Create a variable called keystorePropertiesFile, and initialize it to your
-// keystore.properties file, in the rootProject folder.
-def keystorePropertiesFile = rootProject.file(".gradle/gradle.properties")
+def keystoreFile = "bandahealth.jks"
 
-// Initialize a new Properties() object called keystoreProperties.
+// Get the keystore.properties file location, first looking for the environment property
+def keystorePropertiesFilePath = System.getenv('BANDA_IM_KEYSTORE_FILE')
+if (keystorePropertiesFilePath == null || keystorePropertiesFilePath.toString().length() == 0) {
+	// If the environment property is not defined then assume that the file in the root project folder has been configured
+	keystorePropertiesFilePath = rootDir.toString() + "/keystore.properties"
+}
+
+// Create a variable called keystorePropertiesFile, and initialize it to the keystore.properties file
+def keystorePropertiesFile = file(keystorePropertiesFilePath)
+
+// Initialize a new Properties() object and fill with keystore properties
 def keystoreProperties = new Properties()
-
-// Load your keystore.properties file into the keystoreProperties object.
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+if (keystorePropertiesFile.exists()) {
+	project.logger.lifecycle("Loading keystore properties file (" + keystorePropertiesFilePath + ")")
+	keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+} else {
+	project.logger.lifecycle("Could not find keystore properties file at " + keystorePropertiesFilePath)
+}
 
 android {
-	signingConfigs {
-		release {
-			keyAlias keystoreProperties['keyAlias']
-			keyPassword keystoreProperties['keyPassword']
-			storeFile file(keystoreProperties['storeFile'])
-			storePassword keystoreProperties['storePassword']
-		}
-	}
 	compileSdkVersion 25
 	buildToolsVersion '25.0.0'
 	useLibrary 'org.apache.http.legacy'
@@ -50,59 +53,47 @@ android {
 		versionName applicationVersion
 		versionCode 1
 
+		testApplicationId "org.openmrs.mobile.test"
+		testInstrumentationRunner "org.openmrs.mobile.test.OpenMRSInstrumentationTestRunner"
+
 		minSdkVersion 16
 		targetSdkVersion 23
+	}
 
-		defaultConfig {
-			applicationId "org.openmrs.bandahealth.im"
-			versionName applicationVersion
-			minSdkVersion 16
-			targetSdkVersion 23
-			testApplicationId "org.openmrs.mobile.test"
-			testInstrumentationRunner "org.openmrs.mobile.test.OpenMRSInstrumentationTestRunner"
-		}
-
-		signingConfigs {
-			release {
-				keyAlias keystoreProperties['keyAlias']
-				keyPassword keystoreProperties['keyPassword']
-				storeFile file(keystoreProperties['storeFile'])
-				storePassword keystoreProperties['storePassword']
-			}
-		}
-
-		buildTypes {
-			release {
-				minifyEnabled false
-				proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-				signingConfig signingConfigs.release
-			}
-		}
-
-		lintOptions {
-			warning 'InvalidPackage'
-			abortOnError false
-		}
-
-		packagingOptions {
-			exclude 'META-INF/LICENSE'
-			exclude 'META-INF/LICENSE.txt'
-			exclude 'META-INF/DEPENDENCIES'
-			exclude 'META-INF/DEPENDENCIES.txt'
-			exclude 'META-INF/NOTICE'
-			exclude 'META-INF/NOTICE.txt'
-
-		}
-
-		compileOptions {
-			sourceCompatibility JavaVersion.VERSION_1_8
-			targetCompatibility JavaVersion.VERSION_1_8
+	signingConfigs {
+		release {
+			keyAlias keystoreProperties['keyAlias']
+			keyPassword keystoreProperties['keyPassword']
+			storeFile rootProject.file(keystoreFile)
+			storePassword keystoreProperties['storePassword']
 		}
 	}
+
 	buildTypes {
 		release {
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 			signingConfig signingConfigs.release
 		}
+	}
+
+	lintOptions {
+		warning 'InvalidPackage'
+		abortOnError false
+	}
+
+	packagingOptions {
+		exclude 'META-INF/LICENSE'
+		exclude 'META-INF/LICENSE.txt'
+		exclude 'META-INF/DEPENDENCIES'
+		exclude 'META-INF/DEPENDENCIES.txt'
+		exclude 'META-INF/NOTICE'
+		exclude 'META-INF/NOTICE.txt'
+
+	}
+
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
 	}
 }
 
