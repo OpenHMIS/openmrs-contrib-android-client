@@ -296,6 +296,13 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	}
 
 	@Override
+	public void onResume(){
+		//refresh to updated patient visit data
+		mPresenter.fetchPatientData(patientUuid);
+		super.onResume();
+	}
+
+	@Override
 	public IBaseDiagnosisView getDiagnosisView() {
 		return this;
 	}
