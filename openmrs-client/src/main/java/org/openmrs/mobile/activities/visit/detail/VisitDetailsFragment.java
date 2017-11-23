@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -36,6 +37,9 @@ import android.widget.TextView;
 
 import com.google.android.flexbox.FlexboxLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.BaseDiagnosisFragment;
 import org.openmrs.mobile.activities.IBaseDiagnosisView;
@@ -46,6 +50,7 @@ import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
+import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
@@ -60,14 +65,13 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.VisitDetailsMainPresenter>
+public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.VisitDashboardPagePresenter>
 		implements VisitContract.VisitDetailsView {
 
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT);
@@ -91,8 +95,11 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	private FlexboxLayout visitAttributesLayout;
 	private RelativeLayout visitNoteAuditInfo, visitVitalsAuditInfo, auditDataMetadata, visitDetailsProgressBar;
 	private ScrollView visitDetailsScrollView;
+	private SwipeRefreshLayout visitDetailsSwipeRefreshLayout;
 
 	private Map<String, Integer> auditDataSortOrder;
+
+	private EventBus eventBus;
 
 	public static VisitDetailsFragment newInstance() {
 		return new VisitDetailsFragment();
@@ -124,6 +131,18 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		//buildMarginLayout();
 		initializeListeners();
 		return root;
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		OpenMRS.getInstance().getEventBus().register(this);
+	}
+
+	@Override
+	public void onStop() {
+		OpenMRS.getInstance().getEventBus().unregister(this);
+		super.onStop();
 	}
 
 	private void initializeAuditDataSortOrder() {
@@ -163,6 +182,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		noVitals = (TextView)v.findViewById(R.id.noVitals);
 		visitVitalsTableLayout = (TableLayout)v.findViewById(R.id.visitVitalsTable);
 		auditInfoTableLayout = (TableLayout)v.findViewById(R.id.auditInfoTable);
+		visitDetailsSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.visitDetailsTab);
 
 		// diagnoses components
 		searchDiagnosis = (AutoCompleteTextView)v.findViewById(R.id.searchDiagnosis);
@@ -193,18 +213,20 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		auditDataMetadata = (RelativeLayout)v.findViewById(R.id.auditDataMetadata);
 
 		visitDetailsProgressBar = (RelativeLayout)v.findViewById(R.id.visitDetailsTabProgressBar);
-		visitDetailsScrollView = (ScrollView)v.findViewById(R.id.visitDetailsTab);
+		visitDetailsScrollView = (ScrollView)v.findViewById(R.id.visitDetailsTabScrollView);
 		setLoadingProgressBar((RelativeLayout)v.findViewById(R.id.loadingDiagnoses));
 		setDiagnosesContent((LinearLayout)v.findViewById(R.id.diagnosesContent));
 	}
 
 	@Override
 	public void showToast(String message, ToastUtil.ToastType toastType) {
+		ToastUtil.showShortToast(getContext(), toastType, message);
 	}
 
 	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
+		visitDetailsSwipeRefreshLayout.setRefreshing(false);
 		if (visit != null) {
 			OpenMRS.getInstance().setVisitUuid(visit.getUuid());
 			setVisitDates(visit);
@@ -274,6 +296,13 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 			}
 		});
 
+		visitDetailsSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				mPresenter.dataRefreshWasRequested();
+			}
+		});
 	}
 
 	public void setVisitDates(Visit visit) {
@@ -644,5 +673,16 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 				}
 			}
 		}
+	}
+
+	@Override
+	public void displayRefreshingData(boolean visible) {
+		visitDetailsSwipeRefreshLayout.setRefreshing(visible);
+	}
+
+	@Override
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onVisitDashboardRefreshEvent(VisitDashboardDataRefreshEvent event) {
+		mPresenter.dataRefreshEventOccurred(event);
 	}
 }

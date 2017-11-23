@@ -34,144 +34,150 @@
 
 	</RelativeLayout>
 
-	<ScrollView
+	<android.support.v4.widget.SwipeRefreshLayout
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:focusable="true"
-			android:focusableInTouchMode="true"
-			android:orientation="vertical">
+			android:id="@+id/visitPhotoTab"
+			android:layout_marginTop="10dp">
 
-
-		<LinearLayout
-				android:id="@+id/visitPhotoTab"
+		<ScrollView
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
+				android:focusable="true"
+				android:focusableInTouchMode="true"
 				android:orientation="vertical">
 
 
-			<android.support.v7.widget.CardView
+			<LinearLayout
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_margin="10dp"
-					card_view:cardBackgroundColor="@color/white"
-					card_view:cardCornerRadius="4dp">
+					android:layout_height="match_parent"
+					android:orientation="vertical">
 
-				<LinearLayout
+
+				<android.support.v7.widget.CardView
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_margin="10dp"
-						android:orientation="vertical">
+						card_view:cardBackgroundColor="@color/white"
+						card_view:cardCornerRadius="4dp">
 
-					<TextView
+					<LinearLayout
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
-							android:textSize="18sp"
-							android:textStyle="bold"
-							android:text="@string/visit_scroll_tab_visit_images_label" />
-
-					<View
-							android:layout_width="match_parent"
-							android:layout_height="1dp"
-							android:background="@android:color/darker_gray" />
-
-					<TextView
-							android:id="@+id/noVisitImage"
-							android:layout_marginTop="5dp"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:text="@string/no_visit_images"
-							android:visibility="gone" />
-
-					<android.support.v7.widget.RecyclerView
-							android:id="@+id/downloadPhotoRecyclerView"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_gravity="start|bottom" />
-
-				</LinearLayout>
-			</android.support.v7.widget.CardView>
-
-
-			<android.support.v7.widget.CardView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_margin="10dp"
-					card_view:cardBackgroundColor="@color/white"
-					card_view:cardCornerRadius="4dp">
-
-				<LinearLayout
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:orientation="vertical">
-
-					<RelativeLayout
 							android:layout_margin="10dp"
-							android:orientation="vertical"
-							android:focusable="true"
-							android:focusableInTouchMode="true"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content">
+							android:orientation="vertical">
 
-						<ImageView
-								android:id="@+id/visitPhoto"
-								android:contentDescription="@string/visit_photo"
-								android:src="@drawable/ic_person_grey_500"
-								android:scaleType="fitXY"
-								android:layout_centerInParent="true"
-								android:background="@color/card_shadow_1"
-								android:layout_width="200dp"
-								android:layout_height="200dp" />
-
-						<android.support.design.widget.FloatingActionButton
-								android:id="@+id/capture_photo"
-								android:src="@drawable/ic_photo_camera_white_48dp"
-								android:layout_marginRight="-25dp"
-								android:layout_marginEnd="-25dp"
-								android:layout_marginBottom="10dp"
-								android:layout_below="@id/visitPhoto"
-								android:layout_alignEnd="@id/visitPhoto"
-								android:layout_alignRight="@id/visitPhoto"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content" />
-					</RelativeLayout>
-
-					<android.support.design.widget.TextInputLayout
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content">
-
-						<android.support.design.widget.TextInputEditText
-								android:id="@+id/fileCaption"
+						<TextView
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
-								android:layout_marginBottom="10dp"
-								android:layout_marginTop="5dp"
-								android:layout_marginLeft="20dp"
-								android:layout_marginRight="20dp"
-								android:gravity="start"
-								android:hint="@string/enter_caption" />
+								android:textSize="18sp"
+								android:textStyle="bold"
+								android:text="@string/visit_scroll_tab_visit_images_label" />
 
-					</android.support.design.widget.TextInputLayout>
+						<View
+								android:layout_width="match_parent"
+								android:layout_height="1dp"
+								android:background="@android:color/darker_gray" />
+
+						<TextView
+								android:id="@+id/noVisitImage"
+								android:layout_marginTop="5dp"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:text="@string/no_visit_images"
+								android:visibility="gone" />
+
+						<android.support.v7.widget.RecyclerView
+								android:id="@+id/downloadPhotoRecyclerView"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_gravity="start|bottom" />
+
+					</LinearLayout>
+				</android.support.v7.widget.CardView>
+
+
+				<android.support.v7.widget.CardView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_margin="10dp"
+						card_view:cardBackgroundColor="@color/white"
+						card_view:cardCornerRadius="4dp">
 
 					<LinearLayout
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:orientation="vertical">
 
-						<android.support.v7.widget.AppCompatButton
-								android:id="@+id/uploadVisitPhoto"
+						<RelativeLayout
+								android:layout_margin="10dp"
+								android:orientation="vertical"
+								android:focusable="true"
+								android:focusableInTouchMode="true"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content">
+
+							<ImageView
+									android:id="@+id/visitPhoto"
+									android:contentDescription="@string/visit_photo"
+									android:src="@drawable/ic_person_grey_500"
+									android:scaleType="fitXY"
+									android:layout_centerInParent="true"
+									android:background="@color/card_shadow_1"
+									android:layout_width="200dp"
+									android:layout_height="200dp" />
+
+							<android.support.design.widget.FloatingActionButton
+									android:id="@+id/capture_photo"
+									android:src="@drawable/ic_photo_camera_white_48dp"
+									android:layout_marginRight="-25dp"
+									android:layout_marginEnd="-25dp"
+									android:layout_marginBottom="10dp"
+									android:layout_below="@id/visitPhoto"
+									android:layout_alignEnd="@id/visitPhoto"
+									android:layout_alignRight="@id/visitPhoto"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content" />
+						</RelativeLayout>
+
+						<android.support.design.widget.TextInputLayout
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content">
+
+							<android.support.design.widget.TextInputEditText
+									android:id="@+id/fileCaption"
+									android:layout_width="match_parent"
+									android:layout_height="wrap_content"
+									android:layout_marginBottom="10dp"
+									android:layout_marginTop="5dp"
+									android:layout_marginLeft="20dp"
+									android:layout_marginRight="20dp"
+									android:gravity="start"
+									android:hint="@string/enter_caption" />
+
+						</android.support.design.widget.TextInputLayout>
+
+						<LinearLayout
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
-								android:layout_marginLeft="20dp"
-								android:layout_marginRight="20dp"
-								android:layout_marginBottom="10dp"
-								android:background="@drawable/button_submit"
-								android:textColor="@color/white"
-								android:text="@string/save_photo"
-								style="@style/Widget.AppCompat.Button.Borderless" />
+								android:orientation="vertical">
 
+							<android.support.v7.widget.AppCompatButton
+									android:id="@+id/uploadVisitPhoto"
+									android:layout_width="match_parent"
+									android:layout_height="wrap_content"
+									android:layout_marginLeft="20dp"
+									android:layout_marginRight="20dp"
+									android:layout_marginBottom="10dp"
+									android:background="@drawable/button_submit"
+									android:textColor="@color/white"
+									android:text="@string/save_photo"
+									style="@style/Widget.AppCompat.Button.Borderless" />
+
+						</LinearLayout>
 					</LinearLayout>
-				</LinearLayout>
-			</android.support.v7.widget.CardView>
-		</LinearLayout>
-	</ScrollView>
+				</android.support.v7.widget.CardView>
+			</LinearLayout>
+		</ScrollView>
+	</android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

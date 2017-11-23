@@ -4,6 +4,7 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.PatientDataService;
+import org.openmrs.mobile.event.DataRefreshEvent;
 import org.openmrs.mobile.models.Patient;
 
 public class PatientHeaderPresenter extends BasePresenter implements PatientHeaderContract.Presenter {
@@ -20,10 +21,17 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 		this.patientDataService = dataAccess().patient();
 	}
 
-	@Override
-	public void getPatient() {
-		patientHeaderView.holdHeader(true);
-		patientDataService.getByUuid(patientUuid, QueryOptions.FULL_REP,
+	private void getPatient(boolean forceRefresh) {
+		if (!forceRefresh) {
+			patientHeaderView.holdHeader(true);
+		}
+
+		QueryOptions options = QueryOptions.FULL_REP;
+		if (forceRefresh) {
+			options = QueryOptions.REMOTE_FULL_REP;
+		}
+
+		patientDataService.getByUuid(patientUuid, options,
 				new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
@@ -43,6 +51,11 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 
 	@Override
 	public void subscribe() {
-		getPatient();
+		getPatient(false);
+	}
+
+	@Override
+	public void dataRefreshEventOccurred(DataRefreshEvent event) {
+		getPatient(true);
 	}
 }

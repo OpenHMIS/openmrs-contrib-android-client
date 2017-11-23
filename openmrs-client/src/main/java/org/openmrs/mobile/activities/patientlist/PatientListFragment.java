@@ -15,6 +15,7 @@ package org.openmrs.mobile.activities.patientlist;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -47,8 +48,10 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	private LinearLayoutManager layoutManager;
 	private LinearLayout patientListScreen, patientListRecyclerView;
 	private RelativeLayout patientListProgressBar, patientListLoadingProgressBar, numberOfPatientsLayout, selectPatientList;
+	private SwipeRefreshLayout patientListSwipeRefreshLayout;
 
 	private PatientList selectedPatientList;
+	private PatientList patientListNotSelectedOption;
 
 	private PatientListModelRecyclerViewAdapter adapter;
 
@@ -126,9 +129,14 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		patientListRecyclerView = (LinearLayout)root.findViewById(R.id.patientListRecyclerView);
 		numberOfPatientsLayout = (RelativeLayout)root.findViewById(R.id.numberOfPatientsLayout);
 		selectPatientList = (RelativeLayout)root.findViewById(R.id.selectPatientList);
+		patientListSwipeRefreshLayout = (SwipeRefreshLayout)root.findViewById(R.id.patientListSwipeRefreshView);
+		patientListSwipeRefreshLayout.setEnabled(false);
 
 		layoutManager = new LinearLayoutManager(this.getActivity());
 		patientListModelRecyclerView = (RecyclerView)root.findViewById(R.id.patientListModelRecyclerView);
+
+		patientListNotSelectedOption = new PatientList();
+		patientListNotSelectedOption.setName(getString(R.string.select_patient_list));
 
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
@@ -145,6 +153,14 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
 		patientListModelRecyclerView.setLayoutManager(layoutManager);
 		patientListModelRecyclerView.setNestedScrollingEnabled(false);
+
+		patientListSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				mPresenter.getPatientListData(selectedPatientList.getUuid(), 1, true);
+			}
+		});
 	}
 
 	@Override
@@ -188,14 +204,17 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 				setSelectedPatientList(patientListsToShow.get(position));
 				currentPage = 1;
 				adapter.clearItems();
-				if (selectedPatientList.getUuid() == null) {
+				if (selectedPatientList.getUuid() == null || selectedPatientList.equals(patientListNotSelectedOption)) {
 					showNoPatientListSelected(true);
 					setNumberOfPatientsView(0);
 					List<PatientListContext> patientListContextList = new ArrayList<>();
-					updatePatientListData(patientListContextList);
+					updatePatientListData(patientListContextList, false);
+
+					patientListSwipeRefreshLayout.setEnabled(false);
 				} else {
 					showNoPatientListSelected(false);
-					mPresenter.getPatientListData(selectedPatientList.getUuid(), 1);
+					mPresenter.getPatientListData(selectedPatientList.getUuid(), 1, false);
+					patientListSwipeRefreshLayout.setEnabled(true);
 				}
 			}
 
@@ -208,10 +227,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	private List<PatientList> getPatientListDisplayList(List<PatientList> patientLists) { new ArrayList<>();
 		List<PatientList> patientListsToShow = new ArrayList<>();
 
-		PatientList patientList = new PatientList();
-		patientList.setName(getString(R.string.select_patient_list));
-
-		patientListsToShow.add(patientList);
+		patientListsToShow.add(patientListNotSelectedOption);
 		patientListsToShow.addAll(patientLists);
 
 		return patientListsToShow;
@@ -223,12 +239,13 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	}
 
 	@Override
-	public void updatePatientListData(List<PatientListContext> patientListData) {
-		if (adapter.getItems() == null) {
+	public void updatePatientListData(List<PatientListContext> patientListData, boolean wasForceRefresh) {
+		if (adapter.getItems() == null || wasForceRefresh) {
 			adapter.setItems(patientListData);
 		} else {
 			adapter.addItems(patientListData);
 		}
+		patientListSwipeRefreshLayout.setRefreshing(false);
 	}
 
 	@Override

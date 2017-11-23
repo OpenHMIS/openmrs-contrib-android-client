@@ -61,9 +61,9 @@ public interface PatientDashboardContract {
 
 	interface Presenter extends BasePresenterContract {
 
-		void fetchPatientData(final String patientId);
+		void fetchPatientData(boolean forceRefresh);
 
-		void fetchVisits(Patient patient, int startIndex);
+		void fetchVisits(Patient patient, int startIndex, boolean forceRefresh);
 
 		Patient getPatient();
 
@@ -72,5 +72,7 @@ public interface PatientDashboardContract {
 		void setLoading(boolean loading);
 
 		void loadResults(Patient patient, boolean loadNextResults);
+
+		void dataRefreshWasRequested();
 	}
 }

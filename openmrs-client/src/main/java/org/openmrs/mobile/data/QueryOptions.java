@@ -10,6 +10,10 @@ public class QueryOptions {
 			new Builder().includeInactive(true).customRepresentation(RestConstants.Representations.FULL).build();
 	public static final QueryOptions FULL_REP =
 			new Builder().customRepresentation(RestConstants.Representations.FULL).build();
+	public static final QueryOptions REMOTE_FULL_REP =
+			new Builder().customRepresentation(RestConstants.Representations.FULL)
+					.requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build();
+	public static final QueryOptions REMOTE = new Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build();
 	private static final boolean DEFAULT_INCLUDE_INACTIVE = false;
 	private String cacheKey;
 	private boolean includeInactive = DEFAULT_INCLUDE_INACTIVE;

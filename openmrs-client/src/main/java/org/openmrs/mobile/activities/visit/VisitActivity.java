@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.view.ViewGroup;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -48,13 +49,14 @@ import org.openmrs.mobile.activities.visit.visittasks.VisitTasksFragment;
 import org.openmrs.mobile.activities.visit.visittasks.VisitTasksPresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.TabUtil;
 
 import java.util.ArrayList;
 
 public class VisitActivity extends ACBaseActivity {
 	private static final int END_VISIT_RESULT = 1;
-	public VisitContract.VisitDetailsMainPresenter visitDetailsMainPresenter;
+	public VisitContract.VisitDashboardPagePresenter visitDetailsMainPresenter;
 	private PatientHeaderContract.Presenter patientHeaderPresenter;
 	private String patientUuid;
 	private String visitUuid;
@@ -68,7 +70,7 @@ public class VisitActivity extends ACBaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getLayoutInflater().inflate(R.layout.activity_visit_details, frameLayout);
+		View visitActivityView = getLayoutInflater().inflate(R.layout.activity_visit_details, frameLayout);
 
 		Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
 		toolbar.setTitle(R.string.nav_visit_details);
@@ -86,8 +88,8 @@ public class VisitActivity extends ACBaseActivity {
 			visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
 			providerUuid = OpenMRS.getInstance().getCurrentProviderUUID();
 			visitClosedDate = extras.getString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
-			initViewPager(new VisitPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid,
-					visitClosedDate));
+
+			handleViewPager(visitActivityView, patientUuid, visitUuid, providerUuid, visitClosedDate);
 
 			// patient header
 			if (patientHeaderPresenter == null) {
@@ -118,15 +120,36 @@ public class VisitActivity extends ACBaseActivity {
 			endVisitButton.setVisibility(View.GONE);
 		}
 
+		// Font config
+		FontsUtil.setFont((ViewGroup)this.findViewById(android.R.id.content));
+
 		initializeListeners(endVisitButton, editVisitButton, captureVitalsButton, auditData);
 	}
 
-	private void initViewPager(VisitPageAdapter visitPageAdapter) {
+	private void handleViewPager(View view, String patientUuid, String visitUuid, String providerUuid,
+			String visitClosedDate) {
+		final VisitPageAdapter visitPageAdapter = new VisitPageAdapter(getSupportFragmentManager(), patientUuid,
+				visitUuid, providerUuid, visitClosedDate);
 		MaterialTabHost tabHost = (MaterialTabHost)findViewById(R.id.visitDetailsTabHost);
+		initializeViewPagerTabs(tabHost, visitPageAdapter);
+		runAfterPageDisplayedToUser(view, new Runnable() {
+
+			@Override
+			public void run() {
+				findViewById(R.id.visitActivityProgressBar).setVisibility(View.GONE);
+				initViewPager(tabHost, visitPageAdapter);
+			}
+		});
+	}
+
+	private void initializeViewPagerTabs(MaterialTabHost tabHost, VisitPageAdapter visitPageAdapter) {
 		tabHost.setType(MaterialTabHost.Type.FullScreenWidth);
 		for (int i = 0; i < visitPageAdapter.getCount(); i++) {
 			tabHost.addTab(getTabNames().get(i).toUpperCase());
 		}
+	}
+
+	private void initViewPager(MaterialTabHost tabHost, VisitPageAdapter visitPageAdapter) {
 		final ViewPager viewPager = (ViewPager)findViewById(R.id.visitDetailsPager);
 		viewPager.setOffscreenPageLimit(visitPageAdapter.getCount() - 1);
 		viewPager.setAdapter(visitPageAdapter);

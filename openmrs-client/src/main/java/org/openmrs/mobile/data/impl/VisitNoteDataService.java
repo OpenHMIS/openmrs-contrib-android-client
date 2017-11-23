@@ -6,7 +6,6 @@ import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
 import org.openmrs.mobile.data.db.impl.ObsDbService;
 import org.openmrs.mobile.data.db.impl.VisitNoteDbService;
@@ -36,7 +35,7 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 
 	public void save(VisitNote visitNote, @NonNull GetCallback<VisitNote> callback) {
 		executeSingleCallback(callback,
-				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
+				QueryOptions.REMOTE,
 				() -> {
 					// clean up encounter diagnoses. helpful if a diagnosis has been removed while offline
 					databaseHelper.diffDelete(EncounterDiagnosis.class,

@@ -9,9 +9,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.event.DataRefreshEvent;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.DateUtils;
 
@@ -62,6 +66,18 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 	}
 
 	@Override
+	public void onStart() {
+		super.onStart();
+		OpenMRS.getInstance().getEventBus().register(this);
+	}
+
+	@Override
+	public void onStop() {
+		OpenMRS.getInstance().getEventBus().unregister(this);
+		super.onStop();
+	}
+
+	@Override
 	public void holdHeader(boolean visibility) {
 		hideHeader.setVisibility(visibility ? View.VISIBLE : View.GONE);
 		headerScreen.setVisibility(visibility ? View.GONE : View.VISIBLE);
@@ -72,4 +88,8 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 
 	}
 
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onDataRefreshEvent(DataRefreshEvent event) {
+		mPresenter.dataRefreshEventOccurred(event);
+	}
 }

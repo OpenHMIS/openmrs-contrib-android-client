@@ -2,15 +2,15 @@ package org.openmrs.mobile.event;
 
 import android.support.annotation.Nullable;
 
-public class SyncEvent {
+public class SyncEvent extends OpenMRSEvent {
 
 	protected final String entity;
-	protected final String message;
 	protected final Integer totalItems;
 
 	public SyncEvent(String message, @Nullable String entity, @Nullable Integer totalItems) {
+		super(message);
+
 		this.entity = entity;
-		this.message = message;
 		this.totalItems = totalItems;
 	}
 

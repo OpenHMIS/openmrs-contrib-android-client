@@ -42,6 +42,22 @@
 				android:layout_height="wrap_content"
 				app:colorTabIndicator="#fff" />
 	</android.support.design.widget.AppBarLayout>
+
+
+	<RelativeLayout
+			android:id="@+id/visitActivityProgressBar"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			android:visibility="visible">
+
+		<ProgressBar
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:layout_centerInParent="true"
+				android:layout_gravity="center"/>
+
+	</RelativeLayout>
 	
 	
 	<FrameLayout

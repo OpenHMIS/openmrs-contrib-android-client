@@ -10,14 +10,12 @@ import com.google.common.base.Supplier;
 
 import org.openmrs.mobile.data.cache.CacheService;
 import org.openmrs.mobile.data.db.BaseDbService;
-import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.data.rest.BaseRestService;
 import org.openmrs.mobile.data.sync.SyncLogService;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.SyncAction;
-import org.openmrs.mobile.models.SyncLog;
 import org.openmrs.mobile.utilities.Consumer;
 import org.openmrs.mobile.utilities.Function;
 import org.openmrs.mobile.utilities.NetworkUtils;
@@ -93,7 +91,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		checkNotNull(entity);
 		checkNotNull(callback);
 
-		QueryOptions options = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build();
+		QueryOptions options = QueryOptions.REMOTE;
 		executeSingleCallback(callback, options,
 				() -> {
 					entity.processRelationships();
@@ -109,7 +107,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		checkNotNull(entity);
 		checkNotNull(callback);
 
-		QueryOptions options = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build();
+		QueryOptions options = QueryOptions.REMOTE;
 		executeSingleCallback(callback, options,
 				() -> {
 					entity.processRelationships();

@@ -6,7 +6,6 @@ import android.util.Log;
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
 import org.openmrs.mobile.data.rest.impl.VisitPhotoRestServiceImpl;
 import org.openmrs.mobile.models.Observation;
@@ -35,7 +34,7 @@ public class VisitPhotoDataService
 
 	public void uploadPhoto(VisitPhoto visitPhoto, @NonNull GetCallback<VisitPhoto> callback) {
 		executeSingleCallback(callback,
-				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
+				QueryOptions.REMOTE,
 				() -> {
 					VisitPhoto result = dbService.save(visitPhoto);
 					syncLogService.save(result, SyncAction.NEW);
@@ -53,8 +52,9 @@ public class VisitPhotoDataService
 		obsDataService.getVisitPhotoObservations(visitUuid, options, callback);
 	}
 
-	public void downloadPhotoImage(VisitPhoto photo, String view, @NonNull GetCallback<VisitPhoto> callback) {
-		executeSingleCallback(callback, null,
+	public void downloadPhotoImage(VisitPhoto photo, String view, QueryOptions options,
+			@NonNull GetCallback<VisitPhoto> callback) {
+		executeSingleCallback(callback, options,
 				() -> dbService.getPhotoByObservation(photo.getObservation().getUuid()),
 				() -> restService.downloadPhoto(photo.getObservation().getUuid(), view),
 				(ResponseBody body) -> {

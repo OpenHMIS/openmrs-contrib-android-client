@@ -164,7 +164,7 @@ public class PatientListPresenterTest extends ACUnitTestBase {
 		}).when(patientListContextDataService).getListPatients(anyString(), any(QueryOptions.class), any(PagingInfo.class),
 				any(DataService.GetCallback.class));
 
-		presenter.getPatientListData("11-22-33", 1);
+		presenter.getPatientListData("11-22-33", 1, false);
 		verify(view).setSpinnerVisibility(false);
 		verify(view).setEmptyPatientListVisibility(true);
 	}

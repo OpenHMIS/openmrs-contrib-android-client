@@ -19,6 +19,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,9 +34,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
-import org.openmrs.mobile.activities.visit.VisitFragment;
+import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.models.VisitTask;
@@ -52,12 +58,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VisitTasksFragment extends VisitFragment implements VisitContract.VisitTasksView {
+public class VisitTasksFragment extends ACBaseFragment<VisitContract.VisitDashboardPagePresenter>
+		implements VisitContract.VisitTasksView {
 
 	private View mRootView;
 	private RecyclerView openViewTasksRecyclerView;
 	private LinearLayoutManager layoutManager;
-	private LinearLayout addTaskLayout, closedTasksLayout, visitTasksTab;
+	private LinearLayout addTaskLayout, closedTasksLayout;
+	private SwipeRefreshLayout visitTasksSwipeRefreshLayout;
 	private RelativeLayout visitTasksProgressBar;
 
 	private List<VisitPredefinedTask> predefinedTasks;
@@ -88,9 +96,19 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 		openViewTasksRecyclerView.setLayoutManager(layoutManager);
 
 		addListeners();
-		// Font config
-		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 		return mRootView;
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		OpenMRS.getInstance().getEventBus().register(this);
+	}
+
+	@Override
+	public void onStop() {
+		OpenMRS.getInstance().getEventBus().unregister(this);
+		super.onStop();
 	}
 
 	private void resolveViews(View v) {
@@ -98,7 +116,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 		addtask = (AutoCompleteTextView)v.findViewById(R.id.addVisitTasks);
 		addTaskLayout = (LinearLayout)v.findViewById(R.id.addTaskLayout);
 		closedTasksLayout = (LinearLayout)v.findViewById(R.id.closedTasksLayout);
-		visitTasksTab = (LinearLayout)v.findViewById(R.id.visitTasksTab);
+		visitTasksSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.visitTasksTab);
 		visitTasksProgressBar = (RelativeLayout)v.findViewById(R.id.visitTasksProgressBar);
 
 		noVisitTasks = (TextView)v.findViewById(R.id.noVisitTasks);
@@ -106,7 +124,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 
 	@Override
 	public void showToast(String message, ToastUtil.ToastType toastType) {
-
+		ToastUtil.showShortToast(getContext(), toastType, message);
 	}
 
 	@Override
@@ -236,6 +254,14 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 				addtask.setText(ApplicationConstants.EMPTY_STRING);
 			}
 		});
+
+		visitTasksSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				mPresenter.dataRefreshWasRequested();
+			}
+		});
 	}
 
 	@Override
@@ -260,19 +286,10 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	}
 
 	@Override
-	public void refresh() {
-		((VisitTasksPresenter)mPresenter).getVisit();
-		((VisitTasksPresenter)mPresenter).getPredefinedTasks();
-	}
-
-	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
-		if (visit != null) {
-			if (visit.getStopDatetime() != null) {
-				addTaskLayout.setVisibility(View.GONE);
-			}
-			((VisitTasksPresenter)mPresenter).getVisitTasks();
+		if (visit != null && visit.getStopDatetime() != null) {
+			addTaskLayout.setVisibility(View.GONE);
 		}
 
 	}
@@ -286,10 +303,10 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	public void showTabSpinner(boolean visibility) {
 		if (visibility) {
 			visitTasksProgressBar.setVisibility(View.VISIBLE);
-			visitTasksTab.setVisibility(View.GONE);
+			visitTasksSwipeRefreshLayout.setVisibility(View.GONE);
 		} else {
 			visitTasksProgressBar.setVisibility(View.GONE);
-			visitTasksTab.setVisibility(View.VISIBLE);
+			visitTasksSwipeRefreshLayout.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -340,5 +357,16 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 				}
 			}
 		}
+	}
+
+	@Override
+	public void displayRefreshingData(boolean visible) {
+		visitTasksSwipeRefreshLayout.setRefreshing(visible);
+	}
+
+	@Override
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onVisitDashboardRefreshEvent(VisitDashboardDataRefreshEvent event) {
+		mPresenter.dataRefreshEventOccurred(event);
 	}
 }

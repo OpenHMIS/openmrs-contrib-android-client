@@ -37,185 +37,37 @@
 
 	</RelativeLayout>
 
-	<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	            android:id="@+id/visitDetailsTab"
-	            android:layout_width="match_parent"
-	            android:layout_height="match_parent"
-	            android:focusable="true"
-	            android:focusableInTouchMode="true"
-	            android:orientation="vertical"
-	            android:layout_alignParentTop="true"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentStart="true"
-	            android:layout_marginTop="19dp"
-			>
+	<android.support.v4.widget.SwipeRefreshLayout
+			android:id="@+id/visitDetailsTab"
+			android:layout_below="@id/patientHeader"
+			android:paddingTop="0dp"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginTop="10dp"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true">
 
-		<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="vertical"
-				android:paddingBottom="30dip">
+		<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+		            android:id="@+id/visitDetailsTabScrollView"
+		            android:layout_width="match_parent"
+		            android:layout_height="match_parent"
+		            android:focusable="true"
+		            android:focusableInTouchMode="true"
+		            android:orientation="vertical">
 
-			<android.support.v7.widget.CardView
-					android:layout_margin="10dp"
-					card_view:cardBackgroundColor="@color/white"
-					card_view:cardCornerRadius="4dp"
+			<LinearLayout
 					android:layout_width="match_parent"
-					android:layout_height="match_parent">
+					android:layout_height="wrap_content"
+					android:orientation="vertical"
+					android:paddingBottom="30dip">
 
-				<LinearLayout
-						android:layout_marginBottom="5dp"
+				<android.support.v7.widget.CardView
+						android:layout_margin="10dp"
+						card_view:cardBackgroundColor="@color/white"
+						card_view:cardCornerRadius="4dp"
 						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:orientation="vertical">
-
-					<RelativeLayout
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_marginTop="5dp"
-							android:orientation="vertical">
-
-						<TextView
-								android:id="@+id/activeVisitBadge"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginTop="3dp"
-								android:layout_marginLeft="5dp"
-								android:layout_marginStart="5dp"
-								android:paddingLeft="5dp"
-								android:paddingStart="5dp"
-								android:paddingEnd="5dp"
-								android:paddingRight="5dp"
-								android:textColor="@color/color_white"
-								android:text="@string/active_visit_label"
-								android:background="@drawable/active_visit_badge"/>
-
-						<TextView
-								android:id="@+id/visitStartDate"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:textStyle="bold"
-								android:layout_marginRight="10dp"
-								android:layout_alignParentBottom="true"
-								android:layout_toRightOf="@+id/activeVisitBadge"
-								android:layout_toEndOf="@+id/activeVisitBadge"/>
-
-						<TextView
-								android:id="@+id/startDuration"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginTop="3dp"
-								android:layout_marginRight="10dp"
-								android:layout_marginEnd="10dp"
-								android:textStyle="italic"
-								android:textSize="12sp"
-								android:textColor="@color/openmrs_color_grey"
-								android:layout_alignParentBottom="true"
-								android:layout_alignParentEnd="true"
-								android:layout_alignParentRight="true"/>
-					</RelativeLayout>
-
-					<RelativeLayout
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_marginBottom="5dp"
-							android:orientation="vertical">
-
-						<TextView
-								android:id="@+id/visitEndDate"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginTop="3dp"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"/>
-
-						<TextView
-								android:id="@+id/visitDuration"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:textStyle="italic"
-								android:textSize="12sp"
-								android:layout_marginLeft="5dp"
-								android:layout_marginStart="5dp"
-								android:layout_marginRight="10dp"
-								android:layout_marginEnd="10dp"
-								android:textColor="@color/openmrs_color_grey"
-								android:layout_alignParentBottom="true"
-								android:layout_alignParentEnd="true"
-								android:layout_alignParentRight="true"/>
-					</RelativeLayout>
-
-
-					<RelativeLayout
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:orientation="vertical"
-							android:layout_marginBottom="5dp">
-
-						<TextView
-								android:id="@+id/visitTypeLabel"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:layout_marginEnd="5dp"
-								android:layout_marginRight="5dp"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:text="@string/visit_type"/>
-
-						<TextView
-								android:id="@+id/visitType"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:layout_marginRight="10dp"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_toEndOf="@+id/visitTypeLabel"
-								android:layout_toRightOf="@+id/visitTypeLabel"/>
-					</RelativeLayout>
-
-					<View
-							android:id="@+id/visitDetailsView"
-							android:layout_width="match_parent"
-							android:layout_height="1dp"
-							android:layout_marginLeft="5dp"
-							android:layout_marginRight="5dp"
-							android:background="@android:color/darker_gray"/>
-
-					<com.google.android.flexbox.FlexboxLayout
-							android:id="@+id/visitAttributesLayout"
-							android:layout_marginEnd="30dp"
-							android:layout_marginLeft="5dp"
-							android:layout_marginRight="5dp"
-							android:layout_marginStart="10dp"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:orientation="vertical"
-							app:alignItems="center"
-							app:alignContent="center"
-							app:flexDirection="row"
-							app:flexWrap="wrap"
-							android:layout_marginTop="5dp">
-
-					</com.google.android.flexbox.FlexboxLayout>
-
-				</LinearLayout>
-
-			</android.support.v7.widget.CardView>
-
-			<android.support.v7.widget.CardView
-					android:layout_margin="10dp"
-					card_view:cardBackgroundColor="@color/white"
-					card_view:cardCornerRadius="4dp"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content">
-
-				<LinearLayout
-						android:layout_marginBottom="30dp"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:orientation="vertical">
+						android:layout_height="match_parent">
 
 					<LinearLayout
 							android:layout_marginBottom="5dp"
@@ -223,101 +75,225 @@
 							android:layout_height="wrap_content"
 							android:orientation="vertical">
 
-						<TextView
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginTop="5dp"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:textStyle="bold"
-								android:text="@string/visit_note"/>
-					</LinearLayout>
-
-					<RelativeLayout
-							android:id="@+id/visitNoteAuditInfo"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:visibility="gone"
-							android:orientation="vertical">
-
-						<TextView
-								android:id="@+id/visitNoteProvider"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:layout_marginBottom="5dp"
-								android:textStyle="italic"
-								android:textSize="12sp"
-								android:layout_alignParentLeft="true"
-								android:layout_alignParentStart="true"
-								android:textColor="@color/openmrs_color_grey"/>
-
-
-						<TextView
-								android:id="@+id/visitNoteDate"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginEnd="10dp"
-								android:layout_marginRight="10dp"
-								android:layout_marginBottom="5dp"
-								android:textStyle="italic"
-								android:textSize="12sp"
-								android:layout_alignParentRight="true"
-								android:layout_alignParentEnd="true"
-								android:textColor="@color/openmrs_color_grey"
-								tools:ignore="RelativeOverlap"/>
-					</RelativeLayout>
-
-					<View
-							android:layout_width="match_parent"
-							android:layout_height="1dp"
-							android:layout_marginLeft="5dp"
-							android:layout_marginRight="5dp"
-							android:layout_marginBottom="10dp"
-							android:background="@android:color/darker_gray"/>
-
-				</LinearLayout>
-
-				<LinearLayout
-						android:layout_marginTop="50dp"
-						android:layout_marginBottom="10dp"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:orientation="vertical">
-
-					<android.support.design.widget.TextInputLayout
-							android:layout_marginTop="5dp"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_marginBottom="5dp"
-							android:layout_marginLeft="5dp"
-							android:layout_marginStart="5dp"
-							android:layout_marginRight="5dp"
-							android:layout_marginEnd="5dp">
-
-						<android.support.design.widget.TextInputEditText
-								android:id="@+id/clinicalNotes"
-								android:inputType="textMultiLine"
-								android:minLines="6"
-								android:gravity="top|start"
+						<RelativeLayout
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
+								android:layout_marginTop="5dp"
+								android:orientation="vertical">
+
+							<TextView
+									android:id="@+id/activeVisitBadge"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_marginTop="3dp"
+									android:layout_marginLeft="5dp"
+									android:layout_marginStart="5dp"
+									android:paddingLeft="5dp"
+									android:paddingStart="5dp"
+									android:paddingEnd="5dp"
+									android:paddingRight="5dp"
+									android:textColor="@color/color_white"
+									android:text="@string/active_visit_label"
+									android:background="@drawable/active_visit_badge"/>
+
+							<TextView
+									android:id="@+id/visitStartDate"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_marginLeft="10dp"
+									android:layout_marginStart="10dp"
+									android:textStyle="bold"
+									android:layout_marginRight="10dp"
+									android:layout_alignParentBottom="true"
+									android:layout_toRightOf="@+id/activeVisitBadge"
+									android:layout_toEndOf="@+id/activeVisitBadge"/>
+
+							<TextView
+									android:id="@+id/startDuration"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_marginTop="3dp"
+									android:layout_marginRight="10dp"
+									android:layout_marginEnd="10dp"
+									android:textStyle="italic"
+									android:textSize="12sp"
+									android:textColor="@color/openmrs_color_grey"
+									android:layout_alignParentBottom="true"
+									android:layout_alignParentEnd="true"
+									android:layout_alignParentRight="true"/>
+						</RelativeLayout>
+
+						<RelativeLayout
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginBottom="5dp"
+								android:orientation="vertical">
+
+							<TextView
+									android:id="@+id/visitEndDate"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_marginTop="3dp"
+									android:layout_marginLeft="10dp"
+									android:layout_marginStart="10dp"/>
+
+							<TextView
+									android:id="@+id/visitDuration"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:textStyle="italic"
+									android:textSize="12sp"
+									android:layout_marginLeft="5dp"
+									android:layout_marginStart="5dp"
+									android:layout_marginRight="10dp"
+									android:layout_marginEnd="10dp"
+									android:textColor="@color/openmrs_color_grey"
+									android:layout_alignParentBottom="true"
+									android:layout_alignParentEnd="true"
+									android:layout_alignParentRight="true"/>
+						</RelativeLayout>
+
+
+						<RelativeLayout
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:orientation="vertical"
+								android:layout_marginBottom="5dp">
+
+							<TextView
+									android:id="@+id/visitTypeLabel"
+									android:layout_marginLeft="10dp"
+									android:layout_marginStart="10dp"
+									android:layout_marginEnd="5dp"
+									android:layout_marginRight="5dp"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:text="@string/visit_type"/>
+
+							<TextView
+									android:id="@+id/visitType"
+									android:layout_marginLeft="10dp"
+									android:layout_marginStart="10dp"
+									android:layout_marginRight="10dp"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_toEndOf="@+id/visitTypeLabel"
+									android:layout_toRightOf="@+id/visitTypeLabel"/>
+						</RelativeLayout>
+
+						<View
+								android:id="@+id/visitDetailsView"
+								android:layout_width="match_parent"
+								android:layout_height="1dp"
 								android:layout_marginLeft="5dp"
-								android:layout_marginStart="5dp"
 								android:layout_marginRight="5dp"
-								android:textSize="15sp"
-								android:layout_marginEnd="5dp"
-								android:hint="@string/clinical_notes_label"/>
-					</android.support.design.widget.TextInputLayout>
+								android:background="@android:color/darker_gray"/>
+
+						<com.google.android.flexbox.FlexboxLayout
+								android:id="@+id/visitAttributesLayout"
+								android:layout_marginEnd="30dp"
+								android:layout_marginLeft="5dp"
+								android:layout_marginRight="5dp"
+								android:layout_marginStart="10dp"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:orientation="vertical"
+								app:alignItems="center"
+								app:alignContent="center"
+								app:flexDirection="row"
+								app:flexWrap="wrap"
+								android:layout_marginTop="5dp">
+
+						</com.google.android.flexbox.FlexboxLayout>
+
+					</LinearLayout>
+
+				</android.support.v7.widget.CardView>
+
+				<android.support.v7.widget.CardView
+						android:layout_margin="10dp"
+						card_view:cardBackgroundColor="@color/white"
+						card_view:cardCornerRadius="4dp"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content">
 
 					<LinearLayout
+							android:layout_marginBottom="30dp"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:orientation="vertical">
+
+						<LinearLayout
+								android:layout_marginBottom="5dp"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:orientation="vertical">
+
+							<TextView
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_marginTop="5dp"
+									android:layout_marginLeft="10dp"
+									android:layout_marginStart="10dp"
+									android:textStyle="bold"
+									android:text="@string/visit_note"/>
+						</LinearLayout>
+
+						<RelativeLayout
+								android:id="@+id/visitNoteAuditInfo"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:visibility="gone"
+								android:orientation="vertical">
+
+							<TextView
+									android:id="@+id/visitNoteProvider"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_marginLeft="10dp"
+									android:layout_marginStart="10dp"
+									android:layout_marginBottom="5dp"
+									android:textStyle="italic"
+									android:textSize="12sp"
+									android:layout_alignParentLeft="true"
+									android:layout_alignParentStart="true"
+									android:textColor="@color/openmrs_color_grey"/>
+
+
+							<TextView
+									android:id="@+id/visitNoteDate"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_marginEnd="10dp"
+									android:layout_marginRight="10dp"
+									android:layout_marginBottom="5dp"
+									android:textStyle="italic"
+									android:textSize="12sp"
+									android:layout_alignParentRight="true"
+									android:layout_alignParentEnd="true"
+									android:textColor="@color/openmrs_color_grey"
+									tools:ignore="RelativeOverlap"/>
+						</RelativeLayout>
+
+						<View
+								android:layout_width="match_parent"
+								android:layout_height="1dp"
+								android:layout_marginLeft="5dp"
+								android:layout_marginRight="5dp"
+								android:layout_marginBottom="10dp"
+								android:background="@android:color/darker_gray"/>
+
+					</LinearLayout>
+
+					<LinearLayout
+							android:layout_marginTop="50dp"
+							android:layout_marginBottom="10dp"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:orientation="vertical">
 
 						<android.support.design.widget.TextInputLayout
-								android:layout_marginTop="10dp"
+								android:layout_marginTop="5dp"
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:layout_marginBottom="5dp"
@@ -326,414 +302,445 @@
 								android:layout_marginRight="5dp"
 								android:layout_marginEnd="5dp">
 
-							<AutoCompleteTextView
-									android:layout_marginTop="5dp"
-									android:layout_marginBottom="10dp"
-									android:id="@+id/searchDiagnosis"
+							<android.support.design.widget.TextInputEditText
+									android:id="@+id/clinicalNotes"
+									android:inputType="textMultiLine"
+									android:minLines="6"
+									android:gravity="top|start"
 									android:layout_width="match_parent"
 									android:layout_height="wrap_content"
 									android:layout_marginLeft="5dp"
 									android:layout_marginStart="5dp"
 									android:layout_marginRight="5dp"
-									android:inputType="textAutoComplete|textAutoCorrect"
 									android:textSize="15sp"
 									android:layout_marginEnd="5dp"
-									android:hint="@string/add_diagnosis"/>
-
+									android:hint="@string/clinical_notes_label"/>
 						</android.support.design.widget.TextInputLayout>
 
-						<RelativeLayout
-								android:id="@+id/loadingDiagnoses"
-								android:layout_width="match_parent"
-								android:layout_height="match_parent"
-								android:orientation="vertical"
-								android:visibility="gone">
-
-							<ProgressBar
-									android:layout_width="wrap_content"
-									android:layout_height="match_parent"
-									android:layout_centerInParent="true"
-									android:layout_gravity="center"/>
-
-						</RelativeLayout>
-
 						<LinearLayout
-								android:id="@+id/diagnosesContent"
-								android:orientation="vertical"
 								android:layout_width="match_parent"
-								android:layout_height="wrap_content">
+								android:layout_height="wrap_content"
+								android:orientation="vertical">
 
-							<LinearLayout
-									android:orientation="vertical"
-									android:layout_width="match_parent"
-									android:layout_height="wrap_content"
-									android:layout_marginStart="10dp"
-									android:layout_marginLeft="10dp">
-
-								<TextView
-										android:layout_width="match_parent"
-										android:layout_height="wrap_content"
-										android:layout_marginTop="10dp"
-										android:layout_marginBottom="5dp"
-										android:layout_marginStart="10dp"
-										android:layout_marginLeft="10dp"
-										android:layout_marginRight="10dp"
-										android:textStyle="bold"
-										android:text="@string/primary_diagnosis_label"/>
-
-								<TextView
-										android:id="@+id/noPrimaryDiagnosis"
-										android:layout_width="match_parent"
-										android:layout_height="wrap_content"
-										android:layout_marginTop="10dp"
-										android:layout_marginBottom="5dp"
-										android:layout_marginStart="15dp"
-										android:layout_marginLeft="15dp"
-										android:layout_marginRight="10dp"
-										android:visibility="gone"
-										android:textSize="13sp"
-										android:textColor="@color/openmrs_color_grey"
-										android:text="@string/no_primary_diagnosis"/>
-
-								<android.support.v7.widget.RecyclerView
-										android:id="@+id/primaryDiagnosisRecyclerView"
-										android:layout_width="match_parent"
-										android:layout_height="wrap_content"
-										android:layout_marginTop="5dp"
-										android:layout_marginLeft="10dp"
-										android:layout_marginStart="10dp"
-										android:layout_marginBottom="5dp"
-										android:layout_marginRight="10dp"
-										android:layout_marginEnd="10dp"
-										android:layout_gravity="start|bottom"/>
-							</LinearLayout>
-
-							<LinearLayout
-									android:orientation="vertical"
-									android:layout_width="match_parent"
-									android:layout_height="wrap_content"
+							<android.support.design.widget.TextInputLayout
 									android:layout_marginTop="10dp"
-									android:layout_marginStart="10dp"
-									android:layout_marginLeft="10dp">
+									android:layout_width="match_parent"
+									android:layout_height="wrap_content"
+									android:layout_marginBottom="5dp"
+									android:layout_marginLeft="5dp"
+									android:layout_marginStart="5dp"
+									android:layout_marginRight="5dp"
+									android:layout_marginEnd="5dp">
 
-								<TextView
-										android:layout_width="match_parent"
-										android:layout_height="wrap_content"
-										android:layout_marginTop="10dp"
-										android:layout_marginBottom="5dp"
-										android:layout_marginStart="10dp"
-										android:layout_marginLeft="10dp"
-										android:layout_marginRight="10dp"
-										android:textStyle="bold"
-										android:text="@string/secondary_diagnosis_label"/>
-
-								<TextView
-										android:id="@+id/noSecondaryDiagnosis"
-										android:layout_width="match_parent"
-										android:layout_height="wrap_content"
-										android:layout_marginTop="10dp"
-										android:layout_marginBottom="5dp"
-										android:layout_marginStart="15dp"
-										android:layout_marginLeft="15dp"
-										android:layout_marginRight="10dp"
-										android:visibility="gone"
-										android:textSize="13sp"
-										android:textColor="@color/openmrs_color_grey"
-										android:text="@string/no_secondary_diagnosis"/>
-
-								<android.support.v7.widget.RecyclerView
-										android:id="@+id/secondaryDiagnosisRecyclerView"
-										android:layout_width="match_parent"
-										android:layout_height="wrap_content"
+								<AutoCompleteTextView
 										android:layout_marginTop="5dp"
-										android:layout_marginLeft="10dp"
-										android:layout_marginStart="10dp"
-										android:layout_marginBottom="5dp"
-										android:layout_marginRight="10dp"
-										android:layout_marginEnd="10dp"
-										android:layout_gravity="start|bottom"/>
+										android:layout_marginBottom="10dp"
+										android:id="@+id/searchDiagnosis"
+										android:layout_width="match_parent"
+										android:layout_height="wrap_content"
+										android:layout_marginLeft="5dp"
+										android:layout_marginStart="5dp"
+										android:layout_marginRight="5dp"
+										android:inputType="textAutoComplete|textAutoCorrect"
+										android:textSize="15sp"
+										android:layout_marginEnd="5dp"
+										android:hint="@string/add_diagnosis"/>
 
+							</android.support.design.widget.TextInputLayout>
+
+							<RelativeLayout
+									android:id="@+id/loadingDiagnoses"
+									android:layout_width="match_parent"
+									android:layout_height="match_parent"
+									android:orientation="vertical"
+									android:visibility="gone">
+
+								<ProgressBar
+										android:layout_width="wrap_content"
+										android:layout_height="match_parent"
+										android:layout_centerInParent="true"
+										android:layout_gravity="center"/>
+
+							</RelativeLayout>
+
+							<LinearLayout
+									android:id="@+id/diagnosesContent"
+									android:orientation="vertical"
+									android:layout_width="match_parent"
+									android:layout_height="wrap_content">
+
+								<LinearLayout
+										android:orientation="vertical"
+										android:layout_width="match_parent"
+										android:layout_height="wrap_content"
+										android:layout_marginStart="10dp"
+										android:layout_marginLeft="10dp">
+
+									<TextView
+											android:layout_width="match_parent"
+											android:layout_height="wrap_content"
+											android:layout_marginTop="10dp"
+											android:layout_marginBottom="5dp"
+											android:layout_marginStart="10dp"
+											android:layout_marginLeft="10dp"
+											android:layout_marginRight="10dp"
+											android:textStyle="bold"
+											android:text="@string/primary_diagnosis_label"/>
+
+									<TextView
+											android:id="@+id/noPrimaryDiagnosis"
+											android:layout_width="match_parent"
+											android:layout_height="wrap_content"
+											android:layout_marginTop="10dp"
+											android:layout_marginBottom="5dp"
+											android:layout_marginStart="15dp"
+											android:layout_marginLeft="15dp"
+											android:layout_marginRight="10dp"
+											android:visibility="gone"
+											android:textSize="13sp"
+											android:textColor="@color/openmrs_color_grey"
+											android:text="@string/no_primary_diagnosis"/>
+
+									<android.support.v7.widget.RecyclerView
+											android:id="@+id/primaryDiagnosisRecyclerView"
+											android:layout_width="match_parent"
+											android:layout_height="wrap_content"
+											android:layout_marginTop="5dp"
+											android:layout_marginLeft="10dp"
+											android:layout_marginStart="10dp"
+											android:layout_marginBottom="5dp"
+											android:layout_marginRight="10dp"
+											android:layout_marginEnd="10dp"
+											android:layout_gravity="start|bottom"/>
+								</LinearLayout>
+
+								<LinearLayout
+										android:orientation="vertical"
+										android:layout_width="match_parent"
+										android:layout_height="wrap_content"
+										android:layout_marginTop="10dp"
+										android:layout_marginStart="10dp"
+										android:layout_marginLeft="10dp">
+
+									<TextView
+											android:layout_width="match_parent"
+											android:layout_height="wrap_content"
+											android:layout_marginTop="10dp"
+											android:layout_marginBottom="5dp"
+											android:layout_marginStart="10dp"
+											android:layout_marginLeft="10dp"
+											android:layout_marginRight="10dp"
+											android:textStyle="bold"
+											android:text="@string/secondary_diagnosis_label"/>
+
+									<TextView
+											android:id="@+id/noSecondaryDiagnosis"
+											android:layout_width="match_parent"
+											android:layout_height="wrap_content"
+											android:layout_marginTop="10dp"
+											android:layout_marginBottom="5dp"
+											android:layout_marginStart="15dp"
+											android:layout_marginLeft="15dp"
+											android:layout_marginRight="10dp"
+											android:visibility="gone"
+											android:textSize="13sp"
+											android:textColor="@color/openmrs_color_grey"
+											android:text="@string/no_secondary_diagnosis"/>
+
+									<android.support.v7.widget.RecyclerView
+											android:id="@+id/secondaryDiagnosisRecyclerView"
+											android:layout_width="match_parent"
+											android:layout_height="wrap_content"
+											android:layout_marginTop="5dp"
+											android:layout_marginLeft="10dp"
+											android:layout_marginStart="10dp"
+											android:layout_marginBottom="5dp"
+											android:layout_marginRight="10dp"
+											android:layout_marginEnd="10dp"
+											android:layout_gravity="start|bottom"/>
+
+								</LinearLayout>
 							</LinearLayout>
 						</LinearLayout>
 					</LinearLayout>
-				</LinearLayout>
-			</android.support.v7.widget.CardView>
+				</android.support.v7.widget.CardView>
 
-			<!-- andr-115 card hidden for R1 -->
-			<android.support.v7.widget.CardView
-					android:layout_margin="10dp"
-					card_view:cardBackgroundColor="@color/white"
-					card_view:cardCornerRadius="4dp"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:visibility="gone">
-
-				<LinearLayout
+				<!-- andr-115 card hidden for R1 -->
+				<android.support.v7.widget.CardView
+						android:layout_margin="10dp"
+						card_view:cardBackgroundColor="@color/white"
+						card_view:cardCornerRadius="4dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_marginBottom="30dp"
-						android:orientation="vertical">
+						android:visibility="gone">
 
-					<RelativeLayout
-							android:layout_marginBottom="5dp"
+					<LinearLayout
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:layout_marginBottom="30dp"
+							android:orientation="vertical">
+
+						<RelativeLayout
+								android:layout_marginBottom="5dp"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:orientation="vertical">
+
+							<TextView
+									android:layout_width="match_parent"
+									android:layout_height="wrap_content"
+									android:layout_marginTop="5dp"
+									android:layout_marginLeft="10dp"
+									android:layout_marginStart="10dp"
+									android:textStyle="bold"
+									android:text="@string/patient_scroll_tab_vitals_label"/>
+
+							<ImageButton
+									android:id="@+id/visitVitalsAdd"
+									android:visibility="gone"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_marginTop="5dp"
+									android:layout_marginLeft="10dp"
+									android:layout_marginStart="10dp"
+									android:layout_marginRight="5dp"
+									android:layout_marginEnd="5dp"
+									android:src="@drawable/ic_add_circle_outline"
+									android:background="@null"
+									android:scaleType="center"
+									android:tint="@color/color_primary_dark"
+									android:layout_centerHorizontal="true"
+									android:layout_alignParentEnd="true"
+									android:layout_alignParentRight="true"/>
+
+						</RelativeLayout>
+
+						<RelativeLayout
+								android:id="@+id/visitVitalsAuditInfo"
+								android:layout_marginBottom="5dp"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:visibility="gone"
+								android:orientation="vertical">
+
+							<TextView
+									android:id="@+id/visitVitalsProvider"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_marginLeft="10dp"
+									android:layout_marginStart="10dp"
+									android:layout_marginBottom="5dp"
+									android:textStyle="italic"
+									android:textSize="12sp"
+									android:layout_alignParentLeft="true"
+									android:layout_alignParentStart="true"
+									android:textColor="@color/openmrs_color_grey"/>
+
+
+							<TextView
+									android:id="@+id/visitVitalsDate"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_marginEnd="10dp"
+									android:layout_marginRight="10dp"
+									android:layout_marginBottom="5dp"
+									android:textStyle="italic"
+									android:textSize="12sp"
+									android:layout_alignParentRight="true"
+									android:layout_alignParentEnd="true"
+									android:textColor="@color/openmrs_color_grey"/>
+						</RelativeLayout>
+
+						<View
+								android:layout_width="match_parent"
+								android:layout_height="1dp"
+								android:layout_marginLeft="5dp"
+								android:layout_marginRight="5dp"
+								android:background="@android:color/darker_gray"/>
+
+					</LinearLayout>
+
+					<LinearLayout
+							android:layout_marginBottom="10dp"
+							android:layout_marginTop="45dp"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:orientation="vertical">
 
 						<TextView
+								android:id="@+id/noVitals"
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:layout_marginTop="5dp"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:textStyle="bold"
-								android:text="@string/patient_scroll_tab_vitals_label"/>
+								android:layout_marginLeft="15dp"
+								android:layout_marginStart="15dp"
+								android:layout_marginRight="15dp"
+								android:layout_marginEnd="15dp"
+								android:layout_marginBottom="5dp"
+								android:textColor="@color/openmrs_color_grey"
+								android:text="@string/no_vitals"/>
 
-						<ImageButton
-								android:id="@+id/visitVitalsAdd"
+						<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+						             android:id="@+id/visitVitalsTable"
+						             android:layout_width="match_parent"
+						             android:layout_height="wrap_content"
+						             android:padding="@dimen/patient_card_margin"
+						             android:layout_gravity="center"
+						             android:layout_marginTop="10dp"
+						             android:layout_marginBottom="5dp">
+
+
+						</TableLayout>
+					</LinearLayout>
+				</android.support.v7.widget.CardView>
+
+				<android.support.v7.widget.CardView
+						android:layout_margin="10dp"
+						card_view:cardBackgroundColor="@color/white"
+						card_view:cardCornerRadius="4dp"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						>
+
+					<LinearLayout
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:layout_marginBottom="30dp"
+							android:orientation="vertical">
+
+						<RelativeLayout
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:orientation="vertical">
+
+							<TextView
+									android:layout_width="match_parent"
+									android:layout_height="wrap_content"
+									android:layout_marginTop="5dp"
+									android:layout_marginLeft="10dp"
+									android:layout_marginStart="10dp"
+									android:layout_marginBottom="5dp"
+									android:textStyle="bold"
+									android:text="@string/audit_info"/>
+
+							<ImageButton
+									android:id="@+id/visitAuditInfoAdd"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_marginTop="5dp"
+									android:layout_marginLeft="10dp"
+									android:layout_marginStart="10dp"
+									android:layout_marginRight="5dp"
+									android:layout_marginEnd="5dp"
+									android:layout_marginBottom="5dp"
+									android:src="@drawable/ic_add_circle_outline"
+									android:background="@null"
+									android:scaleType="center"
+									android:tint="@color/color_primary_dark"
+									android:layout_centerHorizontal="true"
+									android:layout_alignParentEnd="true"
+									android:layout_alignParentRight="true"/>
+
+							<TextView
+									android:id="@+id/auditDataCompleteness"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_marginTop="5dp"
+									android:layout_marginRight="10dp"
+									android:layout_marginEnd="10dp"
+									android:layout_marginBottom="5dp"
+									android:layout_marginLeft="10dp"
+									android:layout_marginStart="10dp"
+									android:textStyle="italic|bold"
+									android:textSize="12sp"
+									android:visibility="gone"
+									android:text="@string/in_complete"
+									android:layout_centerHorizontal="true"
+									android:layout_alignParentEnd="true"
+									android:layout_alignParentRight="true"
+									android:textColor="@color/yellow"/>
+						</RelativeLayout>
+
+						<RelativeLayout
+								android:id="@+id/auditDataMetadata"
+								android:layout_marginBottom="5dp"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
 								android:visibility="gone"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginTop="5dp"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
+								android:orientation="vertical">
+
+							<TextView
+									android:id="@+id/auditDataMetadataProvider"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_marginLeft="10dp"
+									android:layout_marginStart="10dp"
+									android:layout_marginBottom="5dp"
+									android:textStyle="italic"
+									android:textSize="12sp"
+									android:layout_alignParentLeft="true"
+									android:layout_alignParentStart="true"
+									android:textColor="@color/openmrs_color_grey"/>
+
+
+							<TextView
+									android:id="@+id/auditDataMetadataDate"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_marginEnd="10dp"
+									android:layout_marginRight="10dp"
+									android:layout_marginBottom="5dp"
+									android:textStyle="italic"
+									android:textSize="12sp"
+									android:layout_alignParentRight="true"
+									android:layout_alignParentEnd="true"
+									android:textColor="@color/openmrs_color_grey"/>
+						</RelativeLayout>
+
+
+						<View
+								android:layout_width="match_parent"
+								android:layout_height="1dp"
+								android:layout_marginLeft="5dp"
 								android:layout_marginRight="5dp"
-								android:layout_marginEnd="5dp"
-								android:src="@drawable/ic_add_circle_outline"
-								android:background="@null"
-								android:scaleType="center"
-								android:tint="@color/color_primary_dark"
-								android:layout_centerHorizontal="true"
-								android:layout_alignParentEnd="true"
-								android:layout_alignParentRight="true"/>
+								android:background="@android:color/darker_gray"/>
 
-					</RelativeLayout>
+					</LinearLayout>
 
-					<RelativeLayout
-							android:id="@+id/visitVitalsAuditInfo"
-							android:layout_marginBottom="5dp"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:visibility="gone"
-							android:orientation="vertical">
-
-						<TextView
-								android:id="@+id/visitVitalsProvider"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:layout_marginBottom="5dp"
-								android:textStyle="italic"
-								android:textSize="12sp"
-								android:layout_alignParentLeft="true"
-								android:layout_alignParentStart="true"
-								android:textColor="@color/openmrs_color_grey"/>
-
-
-						<TextView
-								android:id="@+id/visitVitalsDate"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginEnd="10dp"
-								android:layout_marginRight="10dp"
-								android:layout_marginBottom="5dp"
-								android:textStyle="italic"
-								android:textSize="12sp"
-								android:layout_alignParentRight="true"
-								android:layout_alignParentEnd="true"
-								android:textColor="@color/openmrs_color_grey"/>
-					</RelativeLayout>
-
-					<View
-							android:layout_width="match_parent"
-							android:layout_height="1dp"
-							android:layout_marginLeft="5dp"
-							android:layout_marginRight="5dp"
-							android:background="@android:color/darker_gray"/>
-
-				</LinearLayout>
-
-				<LinearLayout
-						android:layout_marginBottom="10dp"
-						android:layout_marginTop="45dp"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:orientation="vertical">
-
-					<TextView
-							android:id="@+id/noVitals"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_marginTop="5dp"
-							android:layout_marginLeft="15dp"
-							android:layout_marginStart="15dp"
-							android:layout_marginRight="15dp"
-							android:layout_marginEnd="15dp"
-							android:layout_marginBottom="5dp"
-							android:textColor="@color/openmrs_color_grey"
-							android:text="@string/no_vitals"/>
-
-					<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-					             android:id="@+id/visitVitalsTable"
-					             android:layout_width="match_parent"
-					             android:layout_height="wrap_content"
-					             android:padding="@dimen/patient_card_margin"
-					             android:layout_gravity="center"
-					             android:layout_marginTop="10dp"
-					             android:layout_marginBottom="5dp">
-
-
-					</TableLayout>
-				</LinearLayout>
-			</android.support.v7.widget.CardView>
-
-			<android.support.v7.widget.CardView
-					android:layout_margin="10dp"
-					card_view:cardBackgroundColor="@color/white"
-					card_view:cardCornerRadius="4dp"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					>
-
-				<LinearLayout
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_marginBottom="30dp"
-						android:orientation="vertical">
-
-					<RelativeLayout
+					<LinearLayout
+							android:layout_marginBottom="10dp"
+							android:layout_marginTop="45dp"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:orientation="vertical">
 
 						<TextView
+								android:id="@+id/noAuditInfo"
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:layout_marginTop="5dp"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
+								android:layout_marginLeft="15dp"
+								android:layout_marginStart="15dp"
+								android:layout_marginRight="15dp"
+								android:layout_marginEnd="15dp"
+								android:textColor="@color/openmrs_color_grey"
 								android:layout_marginBottom="5dp"
-								android:textStyle="bold"
-								android:text="@string/audit_info"/>
+								android:text="@string/no_audit_infomation"/>
 
-						<ImageButton
-								android:id="@+id/visitAuditInfoAdd"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginTop="5dp"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:layout_marginRight="5dp"
-								android:layout_marginEnd="5dp"
-								android:layout_marginBottom="5dp"
-								android:src="@drawable/ic_add_circle_outline"
-								android:background="@null"
-								android:scaleType="center"
-								android:tint="@color/color_primary_dark"
-								android:layout_centerHorizontal="true"
-								android:layout_alignParentEnd="true"
-								android:layout_alignParentRight="true"/>
-
-						<TextView
-								android:id="@+id/auditDataCompleteness"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginTop="5dp"
-								android:layout_marginRight="10dp"
-								android:layout_marginEnd="10dp"
-								android:layout_marginBottom="5dp"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:textStyle="italic|bold"
-								android:textSize="12sp"
-								android:visibility="gone"
-								android:text="@string/in_complete"
-								android:layout_centerHorizontal="true"
-								android:layout_alignParentEnd="true"
-								android:layout_alignParentRight="true"
-								android:textColor="@color/yellow"/>
-					</RelativeLayout>
-
-					<RelativeLayout
-							android:id="@+id/auditDataMetadata"
-							android:layout_marginBottom="5dp"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:visibility="gone"
-							android:orientation="vertical">
-
-						<TextView
-								android:id="@+id/auditDataMetadataProvider"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:layout_marginBottom="5dp"
-								android:textStyle="italic"
-								android:textSize="12sp"
-								android:layout_alignParentLeft="true"
-								android:layout_alignParentStart="true"
-								android:textColor="@color/openmrs_color_grey"/>
+						<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+						             android:id="@+id/auditInfoTable"
+						             android:layout_width="match_parent"
+						             android:layout_height="wrap_content"
+						             android:padding="@dimen/patient_card_margin"
+						             android:layout_gravity="center"
+						             android:layout_marginTop="10dp"
+						             android:layout_marginBottom="5dp">
 
 
-						<TextView
-								android:id="@+id/auditDataMetadataDate"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginEnd="10dp"
-								android:layout_marginRight="10dp"
-								android:layout_marginBottom="5dp"
-								android:textStyle="italic"
-								android:textSize="12sp"
-								android:layout_alignParentRight="true"
-								android:layout_alignParentEnd="true"
-								android:textColor="@color/openmrs_color_grey"/>
-					</RelativeLayout>
-
-
-					<View
-							android:layout_width="match_parent"
-							android:layout_height="1dp"
-							android:layout_marginLeft="5dp"
-							android:layout_marginRight="5dp"
-							android:background="@android:color/darker_gray"/>
-
-				</LinearLayout>
-
-				<LinearLayout
-						android:layout_marginBottom="10dp"
-						android:layout_marginTop="45dp"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:orientation="vertical">
-
-					<TextView
-							android:id="@+id/noAuditInfo"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_marginTop="5dp"
-							android:layout_marginLeft="15dp"
-							android:layout_marginStart="15dp"
-							android:layout_marginRight="15dp"
-							android:layout_marginEnd="15dp"
-							android:textColor="@color/openmrs_color_grey"
-							android:layout_marginBottom="5dp"
-							android:text="@string/no_audit_infomation"/>
-
-					<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-					             android:id="@+id/auditInfoTable"
-					             android:layout_width="match_parent"
-					             android:layout_height="wrap_content"
-					             android:padding="@dimen/patient_card_margin"
-					             android:layout_gravity="center"
-					             android:layout_marginTop="10dp"
-					             android:layout_marginBottom="5dp">
-
-
-					</TableLayout>
-				</LinearLayout>
-			</android.support.v7.widget.CardView>
-		</LinearLayout>
-	</ScrollView>
+						</TableLayout>
+					</LinearLayout>
+				</android.support.v7.widget.CardView>
+			</LinearLayout>
+		</ScrollView>
+	</android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

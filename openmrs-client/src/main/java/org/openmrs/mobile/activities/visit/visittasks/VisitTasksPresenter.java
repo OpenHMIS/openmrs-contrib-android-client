@@ -15,13 +15,14 @@
 package org.openmrs.mobile.activities.visit.visittasks;
 
 import org.openmrs.mobile.activities.visit.VisitContract;
-import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
+import org.openmrs.mobile.activities.visit.BaseVisitPresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.impl.VisitPredefinedTaskDataService;
 import org.openmrs.mobile.data.impl.VisitTaskDataService;
+import org.openmrs.mobile.listeners.retrofit.DefaultResponseCallbackListener;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
@@ -32,21 +33,23 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
-public class VisitTasksPresenter extends VisitPresenterImpl implements VisitContract.VisitTasksPresenter {
+public class VisitTasksPresenter extends BaseVisitPresenter implements VisitContract.VisitTasksPresenter {
 
 	private VisitContract.VisitTasksView visitTasksView;
 	private VisitPredefinedTaskDataService visitPredefinedTaskDataService;
 	private VisitTaskDataService visitTaskDataService;
 	private VisitDataService visitDataService;
-	private String patientUUID, visitUUID;
+	private String patientUUID;
 
 	private int page = 1;
 	private int limit = 10;
+	private int numberOfDataCallsCompletedForDataRefresh = 0;
+	private final int TOTAL_NUMBER_OF_REFRESH_DATA_CALLS = 2;
 
 	public VisitTasksPresenter(String patientUuid, String visitUuid, VisitContract.VisitTasksView visitTasksView) {
+		super(visitUuid, visitTasksView);
+
 		this.visitTasksView = visitTasksView;
-		this.visitTasksView.setPresenter(this);
-		this.visitUUID = visitUuid;
 		this.patientUUID = patientUuid;
 
 		this.visitPredefinedTaskDataService = dataAccess().visitPredefinedTask();
@@ -56,13 +59,14 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 
 	@Override
 	public void subscribe() {
-		getVisit();
-		getPredefinedTasks();
+		getVisit(false);
+		getPredefinedTasks(false);
 	}
 
-	@Override
-	public void getPredefinedTasks() {
-		visitTasksView.showTabSpinner(true);
+	private void getPredefinedTasks(boolean forceRefresh) {
+		if (!forceRefresh) {
+			visitTasksView.showTabSpinner(true);
+		}
 		PagingInfo pagingInfo = new PagingInfo(page, 100);
 		DataService.GetCallback<List<VisitPredefinedTask>> callback = new DataService
 				.GetCallback<List<VisitPredefinedTask>>() {
@@ -70,6 +74,7 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 			public void onCompleted(List<VisitPredefinedTask> visitPredefinedTasks) {
 				visitTasksView.setPredefinedTasks(visitPredefinedTasks);
 				visitTasksView.showTabSpinner(false);
+				removeRefreshIndicatorIfAllCallsComplete();
 			}
 
 			@Override
@@ -80,15 +85,29 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 								.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 			}
 		};
-		visitPredefinedTaskDataService.getAll(QueryOptions.FULL_REP, pagingInfo, callback);
+
+		QueryOptions options = QueryOptions.FULL_REP;
+		if (forceRefresh) {
+			options = QueryOptions.REMOTE_FULL_REP;
+		}
+
+		visitPredefinedTaskDataService.getAll(options, pagingInfo, callback);
 	}
 
-	@Override
-	public void getVisitTasks() {
-		visitTasksView.showTabSpinner(true);
+	private void getVisitTasks(boolean forceRefresh) {
+		if (!forceRefresh) {
+			visitTasksView.showTabSpinner(true);
+		}
+
+		QueryOptions optionsTemp = QueryOptions.FULL_REP;
+		if (forceRefresh) {
+			optionsTemp = QueryOptions.REMOTE_FULL_REP;
+		}
+		final QueryOptions options = optionsTemp;
+
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
 		// get open tasks
-		visitTaskDataService.getAll("OPEN", patientUUID, visitUUID, QueryOptions.FULL_REP,
+		visitTaskDataService.getAll("OPEN", patientUUID, visitUuid, options,
 				pagingInfo,
 				new DataService.GetCallback<List<VisitTask>>() {
 					@Override
@@ -96,13 +115,14 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 						visitTasksView.setOpenVisitTasks(visitTasksList);
 
 						// get closed tasks
-						visitTaskDataService.getAll("CLOSED", patientUUID, visitUUID, QueryOptions.FULL_REP,
+						visitTaskDataService.getAll("CLOSED", patientUUID, visitUuid, options,
 								pagingInfo,
 								new DataService.GetCallback<List<VisitTask>>() {
 									@Override
 									public void onCompleted(List<VisitTask> visitTasksList) {
 										visitTasksView.showTabSpinner(false);
 										visitTasksView.setClosedVisitTasks(visitTasksList);
+										removeRefreshIndicatorIfAllCallsComplete();
 									}
 
 									@Override
@@ -120,6 +140,13 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 
 	}
 
+	private void removeRefreshIndicatorIfAllCallsComplete() {
+		numberOfDataCallsCompletedForDataRefresh++;
+		if (numberOfDataCallsCompletedForDataRefresh == TOTAL_NUMBER_OF_REFRESH_DATA_CALLS) {
+			visitDashboardPageView.displayRefreshingData(false);
+		}
+	}
+
 	@Override
 	public void addVisitTasks(VisitTask visitTask) {
 		DataService.GetCallback<VisitTask> getSingleCallback =
@@ -127,7 +154,7 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 					@Override
 					public void onCompleted(VisitTask entity) {
 						if (entity != null) {
-							visitTasksView.refresh();
+							subscribe();
 						}
 					}
 
@@ -148,7 +175,7 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 			@Override
 			public void onCompleted(VisitTask entity) {
 				if (entity != null) {
-					visitTasksView.refresh();
+					subscribe();
 				}
 			}
 
@@ -168,7 +195,7 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 		patient.setUuid(patientUUID);
 
 		Visit visit = new Visit();
-		visit.setUuid(visitUUID);
+		visit.setUuid(visitUuid);
 
 		VisitTask visitTaskEntity = new VisitTask();
 
@@ -181,15 +208,19 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 		visitTasksView.clearTextField();
 	}
 
-	@Override
-	public void getVisit() {
-		visitTasksView.showTabSpinner(true);
+	private void getVisit(boolean forceRefresh) {
+		if (!forceRefresh) {
+			visitTasksView.showTabSpinner(true);
+		}
 		DataService.GetCallback<Visit> getSingleCallback =
 				new DataService.GetCallback<Visit>() {
 					@Override
 					public void onCompleted(Visit entity) {
 						visitTasksView.showTabSpinner(false);
-							visitTasksView.setVisit(entity);
+						visitTasksView.setVisit(entity);
+						if (entity != null) {
+							getVisitTasks(forceRefresh);
+						}
 					}
 
 					@Override
@@ -200,6 +231,17 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		visitDataService.getByUuid(visitUUID, QueryOptions.FULL_REP, getSingleCallback);
+		/**
+		 *  There is no need to force refresh the visit since that happens as part of
+		 *  {@link BaseVisitPresenter#refreshBaseData(DefaultResponseCallbackListener)}  }
+		 */
+		visitDataService.getByUuid(visitUuid, QueryOptions.FULL_REP, getSingleCallback);
+	}
+
+	@Override
+	protected void refreshDependentData() {
+		numberOfDataCallsCompletedForDataRefresh = 0;
+		getVisit(true);
+		getPredefinedTasks(true);
 	}
 }

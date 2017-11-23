@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
 import org.openmrs.mobile.data.db.impl.ObsDbService;
 import org.openmrs.mobile.data.rest.impl.EncounterRestServiceImpl;
@@ -44,7 +43,7 @@ public class EncounterDataService extends BaseDataService<Encounter, EncounterDb
 		checkNotNull(entity);
 		checkNotNull(callback);
 
-		QueryOptions options = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build();
+		QueryOptions options = QueryOptions.REMOTE;
 		executeSingleCallback(callback, options,
 				() -> {
 					entity.processRelationships();
@@ -65,7 +64,7 @@ public class EncounterDataService extends BaseDataService<Encounter, EncounterDb
 		checkNotNull(entity);
 		checkNotNull(callback);
 
-		QueryOptions options = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build();
+		QueryOptions options = QueryOptions.REMOTE;
 		executeSingleCallback(callback, options,
 				() -> {
 					entity.processRelationships();

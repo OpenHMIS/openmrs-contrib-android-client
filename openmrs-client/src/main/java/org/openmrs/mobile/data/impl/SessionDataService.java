@@ -2,7 +2,6 @@ package org.openmrs.mobile.data.impl;
 
 import org.openmrs.mobile.data.BaseMetadataDataService;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.impl.SessionDbService;
 import org.openmrs.mobile.data.rest.impl.SessionRestServiceImpl;
 import org.openmrs.mobile.models.Session;
@@ -15,7 +14,7 @@ public class SessionDataService extends BaseMetadataDataService<Session, Session
 
 	public void getSession(String username, String password, GetCallback<Session> callback) {
 		executeSingleCallback(callback,
-				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
+				QueryOptions.REMOTE,
 				() -> null,
 				() -> restService.getSession(username, password));
 	}

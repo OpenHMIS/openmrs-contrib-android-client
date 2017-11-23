@@ -216,6 +216,19 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		}
 	}
 
+	public void destroy() {
+		baseDiagnosisFragment.setVisit(null);
+		baseDiagnosisFragment.setEncounter(null);
+		baseDiagnosisFragment.setSearchDiagnosisView(null);
+		baseDiagnosisFragment.setNoPrimaryDiagnoses(null);
+		baseDiagnosisFragment.setNoSecondaryDiagnoses(null);
+		baseDiagnosisFragment.setPrimaryDiagnosesRecycler(null);
+		baseDiagnosisFragment.setSecondaryDiagnosesRecycler(null);
+		baseDiagnosisFragment.setClinicalNoteView(null);
+		baseDiagnosisFragment.setLoadingProgressBar(null);
+		baseDiagnosisFragment.setDiagnosesContent(null);
+	}
+
 	private void initDiagnosesComponents(View view) {
 		if (baseDiagnosisFragment.getSearchDiagnosisView() == null) {
 			baseDiagnosisFragment.setSearchDiagnosisView(

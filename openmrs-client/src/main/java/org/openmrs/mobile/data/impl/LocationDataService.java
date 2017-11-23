@@ -2,7 +2,6 @@ package org.openmrs.mobile.data.impl;
 
 import org.openmrs.mobile.data.BaseMetadataDataService;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.impl.LocationDbService;
 import org.openmrs.mobile.data.rest.impl.LocationRestServiceImpl;
 import org.openmrs.mobile.models.Location;
@@ -17,7 +16,7 @@ public class LocationDataService extends BaseMetadataDataService<Location, Locat
 
 	public void getLoginLocations(GetCallback<List<Location>> callback) {
 		executeMultipleCallback(callback,
-				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
+				QueryOptions.REMOTE,
 				null,
 				() -> dbService.getAll(null, null),
 				() -> restService.getLoginLocations()
