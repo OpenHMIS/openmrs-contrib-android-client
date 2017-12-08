@@ -32,6 +32,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.GridLayoutManager;
@@ -43,14 +44,16 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.visit.VisitContract;
-import org.openmrs.mobile.activities.visit.VisitFragment;
-import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -63,9 +66,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
 import permissions.dispatcher.OnPermissionDenied;
@@ -74,7 +74,8 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class VisitPhotoFragment extends VisitFragment implements VisitContract.VisitPhotoView {
+public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashboardPagePresenter>
+		implements VisitContract.VisitPhotoView {
 
 	//Upload Visit photo
 	private final static int IMAGE_REQUEST = 1;
@@ -86,7 +87,7 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	private Bitmap visitPhoto = null;
 	private AppCompatButton uploadVisitPhotoButton;
 	private RelativeLayout visitPhotoProgressBar;
-	private LinearLayout visitPhotoTab;
+	private SwipeRefreshLayout visitPhotoSwipRefreshLayout;
 
 	private File output;
 	private EditText fileCaption;
@@ -122,7 +123,7 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 		noVisitImage = (TextView)root.findViewById(R.id.noVisitImage);
 
 		visitPhotoProgressBar = (RelativeLayout)root.findViewById(R.id.visitPhotoProgressBar);
-		visitPhotoTab = (LinearLayout)root.findViewById(R.id.visitPhotoTab);
+		visitPhotoSwipRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.visitPhotoTab);
 
 		addListeners();
 
@@ -138,16 +139,25 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	}
 
 	@Override
-	public void updateVisitImageMetadata(List<VisitPhoto> visitPhotos) {
-		adapter.setVisitPhotos(visitPhotos);
-
-		RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), visitPhotos.size());
-		recyclerView.setLayoutManager(layoutManager);
+	public void onStart() {
+		super.onStart();
+		OpenMRS.getInstance().getEventBus().register(this);
 	}
 
 	@Override
-	public void downloadImage(String obsUuid, DataService.GetCallback<byte[]> callback) {
-		((VisitPhotoPresenter)mPresenter).downloadImage(obsUuid, callback);
+	public void onStop() {
+		OpenMRS.getInstance().getEventBus().unregister(this);
+		super.onStop();
+	}
+
+	@Override
+	public void updateVisitImageMetadata(List<VisitPhoto> visitPhotos) {
+		if (visitPhotos != null && !visitPhotos.isEmpty()) {
+			adapter.setVisitPhotos(visitPhotos);
+
+			RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), visitPhotos.size());
+			recyclerView.setLayoutManager(layoutManager);
+		}
 	}
 
 	@Override
@@ -155,7 +165,6 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 		fileCaption.setText(ApplicationConstants.EMPTY_STRING);
 		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 		fragmentTransaction.detach(this).attach(this).commit();
-		mPresenter.subscribe();
 	}
 
 	@Override
@@ -172,10 +181,10 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	@Override
 	public void showTabSpinner(boolean visibility) {
 		if (visibility) {
-			visitPhotoTab.setVisibility(View.GONE);
+			visitPhotoSwipRefreshLayout.setVisibility(View.GONE);
 			visitPhotoProgressBar.setVisibility(View.VISIBLE);
 		} else {
-			visitPhotoTab.setVisibility(View.VISIBLE);
+			visitPhotoSwipRefreshLayout.setVisibility(View.VISIBLE);
 			visitPhotoProgressBar.setVisibility(View.GONE);
 		}
 	}
@@ -278,18 +287,23 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 		uploadVisitPhotoButton.setOnClickListener(v -> {
 			if (visitPhoto != null) {
 				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-				visitPhoto.compress(Bitmap.CompressFormat.JPEG, 0, byteArrayOutputStream);
+				visitPhoto.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
 
-				MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("file",
-						output.getName(), RequestBody.create(MediaType.parse("image/jpeg"), output));
-
-				((VisitPhotoPresenter)mPresenter).getVisitPhoto().setRequestImage(uploadFile);
+				((VisitPhotoPresenter)mPresenter).getVisitPhoto().setImage(byteArrayOutputStream.toByteArray());
 				((VisitPhotoPresenter)mPresenter).getVisitPhoto().setFileCaption(
 						StringUtils.notEmpty(
 								ViewUtils.getInput(fileCaption)) ?
 								ViewUtils.getInput(fileCaption) :
 								getString(R.string.default_file_caption_message));
 				((VisitPhotoPresenter)mPresenter).uploadImage();
+			}
+		});
+
+		visitPhotoSwipRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				mPresenter.dataRefreshWasRequested();
 			}
 		});
 	}
@@ -330,5 +344,16 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 				}
 			}
 		}
+	}
+
+	@Override
+	public void displayRefreshingData(boolean visible) {
+		visitPhotoSwipRefreshLayout.setRefreshing(visible);
+	}
+
+	@Override
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onVisitDashboardRefreshEvent(VisitDashboardDataRefreshEvent event) {
+		mPresenter.dataRefreshEventOccurred(event);
 	}
 }

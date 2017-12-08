@@ -27,8 +27,8 @@ public class LocationRestServiceImpl extends BaseMetadataRestService<Location, L
 		return "location";
 	}
 
-	public Call<Results<Location>> getLoginLocations(String url) {
-		restService = RestServiceBuilder.createService(LocationRestService.class, url, "", "");
+	public Call<Results<Location>> getLoginLocations() {
+		restService = RestServiceBuilder.createService(LocationRestService.class, "", "");
 
 		return restService.getLoginLocations(buildRestRequestPath(),
 				QueryOptions.getRepresentation(QueryOptions.FULL_REP));

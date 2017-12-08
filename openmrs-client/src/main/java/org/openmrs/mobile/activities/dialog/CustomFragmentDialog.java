@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,11 +45,13 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+import org.openmrs.mobile.activities.BaseDiagnosisFragment;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditpatient.SimilarPatientsRecyclerViewAdapter;
 import org.openmrs.mobile.activities.login.LoginActivity;
-import org.openmrs.mobile.activities.login.LoginFragment;
+import org.openmrs.mobile.activities.login.LoginContract;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
+import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Patient;
@@ -382,8 +385,9 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case LOGIN:
-						((LoginFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.loginContentFrame))
-								.login(true);
+						LoginContract.View view = (LoginContract.View) getActivity().getSupportFragmentManager()
+								.findFragmentById(R.id.loginContentFrame);
+						view.login(true);
 						dismiss();
 						break;
 					case LOGOUT:
@@ -418,26 +422,30 @@ public class CustomFragmentDialog extends DialogFragment {
 						break;
 					case DELETE_PATIENT:
 						PatientDashboardActivity patientDashboardActivity = (PatientDashboardActivity)getActivity();
-						//activity.findPatientPresenter.deletePatient();
 						dismiss();
 						patientDashboardActivity.finish();
 						break;
 					case ADD_VISIT_TASKS:
-						if (StringUtils.notEmpty(getAutoCompleteTextValue())) {
-							/*((VisitTasksActivity)getActivity()).presenter
-									.createVisitTasksObject(getAutoCompleteTextValue());
-							dismiss();
-							break;*/
-						} else {
-							dismiss();
-							break;
-						}
+						break;
+					case MERGE_PATIENT_SUMMARY:
+						mergePatientSummary();
+						dismiss();
+						break;
 					default:
 						break;
 				}
 			}
 			//CHECKSTYLE:ON
 		};
+	}
+
+	private void mergePatientSummary() {
+		if (getActivity() instanceof VisitActivity || getActivity() instanceof PatientDashboardActivity) {
+			Fragment fragment = getActivity().getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+			if(fragment instanceof BaseDiagnosisFragment) {
+				((BaseDiagnosisFragment)fragment).mergePatientSummary();
+			}
+		}
 	}
 
 	private void doStartVisitAction() {
@@ -475,7 +483,8 @@ public class CustomFragmentDialog extends DialogFragment {
 		DELETE_PATIENT,
 		ADD_VISIT_TASKS,
 		SAVE_VISIT_NOTE,
-		CREATE_VISIT_NOTE
+		CREATE_VISIT_NOTE,
+		MERGE_PATIENT_SUMMARY
 	}
 
 	public interface DialogActionClickedListener {

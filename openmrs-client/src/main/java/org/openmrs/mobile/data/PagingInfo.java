@@ -10,7 +10,12 @@ public class PagingInfo {
 	/**
 	 * Sets the page size to 10,000 so that all results will be included and the server-defined default limit won't be used.
 	 */
-	public static final PagingInfo ALL = new PagingInfo(1,10000);
+	public static final PagingInfo ALL = new PagingInfo(1, 10000);
+
+	/**
+	 * Sets the page size to 10, matching the default page size for most entities.
+	 */
+	public static final PagingInfo DEFAULT = new PagingInfo(1, 10);
 
 	private int page;
 	private int pageSize;
@@ -28,6 +33,8 @@ public class PagingInfo {
 	public PagingInfo(int page, int pageSize) {
 		this.page = page;
 		this.pageSize = pageSize;
+
+		this.loadRecordCount = true;
 	}
 
 	public static Integer getPage(@Nullable PagingInfo pagingInfo) {
@@ -47,7 +54,7 @@ public class PagingInfo {
 	}
 
 	public static boolean isValid(PagingInfo pagingInfo) {
-		return !(pagingInfo == null || pagingInfo.getPage() == 0);
+		return pagingInfo != null && pagingInfo.getPage() > 0;
 	}
 
 	public int getPage() {
@@ -71,9 +78,7 @@ public class PagingInfo {
 	}
 
 	public int getStartIndex() {
-		if (page == 0)
-			return 0;
-		return ((page - 1) * pageSize) + 1;
+		return (page - 1) * pageSize;
 	}
 
 	public Integer getTotalRecordCount() {

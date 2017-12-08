@@ -13,6 +13,7 @@
  */
 package org.openmrs.mobile.activities.patientlist;
 
+import android.support.annotation.Nullable;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.PatientList;
@@ -32,9 +33,9 @@ public interface PatientListContract {
 
 		void setNoPatientListsVisibility(boolean visibility);
 
-		void updatePatientLists(List<PatientList> patientList);
+		void updatePatientLists(List<PatientList> patientList, List<PatientList> syncingPatientLists);
 
-		void updatePatientListData(List<PatientListContext> patientListData);
+		void updatePatientListData(List<PatientListContext> patientListData, boolean forceRefresh);
 
 		void setSpinnerVisibility(boolean visibility);
 
@@ -43,6 +44,10 @@ public interface PatientListContract {
 		void showPatientListProgressSpinner(boolean visible);
 
 		void updatePagingLabel(int currentPage, int totalNumberOfPages);
+
+		void updatePatientListSyncDisplay(List<PatientList> patientList, List<PatientList> syncingPatientLists);
+
+		void displayRefreshingData(boolean visibility);
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -71,5 +76,8 @@ public interface PatientListContract {
 
 		void setExistingPatientListUuid(String uuid);
 
+		void syncSelectionsSaved();
+
+		void dataRefreshWasRequested();
 	}
 }

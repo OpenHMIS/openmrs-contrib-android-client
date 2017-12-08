@@ -1,5 +1,6 @@
 package org.openmrs.mobile.data.sync.impl;
 
+import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.db.impl.PersonAttributeTypeDbService;
 import org.openmrs.mobile.data.db.impl.RecordInfoDbService;
@@ -14,7 +15,7 @@ public class PersonAttributeTypeSubscriptionProvider extends AdaptiveSubscriptio
 	@Inject
 	public PersonAttributeTypeSubscriptionProvider(PersonAttributeTypeDbService dbService,
 			RecordInfoDbService recordInfoDbService,
-			PersonAttributeTypeRestServiceImpl restService, Repository repository) {
-		super(dbService, recordInfoDbService, restService, repository);
+			PersonAttributeTypeRestServiceImpl restService, Repository repository, EventBus eventBus) {
+		super(dbService, recordInfoDbService, restService, repository, eventBus);
 	}
 }

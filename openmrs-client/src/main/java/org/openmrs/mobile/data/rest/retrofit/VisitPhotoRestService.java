@@ -1,6 +1,8 @@
 package org.openmrs.mobile.data.rest.retrofit;
 
 import org.openmrs.mobile.data.rest.RestConstants;
+import org.openmrs.mobile.models.RecordInfo;
+import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.VisitPhoto;
 
 import okhttp3.MultipartBody;
@@ -24,6 +26,11 @@ public interface VisitPhotoRestService {
 
 	@GET(RestConstants.REST_PATH)
 	Call<ResponseBody> downloadVisitPhoto(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("obs") String uuid,
+			@Query("view") String view);
+
+	@GET(RestConstants.REST_PATH)
+	Call<Results<RecordInfo>> getVisitPhotoRecordInfo(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("obs") String uuid,
 			@Query("view") String view);
 

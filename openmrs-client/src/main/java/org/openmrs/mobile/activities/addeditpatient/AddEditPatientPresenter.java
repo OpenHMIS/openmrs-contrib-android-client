@@ -34,6 +34,7 @@ import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.PersonAttribute;
 import org.openmrs.mobile.models.PersonAttributeType;
+import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
@@ -57,9 +58,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private OpenMRS instance = OpenMRS.getInstance();
 	private String locationUuid;
 	private String conceptUuid;
-
-	private int page = 0;
-	private int limit = 10;
 
 	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView, List<String> counties,
 			String patientToUpdateUuid) {
@@ -135,6 +133,21 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			patientFileNumberError = true;
 		}
 
+		// Validate telephone number
+		if (patient.getPerson().getAttributes() != null && patient.getPerson().getAttributes().size() > 0) {
+			for (PersonAttribute personAttribute : patient.getPerson().getAttributes()) {
+				if (personAttribute.getAttributeType().getUuid().equalsIgnoreCase(ApplicationConstants
+						.RequiredPersonAttributes.TELEPHONE_NUMBER_UUID)) {
+					phonenumberError = personAttribute.getValue() == null;
+					break;
+				} else {
+					phonenumberError = true;
+				}
+			}
+		} else {
+			phonenumberError = true;
+		}
+
 		boolean result =
 				!familyNameError && !lastNameError && !dateOfBirthError && !countyError && !genderError
 						&& !patientFileNumberError && !civilStatusError && !occupationError && !subCountyError &&
@@ -197,7 +210,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		if (!registeringPatient && validate(patient)) {
 			patientRegistrationView.hideSoftKeys();
 			registeringPatient = true;
-			if (patient.getUuid() == null || patient.getUuid().equalsIgnoreCase("")) {
+			if (Resource.isLocalUuid(patient.getUuid())) {
 				findSimilarPatients(patient);
 			} else {
 				addEditPatient(patient);
@@ -240,7 +253,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 								.addErrorMessage, ToastUtil.ToastType.ERROR);
 			}
 		};
-		if (patient.getUuid() == null || patient.getUuid().equalsIgnoreCase("")) {
+
+		if (Resource.isLocalUuid(patient.getUuid())) {
 			patientDataService.create(patient, getSingleCallback);
 		} else {
 			patientDataService.update(patient, getSingleCallback);
@@ -249,7 +263,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	}
 
 	public void findSimilarPatients(Patient patient) {
-		PagingInfo pagingInfo = new PagingInfo(page, limit);
+		PagingInfo pagingInfo = PagingInfo.DEFAULT;
 		DataService.GetCallback<List<Patient>> callback = new DataService.GetCallback<List<Patient>>() {
 			@Override
 			public void onCompleted(List<Patient> patients) {
@@ -271,7 +285,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		};
 
 		//Just check if the identifier are the same. If not it saves the patient.
-		patientDataService.getByIdentifier(patient.getIdentifier().getIdentifier(), QueryOptions.FULL_REP, pagingInfo, callback);
+		patientDataService
+				.getByIdentifier(patient.getIdentifier().getIdentifier(), QueryOptions.FULL_REP, pagingInfo, callback);
 	}
 
 	@Override
@@ -280,12 +295,15 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			@Override
 			public void onCompleted(Concept concept) {
 				if (concept != null) {
-					if (concept.getDisplay().equalsIgnoreCase(ApplicationConstants.CIVIL_STATUS)) {
+					if (concept.getDisplay().equalsIgnoreCase(ApplicationConstants.CIVIL_STATUS_DISPLAY)) {
 						dropdown.setPrompt(ApplicationConstants.CIVIL_STATUS);
 					} else {
 						dropdown.setPrompt(ApplicationConstants.KIN_RELATIONSHIP);
 					}
-					patientRegistrationView.updateConceptAnswerView(dropdown, concept.getAnswers());
+
+					if (concept.getAnswers() != null) {
+						patientRegistrationView.updateConceptAnswerView(dropdown, concept.getAnswers());
+					}
 				}
 
 			}
@@ -395,10 +413,30 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public <T> T searchPersonAttributeValueByType(PersonAttributeType personAttributeType) {
-		if (null != getPatient() && null != getPatient().getPerson().getAttributes()) {
+		if (getPatient() != null && getPatient().getPerson().getAttributes() != null) {
 			for (PersonAttribute personAttribute : getPatient().getPerson().getAttributes()) {
-				if (personAttribute.getAttributeType().getUuid().equalsIgnoreCase(personAttributeType.getUuid())) {
-					return (T)personAttribute.getValue();
+				if (personAttribute.getAttributeType() != null) {
+					if (personAttribute.getAttributeType().getUuid()
+							.equalsIgnoreCase(personAttributeType.getUuid())) {
+						if (personAttribute.getValue() == null) {
+							if (personAttribute.getDisplay() != null) {
+								return (T)StringUtils.extractDisplayValue(personAttribute.getDisplay(), 1);
+							}
+
+							if (personAttribute.getStringValue() != null) {
+								return (T)personAttribute.getStringValue();
+							}
+						}
+
+						return (T)personAttribute.getValue();
+					}
+				} else {
+					if (personAttributeType.getDisplay()
+							.equalsIgnoreCase(
+									StringUtils.extractDisplayValue(
+											personAttribute.getDisplay(), 0))) {
+						return (T)StringUtils.extractDisplayValue(personAttribute.getDisplay(), 1);
+					}
 				}
 			}
 		}
@@ -432,8 +470,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.RACE_UUID);
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.HEALTH_CENTER_UUID);
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.HEALTH_DISTRICT_UUID);
-		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.MOTHER_NAME_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.FUNDING_SPONSOR_UUID);
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.BIRTH_PLACE_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.IS_DECEASED_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.FIRST_LANGUAGE_UUID);
 
 		return unwantedPersonAttributes;
 	}

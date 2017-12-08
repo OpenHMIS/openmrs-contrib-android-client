@@ -26,7 +26,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = { CacheModule.class, DbModule.class })
+@Component(modules = { CacheModule.class, DbModule.class, SyncLogModule.class })
 public interface DataAccessComponent {
 	ConceptAnswerDataService conceptAnswer();
 

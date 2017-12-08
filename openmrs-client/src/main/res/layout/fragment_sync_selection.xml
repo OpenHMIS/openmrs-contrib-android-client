@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ The contents of this file are subject to the OpenMRS Public License
+  ~ Version 2.0 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://license.openmrs.org
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations
+  ~ under the License.
+  ~
+  ~ Copyright (C) OpenHMIS.  All Rights Reserved.
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical">
+
+
+	<RelativeLayout
+			android:id="@+id/syncSelectionScreenProgressBarHolder"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			android:visibility="gone">
+
+		<ProgressBar
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:layout_centerInParent="true"
+				android:layout_gravity="center"
+				android:id="@+id/syncSelectionScreenProgressBar"/>
+
+	</RelativeLayout>
+
+	<LinearLayout
+			android:id="@+id/syncSelectionScreen"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			android:layout_margin="@dimen/nav_title_margin">
+
+		<TextView
+				android:text="@string/select_patient_lists_to_sync"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/syncSelectionSectionTitle"
+				android:textColor="@color/color_primary"
+				tools:textColor="@color/color_primary_dark"
+				android:layout_marginBottom="@dimen/nav_title_margin"/>
+
+		<android.support.v7.widget.RecyclerView
+				android:id="@+id/syncSelectionModelRecyclerView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="left|bottom"
+				android:layout_weight="1"/>
+
+		<RelativeLayout
+				android:id="@+id/syncSelectionLoadingProgressBar"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:visibility="gone">
+
+			<ProgressBar
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:layout_centerInParent="true"
+					android:layout_gravity="center"
+					/>
+
+		</RelativeLayout>
+
+		<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:weightSum="10"
+				android:gravity="center_horizontal">
+
+			<Button
+					android:text="@string/skip_patient_list_sync_selections"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:id="@+id/moveForwardButton"
+					android:background="@color/color_primary_dark"
+					android:textColor="@color/color_white"
+					android:layout_alignParentBottom="true"
+					android:layout_gravity="center_horizontal"
+					android:layout_weight="5"/>
+		</LinearLayout>
+
+	</LinearLayout>
+
+</LinearLayout>

@@ -26,6 +26,7 @@ import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Person;
+import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 
 import java.lang.reflect.Type;
@@ -47,24 +48,26 @@ public class ObservationDeserializer implements JsonDeserializer<Observation> {
 
 		Observation observation = new Observation();
 		observation.setUuid(jsonObject.get(UUID_KEY).getAsString());
-		observation.setDisplay(jsonObject.get(DISPLAY_KEY).getAsString());
+		if (jsonObject.get(DISPLAY_KEY) != JsonNull.INSTANCE && jsonObject.get(DISPLAY_KEY) != null) {
+			observation.setDisplay(jsonObject.get(DISPLAY_KEY).getAsString());
+		}
 
-		if(jsonObject.get(COMMENT_KEY) != JsonNull.INSTANCE && jsonObject.get(COMMENT_KEY) != null) {
+		if (jsonObject.get(COMMENT_KEY) != JsonNull.INSTANCE && jsonObject.get(COMMENT_KEY) != null) {
 			observation.setComment(jsonObject.get(COMMENT_KEY).getAsString());
 		}
 
-		if(jsonObject.get(DATE_KEY) != JsonNull.INSTANCE && jsonObject.get(DATE_KEY) != null) {
+		if (jsonObject.get(DATE_KEY) != JsonNull.INSTANCE && jsonObject.get(DATE_KEY) != null) {
 			observation.setObsDatetime(jsonObject.get(DATE_KEY).getAsString());
 		}
 
 		JsonElement encounterJson = jsonObject.get("encounter");
-		if( null != encounterJson && !encounterJson.isJsonNull()){
+		if (null != encounterJson && !encounterJson.isJsonNull()) {
 			Encounter encounter = new Encounter();
 			encounter.setUuid(encounterJson.getAsJsonObject().get(UUID_KEY).getAsString());
 
 			Visit visit = new Visit();
-			JsonElement  visitElement = encounterJson.getAsJsonObject().get("visit");
-			if( null != visitElement && !visitElement.isJsonNull()) {
+			JsonElement visitElement = encounterJson.getAsJsonObject().get("visit");
+			if (null != visitElement && !visitElement.isJsonNull()) {
 				visit.setUuid(visitElement.getAsJsonObject().get(UUID_KEY).getAsString());
 			}
 
@@ -104,7 +107,8 @@ public class ObservationDeserializer implements JsonDeserializer<Observation> {
 			}
 		} else if (conceptJson != null &&
 				"Text of encounter note".equals(conceptJson.getAsJsonObject().get(DISPLAY_KEY).getAsString())) {
-			observation.setDiagnosisNote(jsonObject.getAsJsonObject().get(VALUE_KEY).getAsString());
+			JsonElement encounterNote = jsonObject.getAsJsonObject().get(VALUE_KEY);
+			observation.setDiagnosisNote(!encounterNote.isJsonNull() ? encounterNote.getAsString() : "");
 		}
 		if (conceptJson != null) {
 			Concept concept = new Concept();
@@ -113,11 +117,38 @@ public class ObservationDeserializer implements JsonDeserializer<Observation> {
 		}
 
 		JsonElement personJson = jsonObject.get("person");
-		if(personJson != null) {
+		if (personJson != null) {
 			Person person = new Person();
 			person.setUuid(personJson.getAsJsonObject().get(UUID_KEY).getAsString());
 			person.setDisplay(personJson.getAsJsonObject().get(DISPLAY_KEY).getAsString());
 			observation.setPerson(person);
+		}
+
+		JsonElement creatorJson = jsonObject.get("creator");
+		if (creatorJson != null) {
+			User user = new User();
+			user.setUuid(creatorJson.getAsJsonObject().get(UUID_KEY).getAsString());
+			user.setDisplay(creatorJson.getAsJsonObject().get(DISPLAY_KEY).getAsString());
+
+			JsonElement creatorPersonJson = creatorJson.getAsJsonObject().get("person");
+			if (creatorPersonJson != null) {
+				Person person = new Person();
+				person.setUuid(creatorPersonJson.getAsJsonObject().get(UUID_KEY).getAsString());
+				person.setDisplay(creatorPersonJson.getAsJsonObject().get(DISPLAY_KEY).getAsString());
+				user.setPerson(person);
+			}
+
+			observation.setCreator(user);
+		}
+
+		JsonElement dateCreatedJson = jsonObject.get("dateCreated");
+		if (dateCreatedJson != null) {
+			observation.setDateCreated(DateUtils.convertTimeString(dateCreatedJson.getAsString()).toDate());
+		}
+
+		JsonElement voidedJson = jsonObject.get("voided");
+		if (voidedJson != null) {
+			observation.setVoided(Boolean.getBoolean(voidedJson.getAsString()));
 		}
 
 		return observation;

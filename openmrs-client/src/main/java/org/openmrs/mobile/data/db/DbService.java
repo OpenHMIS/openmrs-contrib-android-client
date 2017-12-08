@@ -48,6 +48,15 @@ public interface DbService<E extends BaseOpenmrsObject> {
 	E save(@NonNull E entity);
 
 	/**
+	 * Updates the specified entity, allowing the uuid to be changed along with saving the entity fields. If the uuid is
+	 * not updated then just a normal update is performed.
+	 * @param originalUuid The original entity uuid
+	 * @param entity The entity to save.
+	 * @return The updated entity
+	 */
+	E update(@NonNull String originalUuid, @NonNull E entity);
+
+	/**
 	 * Deletes the specified entity
 	 * @param entity The entity to delete
 	 */

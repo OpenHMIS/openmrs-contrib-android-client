@@ -76,7 +76,6 @@ public abstract class ACUnitTestBase {
 
     protected Patient createPatient(Long id) {
         Patient patient = new Patient();
-        patient.setId(id);
         patient.setUuid("patient_one_uuid"+id);
         patient.setPerson(createPerson(id));
         patient.setIdentifiers(Collections.singletonList(createIdentifier(id)));

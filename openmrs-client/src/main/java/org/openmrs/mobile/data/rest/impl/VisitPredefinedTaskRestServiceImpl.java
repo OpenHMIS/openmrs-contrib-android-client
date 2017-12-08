@@ -10,7 +10,8 @@ import javax.inject.Inject;
 public class VisitPredefinedTaskRestServiceImpl
 		extends BaseMetadataRestService<VisitPredefinedTask, VisitPredefinedTaskRestService> {
 	@Inject
-	public VisitPredefinedTaskRestServiceImpl() { }
+	public VisitPredefinedTaskRestServiceImpl() {
+	}
 
 	@Override
 	protected String getRestPath() {

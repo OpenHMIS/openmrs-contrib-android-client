@@ -26,24 +26,12 @@ import java.util.Locale;
 @Table(database = AppDatabase.class)
 public class ConceptName extends BaseOpenmrsMetadata {
 	@Expose
-	@ForeignKey(stubbedRelationship = true)
-	private Concept concept;
-
-	@Expose
 	@Column(typeConverter = LocaleTypeConverter.class)
 	private Locale locale;
 
 	@Override
 	public String toString() {
 		return getName();
-	}
-
-	public Concept getConcept() {
-		return concept;
-	}
-
-	public void setConcept(Concept concept) {
-		this.concept = concept;
 	}
 
 	public Locale getLocale() {

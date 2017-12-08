@@ -157,12 +157,19 @@
 				android:layout_marginEnd="10dp"
 				android:orientation="vertical"
 				android:visibility="gone">
-			
-			<android.support.v7.widget.RecyclerView
-					android:id="@+id/patientListModelRecyclerView"
+
+			<android.support.v4.widget.SwipeRefreshLayout
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
-					android:layout_gravity="left|bottom" />
+					android:id="@+id/patientListSwipeRefreshView">
+
+				<android.support.v7.widget.RecyclerView
+						android:id="@+id/patientListModelRecyclerView"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_gravity="left|bottom"/>
+
+			</android.support.v4.widget.SwipeRefreshLayout>
 		</LinearLayout>
 		
 		<RelativeLayout

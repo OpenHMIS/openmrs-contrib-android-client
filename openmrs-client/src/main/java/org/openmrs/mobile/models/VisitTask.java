@@ -46,22 +46,12 @@ public class VisitTask extends BaseOpenmrsEntity {
 
 	@SerializedName("closedOn")
 	@Expose
+	@Column
 	private String closedOn;
 
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private User closedBy;
-
-	public void processRelationships() {
-		super.processRelationships();
-
-		if (visit != null) {
-			visit.processRelationships();
-		}
-
-		if (patient != null) {
-			patient.processRelationships();
-		}
-	}
 
 	public VisitTaskStatus getStatus() {
 		return status;

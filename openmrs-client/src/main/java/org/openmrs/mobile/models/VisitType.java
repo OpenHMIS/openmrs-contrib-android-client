@@ -31,6 +31,6 @@ public class VisitType extends BaseOpenmrsMetadata {
 
 	@Override
 	public String toString() {
-		return getName();
+		return getDisplay();
 	}
 }

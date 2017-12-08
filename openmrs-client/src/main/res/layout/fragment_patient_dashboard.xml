@@ -2,7 +2,7 @@
 		xmlns:fab="http://schemas.android.com/apk/res-auto"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
-
+	
 	<ProgressBar
 			android:visibility="gone"
 			android:layout_centerInParent="true"
@@ -11,25 +11,53 @@
 			android:id="@+id/dashboardProgressBar"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent" />
-
+	
+	<RelativeLayout
+			android:orientation="vertical"
+			android:visibility="gone"
+			android:id="@+id/noPatientDataLayout"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+		
+		
+		<TextView
+				android:layout_centerInParent="true"
+				android:gravity="center"
+				android:layout_gravity="center"
+				android:id="@+id/noPatientDataLabel"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:textColor="@color/openmrs_color_grey"
+				android:text="@string/no_patient_data" />
+	
+	</RelativeLayout>
+	
 	<RelativeLayout
 			android:id="@+id/dashboardScreen"
 			android:visibility="gone"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
-
+		
 		<FrameLayout
 				android:id="@+id/patientHeader"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content" />
 
-		<android.support.v7.widget.RecyclerView
+		<android.support.v4.widget.SwipeRefreshLayout
 				android:layout_below="@id/patientHeader"
 				android:paddingTop="0dp"
-				android:id="@+id/patientVisitsRecyclerView"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content" />
+				android:layout_height="wrap_content"
+				android:id="@+id/patientVisitsSwipeRefreshView">
+		
+			<android.support.v7.widget.RecyclerView
+					android:paddingTop="0dp"
+					android:id="@+id/patientVisitsRecyclerView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content" />
 
+		</android.support.v4.widget.SwipeRefreshLayout>
+		
 		<TextView
 				android:visibility="gone"
 				android:layout_centerInParent="true"
@@ -40,7 +68,7 @@
 				android:layout_height="match_parent"
 				android:textColor="@color/openmrs_color_grey"
 				android:text="@string/no_visit" />
-
+		
 		<com.github.clans.fab.FloatingActionMenu
 				android:id="@+id/patientDashboardMenu"
 				android:layout_width="match_parent"
@@ -55,7 +83,7 @@
 				fab:menu_labels_singleLine="true"
 				fab:menu_colorNormal="@color/color_primary_dark"
 				fab:menu_colorPressed="@color/color_primary">
-
+			
 			<com.github.clans.fab.FloatingActionButton
 					android:id="@+id/start_visit"
 					android:layout_width="wrap_content"
@@ -65,8 +93,8 @@
 					fab:fab_size="mini"
 					fab:fab_colorNormal="@color/color_primary_dark"
 					fab:fab_colorPressed="@color/color_primary" />
-
-
+			
+			
 			<com.github.clans.fab.FloatingActionButton
 					android:id="@+id/edit_Patient"
 					android:layout_width="wrap_content"

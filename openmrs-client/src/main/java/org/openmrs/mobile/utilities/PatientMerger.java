@@ -9,7 +9,7 @@ public class PatientMerger {
 
 	public Patient mergePatient(Patient oldPatient, Patient newPatient) {
 		mergePatientsPerson(oldPatient.getPerson(), newPatient.getPerson());
-		oldPatient.setId(newPatient.getId());
+		oldPatient.setUuid(newPatient.getUuid());
 		return oldPatient;
 	}
 

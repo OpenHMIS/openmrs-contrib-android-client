@@ -1,5 +1,6 @@
 package org.openmrs.mobile.data.sync.impl;
 
+import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.db.impl.ConceptDbService;
@@ -26,8 +27,9 @@ public class DiagnosisConceptSubscriptionProvider extends AdaptiveSubscriptionPr
 
 	@Inject
 	public DiagnosisConceptSubscriptionProvider(ConceptDbService dbService, RecordInfoDbService recordInfoDbService,
-			ConceptRestServiceImpl restService, Repository repository, ConceptSetDbService conceptSetDbService) {
-		super(dbService, recordInfoDbService, restService, repository);
+			ConceptRestServiceImpl restService, Repository repository, ConceptSetDbService conceptSetDbService,
+			EventBus eventBus) {
+		super(dbService, recordInfoDbService, restService, repository, eventBus);
 
 		this.conceptSetDbService = conceptSetDbService;
 	}
@@ -39,7 +41,7 @@ public class DiagnosisConceptSubscriptionProvider extends AdaptiveSubscriptionPr
 		icpcDiagnosesSet = conceptSetDbService.getByUuid(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES, null);
 		if (icpcDiagnosesSet == null) {
 			Concept concept = RestHelper.getCallValue(
-					restService.getByUuid(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES, null));
+					restService.getByUuid(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES, QueryOptions.FULL_REP));
 			if (concept != null) {
 				icpcDiagnosesSet = new ConceptSet();
 				icpcDiagnosesSet.setUuid(concept.getUuid());

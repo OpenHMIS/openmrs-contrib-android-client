@@ -1,13 +1,16 @@
 package org.openmrs.mobile.dagger;
 
+import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.data.db.impl.PatientListContextDbService;
+import org.openmrs.mobile.net.AuthorizationManager;
+import org.openmrs.mobile.net.NetworkManager;
+import org.openmrs.mobile.sync.SyncManager;
+
 import javax.inject.Singleton;
 
 import android.content.Context;
 import dagger.Module;
 import dagger.Provides;
-import org.openmrs.mobile.application.OpenMRS;
-import org.openmrs.mobile.net.AuthorizationManager;
-import org.openmrs.mobile.sync.SyncManager;
 
 @Module
 public class ApplicationModule {
@@ -18,7 +21,7 @@ public class ApplicationModule {
 	public ApplicationModule(OpenMRS openMRS) {
 		this.openMRS = openMRS;
 		this.receiverComponent = DaggerReceiverComponent.create();
-		this.syncComponent = DaggerSyncComponent.create();
+		this.syncComponent = DaggerSyncComponent.builder().syncModule(new SyncModule(openMRS)).build();
 	}
 
 	@Provides
@@ -35,13 +38,20 @@ public class ApplicationModule {
 
 	@Provides
 	@Singleton
-	public SyncManager provideSyncManager() {
-		return new SyncManager(providesOpenMRS(), receiverComponent.syncReceiver(), syncComponent.syncService());
+	public SyncManager provideSyncManager(PatientListContextDbService patientListContextDbService) {
+		return new SyncManager(providesOpenMRS(), receiverComponent.syncReceiver(), syncComponent.syncService(),
+				patientListContextDbService);
 	}
 
 	@Provides
 	@Singleton
 	public AuthorizationManager provideAuthorizationManager() {
 		return new AuthorizationManager(openMRS);
+	}
+
+	@Provides
+	@Singleton
+	public NetworkManager provideNetworkManager() {
+		return new NetworkManager(openMRS, DaggerReceiverComponent.create());
 	}
 }

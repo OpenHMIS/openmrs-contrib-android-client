@@ -15,7 +15,6 @@ package org.openmrs.mobile.test.presenters;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -24,6 +23,7 @@ import org.openmrs.mobile.activities.patientlist.PatientListPresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.impl.PatientListContextDataService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.models.Patient;
@@ -31,6 +31,7 @@ import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListCondition;
 import org.openmrs.mobile.models.PatientListContext;
 import org.openmrs.mobile.models.Person;
+import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.test.ACUnitTestBase;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class PatientListPresenterTest extends ACUnitTestBase {
 
@@ -49,16 +51,20 @@ public class PatientListPresenterTest extends ACUnitTestBase {
 	private PatientListContextDataService patientListContextDataService;
 	@Mock
 	private PatientListContract.View view;
+	@Mock
+	private PullSubscriptionDbService pullSubscriptionDbService;
 
 	private PatientListPresenter presenter;
 
 	private List<PatientList> patientLists = new ArrayList<>();
+	private List<PatientList> selectedSyncingPatientLists = new ArrayList<>();
 	private List<PatientListContext> patientListData;
 	private PagingInfo pagingInfo;
 
 	@Before
 	public void setUp() {
-		presenter = new PatientListPresenter(view, patientListDataService, patientListContextDataService);
+		presenter = new PatientListPresenter(view, patientListDataService, patientListContextDataService,
+				pullSubscriptionDbService);
 
 		PatientList list1 = new PatientList();
 		list1.setUuid("11-22-33");
@@ -97,6 +103,8 @@ public class PatientListPresenterTest extends ACUnitTestBase {
 
 	@Test
 	public void shouldGetPatientList_success() throws Exception {
+		when(pullSubscriptionDbService.getAll(any(QueryOptions.class), any(PagingInfo.class)))
+				.thenReturn(new ArrayList<PullSubscription>());
 		doAnswer(new Answer<Void>() {
 			@Override
 			public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -108,7 +116,7 @@ public class PatientListPresenterTest extends ACUnitTestBase {
 
 		presenter.getPatientList();
 		verify(view).setNoPatientListsVisibility(false);
-		verify(view).updatePatientLists(patientLists);
+		verify(view).updatePatientLists(patientLists, selectedSyncingPatientLists);
 	}
 
 	@Test

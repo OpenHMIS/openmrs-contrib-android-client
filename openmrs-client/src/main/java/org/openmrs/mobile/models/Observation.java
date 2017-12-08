@@ -16,8 +16,11 @@ import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
 import org.openmrs.mobile.data.db.AppDatabase;
+import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.Serializable;
+
+import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.CLINICAL_NOTE;
 
 @Table(database = AppDatabase.class)
 public class Observation extends BaseOpenmrsEntity implements Serializable {
@@ -83,12 +86,14 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 
 	@SerializedName("value")
 	@Expose
-	private Object value;
+	@Column
+	private String value;
 
 	@Expose
 	@ForeignKey(stubbedRelationship = true)
 	private Provider provider;
 
+	@Column
 	private String diagnosisList;
 	private String diagnosisCertainty;
 	private String diagnosisOrder;
@@ -263,7 +268,7 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 		this.resourceVersion = resourceVersion;
 	}
 
-	public Object getValue() {
+	public String getValue() {
 		return value;
 	}
 
@@ -271,16 +276,12 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 		this.value = value;
 	}
 
-	public void setValue(Object value) {
-		this.value = value;
+	public Provider getProvider() {
+		return provider;
 	}
 
 	public void setProvider(Provider provider) {
 		this.provider = provider;
-	}
-
-	public Provider getProvider() {
-		return provider;
 	}
 
 	public String getShortDiagnosisCertainty() {
@@ -291,12 +292,12 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 		return diagnosisCertainty;
 	}
 
-	public void setDiagnosisCertanity(String certanity) {
-		this.diagnosisCertainty = certanity;
-	}
-
 	public void setDiagnosisCertainty(String diagnosisCertainty) {
 		this.diagnosisCertainty = diagnosisCertainty;
+	}
+
+	public void setDiagnosisCertanity(String certanity) {
+		this.diagnosisCertainty = certanity;
 	}
 
 	public String getDiagnosisOrder() {
@@ -316,11 +317,16 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	}
 
 	public String getDiagnosisNote() {
+		if (diagnosisNote == null && getDisplay() != null) {
+			if (getDisplay().contains(CLINICAL_NOTE)) {
+				diagnosisNote = StringUtils.splitStrings(getDisplay(), CLINICAL_NOTE).get(1).toString();
+			}
+		}
+
 		return diagnosisNote;
 	}
 
 	public void setDiagnosisNote(String diagnosisNote) {
 		this.diagnosisNote = diagnosisNote;
 	}
-
 }

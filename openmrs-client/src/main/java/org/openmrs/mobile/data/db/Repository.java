@@ -3,10 +3,12 @@ package org.openmrs.mobile.data.db;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
+import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
+
+import org.openmrs.mobile.models.BaseOpenmrsObject;
 
 import java.util.Collection;
 import java.util.List;
@@ -52,7 +54,7 @@ public interface Repository {
 	 * @param <M> The model class
 	 * @return The resulting models
 	 */
-	<M> List<M> query(@NonNull From<M> query);
+	<M> List<M> query(@NonNull ModelQueriable<M> query);
 
 	/**
 	 * Queries multiple values from the specified table.
@@ -88,7 +90,7 @@ public interface Repository {
 	 * @param <M> The model class
 	 * @return The resulting values
 	 */
-	<T, M> List<T> queryCustom(@NonNull Class<T> cls, @NonNull From<M> query);
+	<T, M> List<T> queryCustom(@NonNull Class<T> cls, @NonNull ModelQueriable<M> query);
 
 	/**
 	 * Gets a count of number records in the specified table that meet the specified where conditions.
@@ -105,7 +107,17 @@ public interface Repository {
 	 * @param <M> The model class
 	 * @return The record count
 	 */
-	<M> long count(@NonNull From<M> from);
+	<M> long count(@NonNull ModelQueriable<M> from);
+
+	/**
+	 * Updates the model with the specified id.
+	 * @param table The table where the model will be updated
+	 * @param id The id for the model to update
+	 * @param model The updated model
+	 * @param <M> The model class
+	 * @return {@code true} if the model was found and updated; otherwise, {@code false}
+	 */
+	<M extends BaseOpenmrsObject> boolean update(@NonNull ModelAdapter<M> table, @NonNull String id, @NonNull M model);
 
 	/**
 	 * Saves the specified model.
@@ -154,5 +166,5 @@ public interface Repository {
 	 * @param query The query to execute
 	 * @param <M> The model class
 	 */
-	<M> void deleteAll(@NonNull From<M> query);
+	<M> void deleteAll(@NonNull ModelQueriable<M> query);
 }

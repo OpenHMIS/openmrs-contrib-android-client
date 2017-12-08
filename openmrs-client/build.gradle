@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
+apply plugin: 'com.github.triplet.play'
 
 buildscript {
-
 	repositories {
 		jcenter()
 	}
@@ -13,78 +12,77 @@ buildscript {
 	}
 }
 
-apply plugin: 'com.github.triplet.play'
-apply plugin: 'me.tatarka.retrolambda'
+// Get the keystore.properties file location, first looking for the environment property
+def keystorePropertiesFilePath = System.getenv(BANDA_IM_KEYSTORE_FILE)
+if (keystorePropertiesFilePath == null || keystorePropertiesFilePath.toString().length() == 0) {
+	// If the environment property is not defined then assume that the file in the root project folder has been configured
+	keystorePropertiesFilePath = rootDir.toString() + "/" + KEYSTORE_PROPERTIES
+}
 
-def version = "2.6.1-beta"
-def dbflow_version = "4.0.4"
-def sqlcipher_version = "3.5.7"
+// Create a variable called keystorePropertiesFile, and initialize it to the keystore.properties file
+def keystorePropertiesFile = file(keystorePropertiesFilePath)
+
+// Initialize a new Properties() object and fill with keystore properties
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+	project.logger.lifecycle("Loading keystore properties file (" + keystorePropertiesFilePath + ")")
+	keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+} else {
+	project.logger.lifecycle("Could not find keystore properties file at " + keystorePropertiesFilePath)
+}
 
 android {
 	compileSdkVersion 25
-	buildToolsVersion '25.0.0'
+	buildToolsVersion '26.0.2'
 	useLibrary 'org.apache.http.legacy'
 
-	def travisBuildNumber = System.getenv("TRAVIS_BUILD_NUMBER")
-	def buildNumber = (travisBuildNumber) ? (travisBuildNumber as int) : 1
-
-	def applicationVersion = version;
-	def travisTag = System.getenv("TRAVIS_TAG")
-	def buildVersionName = (travisTag) ? travisTag : applicationVersion + "-debug." + buildNumber
-
 	defaultConfig {
-		applicationId "org.openmrs.mobile"
-		versionName buildVersionName
-		versionCode buildNumber
+		applicationId APPLICATION_ID
+		versionName VERSION
+		versionCode buildVersionCode()
 
-		minSdkVersion 14
-		targetSdkVersion 23
+		testApplicationId TEST_APPLICATION_ID
+		testInstrumentationRunner TEST_INSTRUMENTATION_RUNNER
 
-		defaultConfig {
-			applicationId "org.openmrs.mobile"
-			versionName buildVersionName
-			minSdkVersion 15
-			targetSdkVersion 23
-			testApplicationId "org.openmrs.mobile.test"
-			testInstrumentationRunner "org.openmrs.mobile.test.OpenMRSInstrumentationTestRunner"
+		minSdkVersion 16
+		targetSdkVersion 24
+		multiDexEnabled true
+	}
+
+	signingConfigs {
+		release {
+			keyAlias keystoreProperties[KEY_ALIAS]
+			keyPassword keystoreProperties[KEY_PASSWORD]
+			storeFile rootProject.file(KEYSTORE_FILE)
+			storePassword keystoreProperties[STORE_PASSWORD]
 		}
+	}
 
-		signingConfigs {
-			release {
-				storeFile rootProject.file('release.keystore')
-				storePassword System.getenv("KEYSTORE_PASSWORD")
-				keyAlias System.getenv("KEYSTORE_ALIAS_NAME")
-				keyPassword System.getenv("KEYSTORE_ALIAS_PASS")
-			}
+	buildTypes {
+		release {
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+			signingConfig signingConfigs.release
 		}
+	}
 
-		buildTypes {
-			release {
-				minifyEnabled false
-				proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-				signingConfig signingConfigs.release
-			}
-		}
+	lintOptions {
+		warning 'InvalidPackage'
+		abortOnError false
+	}
 
-		lintOptions {
-			warning 'InvalidPackage'
-			abortOnError false
-		}
+	packagingOptions {
+		exclude 'META-INF/LICENSE'
+		exclude 'META-INF/LICENSE.txt'
+		exclude 'META-INF/DEPENDENCIES'
+		exclude 'META-INF/DEPENDENCIES.txt'
+		exclude 'META-INF/NOTICE'
+		exclude 'META-INF/NOTICE.txt'
 
-		packagingOptions {
-			exclude 'META-INF/LICENSE'
-			exclude 'META-INF/LICENSE.txt'
-			exclude 'META-INF/DEPENDENCIES'
-			exclude 'META-INF/DEPENDENCIES.txt'
-			exclude 'META-INF/NOTICE'
-			exclude 'META-INF/NOTICE.txt'
+	}
 
-		}
-
-		compileOptions {
-			sourceCompatibility JavaVersion.VERSION_1_8
-			targetCompatibility JavaVersion.VERSION_1_8
-		}
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
 	}
 }
 
@@ -93,74 +91,68 @@ repositories {
 	mavenCentral()
 	jcenter()
 	maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+	maven { url "https://jitpack.io" }
+	google()
+}
+
+configurations {
+	all {
+		exclude module: 'httpclient'
+	}
 }
 
 dependencies {
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
-    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
+	implementation 'com.google.code.gson:gson:2.8.0'
+	annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:4.1.1"
 
-    compile 'com.google.dagger:dagger-android:2.11'
-    apt 'com.google.dagger:dagger-android-processor:2.11'
-    apt 'com.google.dagger:dagger-compiler:2.11'
-	androidTestApt 'com.google.dagger:dagger-compiler:2.11'
-	testApt 'com.google.dagger:dagger-compiler:2.11'
+	implementation 'com.google.dagger:dagger-android:2.11'
+	annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
+	annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+	androidTestAnnotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+	testAnnotationProcessor 'com.google.dagger:dagger-compiler:2.11'
 
-    androidTestCompile(
+	androidTestImplementation (
 			'org.mockito:mockito-core:1.10.19',
 			'com.google.dexmaker:dexmaker-mockito:1.0',
 			'com.google.dexmaker:dexmaker:1.0',
 			'com.jayway.android.robotium:robotium-solo:4.2'
 	)
-	androidTestCompile files('libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar')
+	androidTestImplementation files('libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar')
 
-	compile 'com.google.guava:guava:20.0'
-	compile 'com.android.support:appcompat-v7:25.3.1'
-	compile 'com.android.support:gridlayout-v7:25.3.1'
-	compile 'com.android.support:cardview-v7:25.3.1'
-	compile 'com.android.support:recyclerview-v7:25.3.1'
-	compile 'com.android.support:design:25.3.1'
-	compile 'com.android.support:support-v13:25.3.1'
-	compile 'com.android.support:support-annotations:25.3.1'
-	compile 'com.squareup.retrofit2:retrofit:2.0.2'
-	compile 'com.squareup.retrofit2:converter-gson:2.0.2'
-	compile 'org.apache.httpcomponents:httpcore:4.4.4'
-	compile 'org.apache.httpcomponents:httpmime:4.5.2'
-	compile 'net.yanzm:mth:1.0.4'
-	compile 'net.zetetic:android-database-sqlcipher:3.5.1@aar'
-	compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
-	compile 'joda-time:joda-time:2.0'
-	compile 'com.github.hotchemi:permissionsdispatcher:2.3.1'
-	compile 'com.github.clans:fab:1.6.4'
-	compile 'com.google.android:flexbox:0.1.3'
-
-	apt 'com.github.hotchemi:permissionsdispatcher-processor:2.3.1'
-
-	compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
-	compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
-
+	implementation 'com.google.guava:guava:23.3-android'
+	implementation 'com.android.support:appcompat-v7:25.4.0'
+	implementation 'com.android.support:gridlayout-v7:25.4.0'
+	implementation 'com.android.support:cardview-v7:25.4.0'
+	implementation 'com.android.support:recyclerview-v7:25.4.0'
+	implementation 'com.android.support:design:25.4.0'
+	implementation 'com.android.support:support-v13:25.4.0'
+	implementation 'com.android.support:support-annotations:27.0.0'
+	implementation 'com.squareup.retrofit2:retrofit:2.0.2'
+	implementation 'com.squareup.retrofit2:converter-gson:2.0.2'
+	implementation 'org.apache.httpcomponents:httpcore:4.4.4'
+	implementation 'org.apache.httpcomponents:httpmime:4.5.2'
+	implementation 'net.yanzm:mth:1.0.4'
+	implementation 'net.zetetic:android-database-sqlcipher:3.5.7@aar'
+	implementation 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+	implementation 'joda-time:joda-time:2.0'
+	implementation 'com.github.hotchemi:permissionsdispatcher:2.3.1'
+	implementation 'com.github.clans:fab:1.6.4'
+	implementation 'com.google.android:flexbox:0.1.3'
+	implementation 'org.greenrobot:eventbus:3.0.0'
+	annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.1'
+	implementation "com.github.Raizlabs.DBFlow:dbflow-core:4.1.1"
+	implementation "com.github.Raizlabs.DBFlow:dbflow:4.1.1"
+	
 	// sql-cipher database encryption (optional)
-    //compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${dbflow_version}"
-    //compile "net.zetetic:android-database-sqlcipher:${sqlcipher_version}@aar"
+	//compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:4.1.1"
+	//compile "net.zetetic:android-database-sqlcipher:3.5.7@aar"
 
-	testCompile(
+	testImplementation (
 			'org.mockito:mockito-core:1.10.19',
 			'junit:junit:4.12',
 			'org.powermock:powermock-api-mockito:1.6.6',
 			'org.powermock:powermock-module-junit4:1.6.6'
 	)
 
-	testCompile "org.robolectric:robolectric:3.3.2"
-}
-
-play {
-	if (version.contains("alpha")) {
-		track = 'alpha'
-	} else if (version.contains("beta")) {
-		track = 'beta'
-	} else {
-		track = 'production'
-	}
-
-	serviceAccountEmail = System.getenv("PUBLISHER_ACCOUNT_ID")
-	jsonFile = rootProject.file('google_play.json')
+	testImplementation 'org.robolectric:robolectric:3.4.2'
 }

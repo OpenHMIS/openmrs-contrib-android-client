@@ -16,7 +16,9 @@ package org.openmrs.mobile.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -32,6 +34,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -51,6 +54,7 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class ACBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
 	protected final OpenMRS openMRS = OpenMRS.getInstance();
 	protected final OpenMRSLogger openMRSLogger = openMRS.getOpenMRSLogger();
 	protected FragmentManager fragmentManager;
@@ -58,9 +62,11 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	protected DrawerLayout drawer;
 	protected AuthorizationManager authorizationManager;
 	protected FrameLayout frameLayout;
+
 	private MenuItem syncbutton;
 	private Toolbar toolbar;
 	private OpenMRS instance = OpenMRS.getInstance();
+	private ActionBarDrawerToggle toggle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -211,8 +217,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 
 	private void intitializeNavigationDrawer() {
 		drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
-		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-				this, drawer, toolbar, R.string.label_open, R.string.label_close);
+		toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.label_open, R.string.label_close);
 		drawer.setDrawerListener(toggle);
 		toggle.syncState();
 
@@ -223,6 +228,21 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 			logoutMenuItem.setTitle(getString(R.string.action_logout) + " " + openMRS.getUsername());
 		}
 		navigationView.setNavigationItemSelectedListener(this);
+
+		View privacyPolicy = findViewById(R.id.privacyPolicy);
+		privacyPolicy.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.uri_privacy_policy)));
+				startActivity(browserIntent);
+			}
+		});
+	}
+
+	protected void disableActionBarNavigation() {
+		toggle.setDrawerIndicatorEnabled(false);
+		toggle.syncState();
 	}
 
 	@Override
@@ -284,6 +304,9 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	}
 
 	public static void hideSoftKeyboard(Activity activity) {
+		if (activity == null) {
+			return;
+		}
 		InputMethodManager inputMethodManager =
 				(InputMethodManager)activity.getSystemService(
 						Activity.INPUT_METHOD_SERVICE);
@@ -293,5 +316,34 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 			inputMethodManager.hideSoftInputFromWindow(
 					windowToken.getWindowToken(), 0);
 		}
+	}
+
+	public static void showSoftKeyboard(Activity activity) {
+		if (activity == null) {
+			return;
+		}
+		InputMethodManager inputMethodManager =
+				(InputMethodManager)activity.getSystemService(
+						Activity.INPUT_METHOD_SERVICE);
+		View windowToken = activity.getCurrentFocus();
+
+		if (windowToken != null) {
+			inputMethodManager.toggleSoftInputFromWindow(windowToken.getWindowToken(),
+					inputMethodManager.SHOW_FORCED, 0);
+		}
+	}
+
+	protected void runAfterPageDisplayedToUser(View view, Runnable runnable) {
+
+		view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+			@Override
+			public void onGlobalLayout() {
+				// At this point, the layout is complete and has been drawn. Put it in a handler to ensure the UI thread
+				// is not slowed by this runnable's execution
+				new Handler().post(runnable);
+				view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+			}
+		});
 	}
 }

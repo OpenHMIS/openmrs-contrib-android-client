@@ -1,5 +1,6 @@
 package org.openmrs.mobile.data.sync.impl;
 
+import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.db.impl.EncounterTypeDbService;
 import org.openmrs.mobile.data.db.impl.RecordInfoDbService;
@@ -14,7 +15,7 @@ public class EncounterTypeSubscriptionProvider extends AdaptiveSubscriptionProvi
 	@Inject
 	public EncounterTypeSubscriptionProvider(EncounterTypeDbService dbService,
 			RecordInfoDbService recordInfoDbService,
-			EncounterTypeRestServiceImpl restService, Repository repository) {
-		super(dbService, recordInfoDbService, restService, repository);
+			EncounterTypeRestServiceImpl restService, Repository repository, EventBus eventBus) {
+		super(dbService, recordInfoDbService, restService, repository, eventBus);
 	}
 }

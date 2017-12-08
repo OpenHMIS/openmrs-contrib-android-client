@@ -30,7 +30,11 @@ public final class StringUtils {
 	}
 
 	public static boolean notEmpty(String string) {
-		return string != null && !string.isEmpty();
+		return !isNullOrEmpty(string);
+	}
+
+	public static boolean isNullOrEmpty(String string) {
+		return string == null || string.isEmpty();
 	}
 
 	public static String unescapeJavaString(String st) {
@@ -132,5 +136,13 @@ public final class StringUtils {
 		diagnosisStringSix += (diagnosisStringFive.replaceAll(":", ""));
 
 		return diagnosisStringSix;
+	}
+
+	public static String extractDisplayValue(String display, int index) {
+		if (isNullOrEmpty(display)) {
+			return ApplicationConstants.EMPTY_STRING;
+		}
+
+		return display.split("=")[index].trim();
 	}
 }

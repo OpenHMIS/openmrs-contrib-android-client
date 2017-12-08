@@ -27,6 +27,10 @@ public final class URLValidator {
 	}
 
 	public static ValidationResult validate(String url) {
+		if (StringUtils.isNullOrEmpty(url)) {
+			return new ValidationResult(false, url);
+		}
+
 		ValidationResult result;
 		String ensuredUrl = ensureProtocol(url);
 		Pattern urlPattern = Pattern.compile(URL_PATTERN);

@@ -24,8 +24,8 @@ public class SessionRestServiceImpl extends BaseMetadataRestService<Session, Ses
 		return "session";
 	}
 
-	public Call<Session> getSession(String serverURl, String username, String password) {
-		restService = RestServiceBuilder.createService(SessionRestService.class, serverURl, username, password);
+	public Call<Session> getSession(String username, String password) {
+		restService = RestServiceBuilder.createService(SessionRestService.class, username, password);
 
 		return restService.getSession();
 	}

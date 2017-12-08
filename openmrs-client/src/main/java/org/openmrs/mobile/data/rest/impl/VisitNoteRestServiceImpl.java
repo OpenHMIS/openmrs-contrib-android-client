@@ -31,23 +31,31 @@ public class VisitNoteRestServiceImpl extends BaseRestService<VisitNote, VisitNo
 	}
 
 	public Call<VisitNote> save(VisitNote visitNote) {
-		Gson gson = new GsonBuilder().setExclusionStrategies(new CustomExclusionStrategy()).create();
+		Gson gson = new GsonBuilder()
+				.excludeFieldsWithoutExposeAnnotation()
+				.setExclusionStrategies(new CustomExclusionStrategy()).create();
 		Map<String, String> params = new HashMap<>();
 		params.put("personId", visitNote.getPersonId());
 		params.put("htmlFormId", visitNote.getHtmlFormId());
 		params.put("createVisit", visitNote.getCreateVisit());
 		params.put("formModifiedTimestamp", visitNote.getFormModifiedTimestamp());
 		params.put("encounterModifiedTimestamp", visitNote.getEncounterModifiedTimestamp());
-		params.put("visitId", visitNote.getVisitId());
+		params.put("visitId", visitNote.getVisit().getUuid());
 		params.put("returnUrl", visitNote.getReturnUrl());
 		params.put("closeAfterSubmission", visitNote.getCloseAfterSubmission());
 		params.put("encounterDiagnoses", gson.toJson(visitNote.getEncounterDiagnoses()));
-		params.put("encounterId", visitNote.getEncounterId());
+		params.put("encounterId", visitNote.getEncounter() != null ? visitNote.getEncounter().getUuid() :
+				ApplicationConstants.EMPTY_STRING);
 		params.put("w1", visitNote.getW1());
 		params.put("w3", visitNote.getW3());
 		params.put("w5", visitNote.getW5());
-		params.put("w10", visitNote.getW10());
-		params.put("w12", visitNote.getW12());
+		params.put("w10", visitNote.getW10() != null ? visitNote.getW10() : ApplicationConstants.EMPTY_STRING);
+		params.put("w12", visitNote.getW12() != null ? visitNote.getW12() : ApplicationConstants.EMPTY_STRING);
+
+		if (visitNote.getObservation() != null) {
+			params.put("obs", visitNote.getObservation().getUuid());
+			params.put("basePatientSummary", visitNote.getObservation().getDiagnosisNote());
+		}
 
 		return restService.save(buildRestRequestPath(), params);
 	}

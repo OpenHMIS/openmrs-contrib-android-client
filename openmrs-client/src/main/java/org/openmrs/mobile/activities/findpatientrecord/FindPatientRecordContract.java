@@ -35,8 +35,6 @@ public interface FindPatientRecordContract {
 
 		void setProgressBarVisibility(boolean visibility);
 
-		void showToast(String message, ToastUtil.ToastType toastType);
-
 		void showRegistration();
 
 	}

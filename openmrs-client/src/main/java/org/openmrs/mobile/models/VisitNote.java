@@ -1,6 +1,9 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.Table;
 
 import org.openmrs.mobile.data.db.AppDatabase;
@@ -11,49 +14,82 @@ import java.util.List;
 @Table(database = AppDatabase.class)
 public class VisitNote extends BaseOpenmrsEntity {
 	@Expose
+	@Column
 	private String personId;
 
 	@Expose
+	@Column
 	private String htmlFormId;
 
 	@Expose
+	@Column
 	private String createVisit;
 
 	@Expose
+	@Column
 	private String formModifiedTimestamp;
 
 	@Expose
+	@Column
 	private String encounterModifiedTimestamp;
 
 	@Expose
-	private String visitId;
+	@ForeignKey(stubbedRelationship = true)
+	private Visit visit;
 
 	@Expose
+	@Column
 	private String returnUrl;
 
 	@Expose
+	@Column
 	private String closeAfterSubmission;
 
 	@Expose
 	private List<EncounterDiagnosis> encounterDiagnoses;
 
 	@Expose
-	private String encounterId;
+	@ForeignKey(stubbedRelationship = true)
+	private Encounter encounter;
 
 	@Expose
+	@Column
 	private String w1;
 
 	@Expose
+	@Column
 	private String w3;
 
 	@Expose
+	@Column
 	private String w5;
 
 	@Expose
+	@Column
 	private String w10;
 
 	@Expose
+	@Column
 	private String w12;
+
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Observation observation;
+
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "encounterDiagnoses", isVariablePrivate = true)
+	List<EncounterDiagnosis> loadEncounterDiagnoses() {
+		encounterDiagnoses = loadRelatedObject(EncounterDiagnosis.class, encounterDiagnoses,
+				() -> EncounterDiagnosis_Table.visitNote_uuid.eq(getUuid()));
+
+		return encounterDiagnoses;
+	}
+
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
+
+		processRelatedObjects(encounterDiagnoses, (e) -> e.setVisitNote(this));
+	}
 
 	public String getPersonId() {
 		return personId;
@@ -95,12 +131,12 @@ public class VisitNote extends BaseOpenmrsEntity {
 		this.encounterModifiedTimestamp = encounterModifiedTimestamp;
 	}
 
-	public String getVisitId() {
-		return visitId;
+	public Visit getVisit() {
+		return visit;
 	}
 
-	public void setVisitId(String visitId) {
-		this.visitId = visitId;
+	public void setVisit(Visit visit) {
+		this.visit = visit;
 	}
 
 	public String getReturnUrl() {
@@ -167,12 +203,12 @@ public class VisitNote extends BaseOpenmrsEntity {
 		this.w12 = w12;
 	}
 
-	public String getEncounterId() {
-		return encounterId;
+	public Encounter getEncounter() {
+		return encounter;
 	}
 
-	public void setEncounterId(String encounterId) {
-		this.encounterId = encounterId;
+	public void setEncounter(Encounter encounter) {
+		this.encounter = encounter;
 	}
 
 	public void addEncounterDiagnosis(EncounterDiagnosis encounterDiagnosis){
@@ -181,5 +217,13 @@ public class VisitNote extends BaseOpenmrsEntity {
 		}
 
 		encounterDiagnoses.add(encounterDiagnosis);
+	}
+
+	public Observation getObservation() {
+		return observation;
+	}
+
+	public void setObservation(Observation observation) {
+		this.observation = observation;
 	}
 }

@@ -1,5 +1,6 @@
 package org.openmrs.mobile.data.sync.impl;
 
+import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.db.impl.LocationDbService;
 import org.openmrs.mobile.data.db.impl.RecordInfoDbService;
@@ -13,7 +14,7 @@ public class LocationSubscriptionProvider extends AdaptiveSubscriptionProvider<L
 		LocationRestServiceImpl> {
 	@Inject
 	public LocationSubscriptionProvider(LocationDbService dbService, RecordInfoDbService recordInfoDbService,
-			LocationRestServiceImpl restService, Repository repository) {
-		super(dbService, recordInfoDbService, restService, repository);
+			LocationRestServiceImpl restService, Repository repository, EventBus eventBus) {
+		super(dbService, recordInfoDbService, restService, repository, eventBus);
 	}
 }

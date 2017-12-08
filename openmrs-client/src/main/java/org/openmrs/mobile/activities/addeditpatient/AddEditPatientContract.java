@@ -52,8 +52,6 @@ public interface AddEditPatientContract {
 
 		void setPatientIdentifierType(PatientIdentifierType patientIdentifierType);
 
-		void showToast(String message, ToastUtil.ToastType toastType);
-
 		void loadPersonAttributeTypes(List<PersonAttributeType> personAttributeTypeList);
 
 		void updateConceptAnswerView(Spinner conceptNamesDropdown, List<ConceptAnswer> conceptAnswers);

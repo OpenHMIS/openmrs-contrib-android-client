@@ -3,6 +3,7 @@ package org.openmrs.mobile.data.rest;
 import android.support.annotation.Nullable;
 
 import org.openmrs.mobile.data.DataOperationException;
+import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.models.Results;
 
 import java.util.List;

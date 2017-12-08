@@ -13,8 +13,15 @@
   -->
 
 <resources>
+	<!-- Navigation Panel -->
+	<string name="nav_patient_list">Patient List</string>
+	<string name="nav_privacy_policy">Privacy Policy</string>
+	<string name="nav_find_patient">Find Patient Record</string>
 	<string name="action_settings">Settings</string>
 	<string name="action_logout">Logout</string>
+
+	<!-- URIs -->
+	<string name="uri_privacy_policy">https://www.bandahealth.org/imed-privacy-policy</string>
 	
 	<string name="dbname">openmrs.db</string>
 	<string name="aadbname">aaopenmrs.db</string>
@@ -163,14 +170,14 @@
 	<string name="button_deny">Deny</string>
 	
 	
-	<string name="app_name">Kijabe IM</string>
+	<string name="app_name">Banda Health IM</string>
 	<string name="username">Username</string>
 	<string name="password">Password</string>
 	<string name="login">Login</string>
 	<string name="create_account">No account yet? Create one</string>
 	<string name="search_hint">Search patients</string>
-	
-	<string name="nav_find_patient">Find Patient Record</string>
+	<string name="sync_hint">Sync selections</string>
+
 	<string name="nav_register_patient">Register Patient</string>
 	<string name="nav_open_visit_tasks">Open Visit Tasks</string>
 	<string name="nav_closed_visit_tasks_period">Date Closed: %1$s</string>
@@ -262,7 +269,11 @@
 	<string name="sync">Sync</string>
 	<string name="sync_on">Sync on</string>
 	<string name="sync_off">Sync off</string>
-	
+
+	<!-- Patient Dashboard -->
+	<string name="no_network_and_no_patient_data_in_database">Patient not synced</string>
+	<string name="patient_dashboard_sync_age_display">Last synced %1$s</string>
+	<string name="patient_dashboard_sync_age_display_not_available">Sync information unavailable</string>
 	
 	<!--Activity Logs-->
 	<string name="title_activity_logs">Logs</string>
@@ -285,7 +296,6 @@
 		visitPhotoView meaningful results</string>
 	<string name="patient_metadata_label">Patient Contact Information</string>
 	<string name="visit_tasks_dialog_message">add a visit task</string>
-	<string name="nav_patient_list">Patient List</string>
 	
 	<string name="label_start_visit">Start Visit</string>
 	<string name="label_edit_visit">Edit Visit</string>
@@ -322,7 +332,7 @@
 	<string name="no_vitals">No vitals recorded for this visit</string>
 	<string name="no_visit_tasks">No tasks for this visit</string>
 	<string name="add_diagnosis">Enter Diagnosis</string>
-	<string name="visit_image_description">Description: %1$s \r\n Uploaded: %2$s \r\n Patient: %3$s</string>
+	<string name="visit_image_description">Description: %1$s \r\nUploaded: %2$s \r\nUploaded By: %3$s</string>
 	<string name="add_patient">Add Patient</string>
 	<string name="telephone">Telephone:</string>
 	<string name="no_primary_diagnosis">No Primary Diagnosis</string>
@@ -374,6 +384,7 @@
 	<string name="no_visits_recorded_for_this_patient">No visits recorded for this patient</string>
 	<string name="search_query_label">for search query: %1$s</string>
 	<string name="first_heart_rate">1st heart rate in ICU:</string>
+	<string name="first_respiratory_rate">1st respiratory rate in ICU:</string>
 	<string name="first_gcs_score">1st GCS score at ICU admission (#):</string>
 	<string name="mechanical_ventilation">Mechanical ventilation?</string>
 	<string name="vaospressors_during_hospital_stay">Received vaospressors during hospital stay?</string>
@@ -382,11 +393,46 @@
 	<string name="first_map">1st MAP in ICU ≤ 65?</string>
 	<string name="any_prior_sedetion">Had patient received any sedation prior to 1st GCS score at ICU admission?</string>
 	<string name="surgery_during_hospital_stay">Surgery during hospital stay?</string>
-	<string name="not_applicable">N/A</string>
-	<string name="planned">Planned</string>
-	<string name="unplanned">Unplanned</string>
+	<string name="not_applicable">No</string>
+	<string name="planned">Yes - Scheduled in clinic</string>
+	<string name="unplanned">Yes - Not scheduled in clinic</string>
 	<string name="hiv_positive">Positive</string>
 	<string name="hiv_negative">Negative</string>
 	<string name="patient_diabetic">Patient diabetic?</string>
 	<string name="ward_stay_admission">Ward stay during admission</string>
+	<string name="merge_clinical_note_template">%1$s [created by %2$s on %3$s]</string>
+	<string name="merge_patient_summary">Merge Patient Summary</string>
+	<string name="intubation_at_first_gcs">Patient intubated at time of 1st GCS?</string>
+	<string name="intubation_yes">Yes</string>
+	<string name="intubation_no">No</string>
+	<string name="intubation_unknown">Unknown</string>
+	<string name="no_patient_data">You are offline and cannot view patient information that is not synced.</string>
+	<string name="error_gcs_score">Invalid GCS value (should be between %1$d and %2$d)</string>
+	<string name="error_first_respiratory_rate">Invalid Respiratory Rate (should be between %1$d and %2$d)</string>
+	<string name="error_hba1c">Invalid HbA1c value (should be between %1$d and %2$d)</string>
+	<!-- Login Sync Activity -->
+	<string name="download_upload_speed_is_fast">This should take less than a minute&#8230;</string>
+	<string name="download_upload_speed_is_slow">This could take a few minutes&#8230;</string>
+	<string name="sync_off_for_now_because_network_not_available">Phone offline. Sync will resume when online.</string>
+	<string name="subscription_remote_pull_starting">Downloading %1$s&#8230;</string>
+	<string name="subscription_remote_pull_complete">%1$s complete!</string>
+	<string name="record_remote_push_starting">Uploading record %1$s of %2$s&#8230;</string>
+	<string name="record_remote_push_complete">Uploading record %1$s of %2$s complete!</string>
+	<string name="entity_remote_pull_starting">Downloading %1$s - %2$s&#8230;</string>
+	<string name="entity_remote_pull_complete">%1$s - %2$s complete!</string>
+	<string name="download_complete">Download complete!</string>
+	<string name="upload_complete">Upload complete!</string>
+	<string name="initial_sync_push_progress_text">Checking if data needs to be uploaded&#8230;</string>
+	<string name="initial_sync_pull_progress_text">Waiting for upload to finish&#8230;</string>
+	<string name="initial_sync_pull_progress_text_after_upload_complete">Checking if data needs to be downloaded
+		&#8230;</string>
+	<string name="trim_starting">Updating database&#8230;</string>
+	<string name="trim_complete">Database update complete!</string>
+	
+	<!-- Sync Selection texts -->
+	<string name="select_patient_lists_to_sync">Select Patient Lists to Sync</string>
+	<string name="title_select_patient_lists_to_sync">Patient List Sync Selections</string>
+	<string name="skip_patient_list_sync_selections">Skip</string>
+	<string name="save_patient_list_sync_selections">Save Selections</string>
+	<string name="phonenumber_required">Telephone number is Required</string>
 </resources>

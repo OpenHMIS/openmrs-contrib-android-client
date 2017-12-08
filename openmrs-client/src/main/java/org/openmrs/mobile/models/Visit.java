@@ -23,6 +23,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,12 +31,12 @@ import java.util.List;
 public class Visit extends BaseOpenmrsEntity implements Serializable {
 	@SerializedName("visitType")
 	@Expose
-	@ForeignKey
+	@ForeignKey(saveForeignKeyModel = true)
 	private VisitType visitType;
 
 	@SerializedName("location")
 	@Expose
-	@ForeignKey
+	@ForeignKey(saveForeignKeyModel = true)
 	private Location location;
 
 	@SerializedName("startDatetime")
@@ -50,11 +51,11 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 
 	@SerializedName("encounters")
 	@Expose
-	private List<Encounter> encounters;
+	private List<Encounter> encounters = new ArrayList<>();
 
 	@SerializedName("attributes")
 	@Expose
-	private List<VisitAttribute> attributes;
+	private List<VisitAttribute> attributes = new ArrayList<>();
 
 	@Expose
 	@SerializedName("patient")
@@ -67,24 +68,36 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 		this.uuid = visitUuid;
 	}
 
-	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "encounters", isVariablePrivate = true)
+	public Visit(Date stopDatetime) {
+		this.stopDatetime = stopDatetime;
+	}
+
+	/**
+	 * EffecientMethods has been disabled just so the underlying nested collections are persisted in the db.
+	 * Example: visit->encounters->obs won't be saved when effecientMethods is enabled.
+	 * https://github.com/Raizlabs/DBFlow/issues/1238
+	 * @return
+	 */
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "encounters", isVariablePrivate = true, efficientMethods = false)
 	List<Encounter> loadEncounters() {
-		return loadRelatedObject(Encounter.class, encounters,
-				() -> Encounter_Table.visit_uuid.eq(getUuid()));
+		encounters = loadRelatedObject(Encounter.class, encounters, () -> Encounter_Table.visit_uuid.eq(getUuid()));
+
+		return encounters;
 	}
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "attributes", isVariablePrivate = true)
 	List<VisitAttribute> loadAttributes() {
-		return loadRelatedObject(VisitAttribute.class, attributes,
-				() -> VisitAttribute_Table.visit_uuid.eq(getUuid()));
+		attributes = loadRelatedObject(VisitAttribute.class, attributes, () -> VisitAttribute_Table.visit_uuid.eq(getUuid()));
+
+		return attributes;
 	}
 
 	@Override
 	public void processRelationships() {
 		super.processRelationships();
 
-		processRelatedObjects(encounters);
-		processRelatedObjects(attributes);
+		processRelatedObjects(encounters, (e) -> e.setVisit(this));
+		processRelatedObjects(attributes, (a) -> a.setVisit(this));
 	}
 
 	public Patient getPatient() {

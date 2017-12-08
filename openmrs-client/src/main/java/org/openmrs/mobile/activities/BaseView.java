@@ -14,8 +14,14 @@
 
 package org.openmrs.mobile.activities;
 
+import org.openmrs.mobile.utilities.ToastUtil;
+
 public interface BaseView<T> {
 
 	void setPresenter(T presenter);
+
+	void runOnUIThread(Runnable runnable);
+
+	void showToast(String message, ToastUtil.ToastType toastType);
 
 }

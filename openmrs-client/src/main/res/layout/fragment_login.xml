@@ -2,7 +2,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:gravity="center">
-	
+
 	<ProgressBar
 			android:visibility="gone"
 			android:id="@+id/locationLoadingProgressBar"
@@ -11,7 +11,7 @@
 			android:layout_height="30dp"
 			android:layout_marginTop="-20dp"
 			android:indeterminate="true" />
-	
+
 	<ScrollView
 			android:id="@+id/viewsContainer"
 			android:layout_width="match_parent"
@@ -19,7 +19,7 @@
 			android:layout_alignTop="@+id/locationLoadingProgressBar"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true">
-		
+
 		<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
 				android:layout_gravity="center"
 				android:paddingLeft="24dp"
 				android:paddingRight="24dp">
-			
+
 			<ImageView
 					android:id="@+id/bandaHealthLogo"
 					android:layout_width="fill_parent"
@@ -37,7 +37,7 @@
 					android:layout_marginBottom="24dp"
 					android:contentDescription="@string/app_name"
 					android:src="@drawable/banda_logo" />
-			
+
 			<android.support.design.widget.TextInputLayout
 					android:id="@+id/loginUrlTextLayout"
 					android:visibility="gone"
@@ -45,7 +45,7 @@
 					android:layout_height="wrap_content"
 					android:layout_marginBottom="8dp"
 					android:layout_marginTop="8dp">
-				
+
 				<android.support.design.widget.TextInputEditText
 						android:imeOptions="actionDone"
 						android:id="@+id/loginUrlField"
@@ -54,13 +54,13 @@
 						android:hint="@string/login_url_hint"
 						android:inputType="text|textUri" />
 			</android.support.design.widget.TextInputLayout>
-			
+
 			<android.support.design.widget.TextInputLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_marginBottom="8dp"
 					android:layout_marginTop="8dp">
-				
+
 				<android.support.design.widget.TextInputEditText
 						android:imeOptions="actionDone"
 						android:id="@+id/loginUsernameField"
@@ -69,24 +69,42 @@
 						android:hint="@string/username"
 						android:inputType="text" />
 			</android.support.design.widget.TextInputLayout>
-			
-			
-			<android.support.design.widget.TextInputLayout
+
+			<RelativeLayout
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginBottom="8dp"
-					android:layout_marginTop="8dp">
-				
-				<android.support.design.widget.TextInputEditText
-						android:imeOptions="actionDone"
-						android:id="@+id/loginPasswordField"
-						android:layout_width="match_parent"
+					android:layout_height="wrap_content">
+
+				<android.support.design.widget.TextInputLayout
+						android:id="@+id/textInputLayoutPassword"
+						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:hint="@string/password"
-						android:inputType="textPassword" />
-			</android.support.design.widget.TextInputLayout>
-			
-			
+						android:layout_alignParentTop="true">
+
+					<android.support.design.widget.TextInputEditText
+							android:layout_width="fill_parent"
+							android:layout_height="wrap_content"
+							android:focusable="true"
+							android:imeOptions="actionDone"
+							android:id="@+id/loginPasswordField"
+							android:hint="@string/password"
+							android:inputType="textPassword|text"
+							android:maxLines="1"/>
+
+				</android.support.design.widget.TextInputLayout>
+
+				<CheckBox
+						android:id="@+id/checkboxShowPassword"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_alignEnd="@id/textInputLayoutPassword"
+						android:layout_alignRight="@id/textInputLayoutPassword"
+						android:layout_marginTop="10dp"
+						android:button="@drawable/showpassword_button_selector"
+						android:gravity="bottom"
+						android:paddingLeft="10dp"
+						android:paddingRight="10dp" />
+			</RelativeLayout>
+
 			<android.support.v7.widget.AppCompatSpinner
 					android:prompt="@string/login_location_select"
 					android:id="@+id/locationSpinner"
@@ -95,8 +113,8 @@
 					android:spinnerMode="dialog"
 					style="@style/Widget.AppCompat.Spinner.Underlined"
 					android:layout_marginTop="20dp" />
-			
-			
+
+
 			<android.support.v7.widget.AppCompatButton
 					android:enabled="false"
 					android:id="@+id/loginButton"
@@ -109,7 +127,7 @@
 					android:background="@drawable/button_submit"
 					android:text="@string/login"
 					style="@style/Widget.AppCompat.Button.Borderless" />
-			
+
 			<TextView
 					android:id="@+id/changeUrlIcon"
 					android:layout_width="match_parent"
@@ -118,7 +136,7 @@
 					android:textColor="@color/primary_dark"
 					android:layout_gravity="center_horizontal"
 					android:gravity="center_horizontal" />
-		
+
 		</LinearLayout>
 	</ScrollView>
 

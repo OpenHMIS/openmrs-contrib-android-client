@@ -62,7 +62,6 @@ public class Location extends BaseOpenmrsMetadata {
 
 	public Location(Long id, String name, String parentLocationUuid, String description, String address2, String address1,
 			String cityVillage, String stateProvince, String country, String postalCode) {
-		setId(id);
 		setName(name);
 		this.parentLocationUuid = parentLocationUuid;
 		setDescription(description);

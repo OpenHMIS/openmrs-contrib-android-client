@@ -22,29 +22,35 @@ import org.openmrs.mobile.data.impl.EncounterDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+
+import java.util.List;
 
 public class AuditDataPresenter extends BasePresenter implements AuditDataContract.Presenter {
 
 	private AuditDataContract.View auditDataView;
 	private VisitDataService visitDataService;
 	private ConceptDataService conceptDataService;
+	private String visitUuid;
 
 	private EncounterDataService encounterDataService;
 
-	public AuditDataPresenter(AuditDataContract.View view) {
+	private Encounter currentEncounter = null;
+
+	public AuditDataPresenter(AuditDataContract.View view, String visitUuid) {
 		this.auditDataView = view;
 		this.auditDataView.setPresenter(this);
 
 		this.visitDataService = dataAccess().visit();
 		this.encounterDataService = dataAccess().encounter();
 		this.conceptDataService = dataAccess().concept();
+		this.visitUuid = visitUuid;
 	}
 
 	@Override
 	public void subscribe() {
-		fetchInpatientTypeServices();
 	}
 
 	@Override
@@ -55,6 +61,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				if (concept != null) {
 					if (!concept.getAnswers().isEmpty()) {
 						auditDataView.setInpatientTypeServices(concept.getAnswers());
+						fetchVisit(visitUuid);
 					}
 				}
 			}
@@ -75,10 +82,14 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			@Override
 			public void onCompleted(Visit visit) {
 				auditDataView.setVisit(visit);
-				for (int i = 0; i < visit.getEncounters().size(); i++) {
-					if (visit.getEncounters().get(i).getEncounterType().getUuid().equalsIgnoreCase(ApplicationConstants
-							.EncounterTypeEntity.AUDIT_DATA_UUID) && !visit.getEncounters().get(i).getVoided()) {
-						fetchEncounter(visit.getEncounters().get(i).getUuid());
+				for (Encounter encounter : visit.getEncounters()) {
+					if (encounter.getVoided() != null && encounter.getVoided()) {
+						continue;
+					}
+
+					if (encounter.getEncounterType().getUuid()
+							.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID)) {
+						fetchEncounter(encounter.getUuid());
 					}
 				}
 				auditDataView.showPageSpinner(false);
@@ -98,6 +109,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 		DataService.GetCallback<Encounter> fetchEncountercallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter encounter) {
+				currentEncounter = encounter;
 				auditDataView.showPageSpinner(false);
 				auditDataView.setEncounterUuid(encounter.getUuid());
 				auditDataView.updateFormFields(encounter);
@@ -142,5 +154,18 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 		}
 	}
 
+	@Override
+	public boolean isObservationExistingForCurrentEncounter(Observation observation) {
+		if (currentEncounter == null) {
+			return false;
+		}
+		String obsUuid = observation.getUuid();
+		for (Observation oldObservation : currentEncounter.getObs()) {
+			if (oldObservation.getUuid().equalsIgnoreCase(obsUuid)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
 

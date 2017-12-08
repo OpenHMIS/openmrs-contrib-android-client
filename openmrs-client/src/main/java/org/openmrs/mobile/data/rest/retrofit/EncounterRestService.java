@@ -46,7 +46,7 @@ public interface EncounterRestService {
 	Call<Results<RecordInfo>> getRecordInfoByVisit(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("visit") String visitUuid,
 			@Query("v") String representation,
-			@Query("includeInactive") Boolean includeAll,
+			@Query("includeAll") Boolean includeAll,
 			@Query("limit") int limit,
 			@Query("startIndex") int startIndex);
 }

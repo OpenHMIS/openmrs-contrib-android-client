@@ -21,6 +21,7 @@ import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 
 import java.util.List;
@@ -57,6 +58,8 @@ public interface AuditDataContract {
 		void fetchVisit(String patientId);
 
 		void saveUpdateEncounter(Encounter encounter, boolean isNewEncounter);
+
+		boolean isObservationExistingForCurrentEncounter(Observation observation);
 	}
 
 }

@@ -1,6 +1,5 @@
 package org.openmrs.mobile.activities;
 
-import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -12,8 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.visit.detail.DiagnosisRecyclerViewAdapter;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterDiagnosis;
@@ -34,7 +36,7 @@ import java.util.TimerTask;
 public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		extends ACBaseFragment<T> implements IBaseDiagnosisFragment {
 
-	private static long SEARCH_DIAGNOSES_DELAY = 1000, SAVE_CLINICAL_NOTE_DELAY = 2500;
+	private static long SEARCH_DIAGNOSES_DELAY = 1000;
 	protected List<EncounterDiagnosis> primaryDiagnoses = new ArrayList<>(), secondaryDiagnoses = new ArrayList<>();
 	protected AutoCompleteTextView searchDiagnosis;
 	protected RecyclerView primaryDiagnosesRecycler, secondaryDiagnosesRecycler;
@@ -45,24 +47,29 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	protected TextInputEditText clinicalNoteView;
 	protected BaseDiagnosisPresenter diagnosisPresenter = new BaseDiagnosisPresenter();
 	private Timer timer;
-	private String encounterUuid;
+	private Observation observation;
 	private Visit visit;
 	private boolean firstTimeEdit;
-	private long lastTextEdit = 0;
+	private CustomFragmentDialog mergePatientSummaryDialog;
+	private TextWatcher clinicalNoteListener;
+	private Encounter encounter;
 
 	@Override
 	public void initializeListeners() {
+		diagnosisPresenter.setCancelRunningRequest(false);
 		primaryDiagnoses.clear();
 		secondaryDiagnoses.clear();
 		addDiagnosisListeners();
-		addClinicalNoteListener();
+
+		// load patient summary merge dialog if need be
+		createPatientSummaryMergeDialog(getClinicalNoteView().getText().toString());
 	}
 
 	protected IBaseDiagnosisFragment getIBaseDiagnosisFragment() {
 		return this;
 	}
 
-	abstract public IBaseDiagnosisView getDiagnosisView();
+	public abstract IBaseDiagnosisView getDiagnosisView();
 
 	private void addDiagnosisListeners() {
 		searchDiagnosis.addTextChangedListener(new TextWatcher() {
@@ -104,7 +111,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 					createEncounterDiagnosis(null, ViewUtils.getInput(searchDiagnosis), concept.getValue(),
 							true);
 
-					getDiagnosisView().saveVisitNote(encounterUuid, clinicalNoteView.getText().toString(), visit);
+					saveVisitNote(getEncounter(), getClinicalNoteView().getText().toString(), visit, true);
 				}
 			}
 		});
@@ -113,35 +120,57 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	private void addClinicalNoteListener() {
 		firstTimeEdit = true;
 
-		Handler handler = new Handler();
-		Runnable inputCompleteChecker = () -> {
-			if (System.currentTimeMillis() > (lastTextEdit + SAVE_CLINICAL_NOTE_DELAY)) {
-				saveVisitNote(null != getEncounterUuid() ? getEncounterUuid() : ApplicationConstants.EMPTY_STRING,
-						clinicalNoteView.getText().toString(), visit);
-			}
-		};
-
-		clinicalNoteView.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			@Override
-			public void onTextChanged(final CharSequence s, int start, int before, int count) {
-				//Remove this to run only once
-				handler.removeCallbacks(inputCompleteChecker);
-			}
-
-			@Override
-			public void afterTextChanged(final Editable s) {
-				if (s.length() > 0 && !firstTimeEdit) {
-					lastTextEdit = System.currentTimeMillis();
-					handler.postDelayed(inputCompleteChecker, SAVE_CLINICAL_NOTE_DELAY);
-				} else {
-					firstTimeEdit = false;
+		if (clinicalNoteListener == null) {
+			clinicalNoteListener = new TextWatcher() {
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 				}
-			}
-		});
+
+				@Override
+				public void onTextChanged(final CharSequence s, int start, int before, int count) {
+				}
+
+				@Override
+				public void afterTextChanged(final Editable s) {
+					if (s.length() > 0 && !firstTimeEdit) {
+						saveVisitNote(getEncounter(), getClinicalNoteView().getText().toString(), visit, true);
+					} else {
+						firstTimeEdit = false;
+					}
+				}
+			};
+		}
+
+		getClinicalNoteView().addTextChangedListener(clinicalNoteListener);
+	}
+
+	private void removeClinicalNoteListener() {
+		getClinicalNoteView().removeTextChangedListener(clinicalNoteListener);
+	}
+
+	public void mergePatientSummary() {
+		String updatedPatientSummary = mergePatientSummaryDialog.getEditNoteTextValue();
+		saveVisitNote(getEncounter(), updatedPatientSummary, visit, false);
+		setClinicalNoteText(updatedPatientSummary);
+	}
+
+	public void createPatientSummaryMergeDialog(String patientSummaryText) {
+		removeClinicalNoteListener();
+		// This condition will be changed. It's just a way of detecting a conflict that needs to be resolved.
+		if (patientSummaryText.contains(ApplicationConstants.PatientSummary.SEARCH_PATIENT_SUMMARY_CONFLICT)) {
+			CustomDialogBundle bundle = new CustomDialogBundle();
+			bundle.setTitleViewMessage(getString(R.string.merge_patient_summary));
+			bundle.setEditNoteTextViewMessage(patientSummaryText);
+			bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.MERGE_PATIENT_SUMMARY);
+			bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
+
+			mergePatientSummaryDialog = CustomFragmentDialog.newInstance(bundle);
+			mergePatientSummaryDialog.show(
+					getActivity().getSupportFragmentManager(), ApplicationConstants.DialogTAG.MERGE_PATIENT_SUMMARY_TAG);
+		} else {
+			setClinicalNoteText(patientSummaryText);
+			addClinicalNoteListener();
+		}
 	}
 
 	public void setDiagnoses(Visit visit) {
@@ -151,8 +180,18 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 			this.visit = visit;
 		}
 
+		VisitNote visitNote = diagnosisPresenter.getVisitNote(visit);
+		if (visitNote != null) {
+			updateEncounterDiagnosis(visitNote);
+			return;
+		}
+
 		if (visit.getEncounters().size() != 0) {
 			for (Encounter encounter : visit.getEncounters()) {
+				if (encounter.getVoided() != null && encounter.getVoided()) {
+					continue;
+				}
+
 				if (encounter.getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
 					if (encounter.getObs().size() == 0) {
@@ -198,13 +237,27 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 		for (Concept diagnosis : searchDiagnosis) {
 			for (String existingDiagnosis : existingDiagnoses) {
-				if (null != diagnosis.getName() &&
+				if (diagnosis.getName() != null && diagnosis.getName().getName() != null &&
 						diagnosis.getName().getName().equalsIgnoreCase(existingDiagnosis)
 						|| diagnosis.toString().equalsIgnoreCase(existingDiagnosis)) {
 					diagnoses.remove(diagnosis);
 				}
 			}
 		}
+	}
+
+	public void updateEncounterDiagnosis(VisitNote visitNote) {
+		for (EncounterDiagnosis diagnosis : visitNote.getEncounterDiagnoses()) {
+			if (diagnosis.getOrder().equalsIgnoreCase(ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER)) {
+				primaryDiagnoses.add(diagnosis);
+			} else {
+				secondaryDiagnoses.add(diagnosis);
+			}
+		}
+
+		setClinicalNoteText(visitNote.getW12());
+
+		setRecyclerViews();
 	}
 
 	public void createEncounterDiagnosis(Observation observation, String diagnosis, String conceptNameId,
@@ -233,6 +286,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 				}
 
 				encounterDiagnosis.setExistingObs(observation.getUuid());
+			} else if (observation.getDisplay().startsWith(ApplicationConstants.ObservationLocators.CLINICAL_NOTE)) {
+				setObservation(observation);
 			}
 		} else {
 			encounterDiagnosis.setCertainty(ApplicationConstants.DiagnosisStrings.PRESUMED);
@@ -254,36 +309,32 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	public void setPrimaryDiagnosis(EncounterDiagnosis primaryDiagnosis) {
-		for (int i = 0; i < secondaryDiagnoses.size(); i++) {
-			if (secondaryDiagnoses.get(i) == primaryDiagnosis) {
-				secondaryDiagnoses.remove(i);
-				primaryDiagnoses.add(primaryDiagnosis);
-			}
+		if (removeDiagnosis(primaryDiagnosis, secondaryDiagnoses)) {
+			primaryDiagnoses.add(primaryDiagnosis);
 		}
+
 		setRecyclerViews();
 	}
 
 	public void setSecondaryDiagnosis(EncounterDiagnosis secondaryDiagnosis) {
-		for (int i = 0; i < primaryDiagnoses.size(); i++) {
-			if (primaryDiagnoses.get(i) == secondaryDiagnosis) {
-				primaryDiagnoses.remove(i);
-				secondaryDiagnoses.add(secondaryDiagnosis);
-			}
+		if (removeDiagnosis(secondaryDiagnosis, primaryDiagnoses)) {
+			secondaryDiagnoses.add(secondaryDiagnosis);
 		}
+
 		setRecyclerViews();
 	}
 
 	public void setDiagnosisCertainty(EncounterDiagnosis diagnosisCertainty) {
 		if (diagnosisCertainty.getOrder().equalsIgnoreCase(ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER)) {
 			for (int i = 0; i < primaryDiagnoses.size(); i++) {
-				if (primaryDiagnoses.get(i) == diagnosisCertainty) {
+				if (primaryDiagnoses.get(i).getUuid().equalsIgnoreCase(diagnosisCertainty.getUuid())) {
 					primaryDiagnoses.remove(i);
 					primaryDiagnoses.add(i, diagnosisCertainty);
 				}
 			}
 		} else {
 			for (int i = 0; i < secondaryDiagnoses.size(); i++) {
-				if (secondaryDiagnoses.get(i) == diagnosisCertainty) {
+				if (secondaryDiagnoses.get(i).getUuid().equalsIgnoreCase(diagnosisCertainty.getUuid())) {
 					secondaryDiagnoses.remove(i);
 					secondaryDiagnoses.add(i, diagnosisCertainty);
 				}
@@ -294,19 +345,28 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 	public void removeDiagnosis(EncounterDiagnosis removeDiagnosis, String order) {
 		if (order.equalsIgnoreCase(ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER)) {
-			for (int i = 0; i < primaryDiagnoses.size(); i++) {
-				if (primaryDiagnoses.get(i) == removeDiagnosis) {
-					primaryDiagnoses.remove(i);
-				}
-			}
+			removeDiagnosis(removeDiagnosis, primaryDiagnoses);
 		} else {
-			for (int i = 0; i < secondaryDiagnoses.size(); i++) {
-				if (secondaryDiagnoses.get(i) == removeDiagnosis) {
-					secondaryDiagnoses.remove(i);
-				}
+			removeDiagnosis(removeDiagnosis, secondaryDiagnoses);
+		}
+
+		setRecyclerViews();
+	}
+
+	private boolean removeDiagnosis(EncounterDiagnosis removeDiagnosis, List<EncounterDiagnosis> diagnoses) {
+		int index = -1;
+		for (EncounterDiagnosis encounterDiagnosis : diagnoses) {
+			if (encounterDiagnosis.getUuid().equalsIgnoreCase(removeDiagnosis.getUuid())) {
+				index = diagnoses.indexOf(removeDiagnosis);
 			}
 		}
-		setRecyclerViews();
+
+		if (index > -1) {
+			diagnoses.remove(index);
+			return true;
+		}
+
+		return false;
 	}
 
 	private void setRecyclerViews() {
@@ -327,11 +387,11 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		}
 
 		primaryDiagnosesRecycler.setAdapter(
-				new DiagnosisRecyclerViewAdapter(getActivity(), primaryDiagnoses, getEncounterUuid(),
+				new DiagnosisRecyclerViewAdapter(getActivity(), primaryDiagnoses, getEncounter(),
 						getClinicalNoteView().getText().toString(), visit, getDiagnosisView()));
 
 		secondaryDiagnosesRecycler.setAdapter(
-				new DiagnosisRecyclerViewAdapter(getActivity(), secondaryDiagnoses, getEncounterUuid(),
+				new DiagnosisRecyclerViewAdapter(getActivity(), secondaryDiagnoses, getEncounter(),
 						getClinicalNoteView().getText().toString(), visit, getDiagnosisView()));
 
 		// clear auto-complete input field
@@ -340,31 +400,36 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		diagnosesContent.setVisibility(View.VISIBLE);
 	}
 
-	public void saveVisitNote(VisitNote visitNote) {
-		diagnosisPresenter.saveVisitNote(visitNote, getIBaseDiagnosisFragment());
+	public void saveVisitNote(VisitNote visitNote,  boolean scheduleTask) {
+		diagnosisPresenter.saveVisitNote(visitNote, getIBaseDiagnosisFragment(), scheduleTask);
 	}
 
-	public void saveVisitNote(String encounterUuid, String clinicalNote, Visit visit) {
-		saveVisitNote(createVisitNote(encounterUuid, clinicalNote, visit));
+	public void saveVisitNote(Encounter encounter, String clinicalNote, Visit visit, boolean scheduleTask) {
+		saveVisitNote(createVisitNote(encounter, clinicalNote, visit), scheduleTask);
 	}
 
-	protected VisitNote createVisitNote(String encounterUuid, String clinicalNote, Visit visit) {
+	protected VisitNote createVisitNote(Encounter encounter, String clinicalNote, Visit visit) {
 		List<EncounterDiagnosis> encounterDiagnoses = new ArrayList<>();
 		VisitNote visitNote = new VisitNote();
+		visitNote.setUuid(visit.getUuid());
 		visitNote.setPersonId(visit.getPatient().getUuid());
 		visitNote.setHtmlFormId(ApplicationConstants.EncounterTypeEntity.VISIT_NOTE_FORM_ID);
 		visitNote.setCreateVisit("false");
 		visitNote.setFormModifiedTimestamp(String.valueOf(System.currentTimeMillis()));
 		visitNote.setEncounterModifiedTimestamp("0");
-		visitNote.setVisitId(visit.getUuid());
+		visitNote.setVisit(visit);
 		visitNote.setReturnUrl(ApplicationConstants.EMPTY_STRING);
 		visitNote.setCloseAfterSubmission(ApplicationConstants.EMPTY_STRING);
-		visitNote.setEncounterId(encounterUuid == null ? ApplicationConstants.EMPTY_STRING : encounterUuid);
+		visitNote.setEncounter(encounter);
 		visitNote.setW1(OpenMRS.getInstance().getCurrentUserUuid());
 		visitNote.setW3(OpenMRS.getInstance().getParentLocationUuid());
 		visitNote.setW5(DateUtils.convertTime(visit.getStartDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_FORMAT));
-		visitNote.setW10(ApplicationConstants.EMPTY_STRING);
-		visitNote.setW12(null == clinicalNote ? ApplicationConstants.EMPTY_STRING : clinicalNote);
+		visitNote.setW10(clinicalNote == null ? ApplicationConstants.EMPTY_STRING : clinicalNote);
+		visitNote.setW12(clinicalNote == null ? ApplicationConstants.EMPTY_STRING : clinicalNote);
+
+		if (getObservation() != null) {
+			visitNote.setObservation(getObservation());
+		}
 
 		encounterDiagnoses.addAll(primaryDiagnoses);
 		encounterDiagnoses.addAll(secondaryDiagnoses);
@@ -390,6 +455,12 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		} else {
 			return ApplicationConstants.DiagnosisStrings.CONFIRMED;
 		}
+	}
+
+	private void setClinicalNoteText(String text) {
+		getClinicalNoteView().setText(text);
+		// position cursor at the end of text
+		getClinicalNoteView().setSelection(text.length());
 	}
 
 	@Override
@@ -477,13 +548,13 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	@Override
-	public String getEncounterUuid() {
-		return encounterUuid;
+	public Encounter getEncounter() {
+		return encounter;
 	}
 
 	@Override
-	public void setEncounterUuid(String encounterUuid) {
-		this.encounterUuid = encounterUuid;
+	public void setEncounter(Encounter encounter) {
+		this.encounter = encounter;
 	}
 
 	@Override
@@ -495,4 +566,15 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	public void setVisit(Visit visit) {
 		this.visit = visit;
 	}
+
+	@Override
+	public Observation getObservation() {
+		return observation;
+	}
+
+	@Override
+	public void setObservation(Observation observation) {
+		this.observation = observation;
+	}
+
 }

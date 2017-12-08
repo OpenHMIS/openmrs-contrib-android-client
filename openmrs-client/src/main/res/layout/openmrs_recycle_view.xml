@@ -12,13 +12,13 @@
   ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:orientation="vertical"
-		android:layout_height="match_parent"
-		android:layout_width="wrap_content">
-	
+              android:orientation="vertical"
+              android:layout_height="match_parent"
+              android:layout_width="match_parent">
+
 	<android.support.v7.widget.RecyclerView
 			android:id="@+id/recyclerView"
 			android:layout_width="match_parent"
-			android:layout_height="250dp" />
+			android:layout_height="250dp"/>
 
 </LinearLayout>

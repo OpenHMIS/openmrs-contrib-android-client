@@ -6,7 +6,6 @@ import com.raizlabs.android.dbflow.sql.language.Operator;
 import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 
-import com.raizlabs.android.dbflow.structure.ModelAdapter;
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -23,6 +22,7 @@ import org.openmrs.mobile.BuildConfig;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Location_Table;
+import org.openmrs.mobile.models.queryModel.EntityUuid;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -83,13 +83,14 @@ public class DatabaseHelperTest {
 	@Test
 	public void diffDelete_shouldIgnoreExpectedRecordsNotFoundInTable() throws Exception {
 		List<Location> models = new ArrayList<>(Arrays.asList(testData));
-		List<String> results = createResults(testData[0]);
+		List<EntityUuid> results = createResults(testData[0]);
 
-		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class))).thenReturn(results);
+		when(repo.queryCustom(eq(EntityUuid.class), any(), any(IProperty.class),
+				isNull(SQLOperator.class))).thenReturn(results);
 
 		databaseHelper.diffDelete(Location.class, models);
 
-		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
+		verify(repo).queryCustom(eq(EntityUuid.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, never()).deleteAll(any(), any(SQLOperator.class));
 	}
 
@@ -97,12 +98,12 @@ public class DatabaseHelperTest {
 	public void diffDelete_shouldSkipChecksWhenTableIsEmpty() throws Exception {
 		List<Location> models = new ArrayList<>(Arrays.asList(testData));
 
-		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class)))
+		when(repo.queryCustom(eq(EntityUuid.class), any(), any(IProperty.class), isNull(SQLOperator.class)))
 				.thenReturn(new ArrayList<>());
 
 		databaseHelper.diffDelete(Location.class, models);
 
-		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
+		verify(repo).queryCustom(eq(EntityUuid.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, never()).deleteAll(any(), any(SQLOperator.class));
 	}
 
@@ -110,16 +111,19 @@ public class DatabaseHelperTest {
 	public void diffDelete_shouldDeleteASingleSourceRecordWhenMissingFromExpectedRecords() throws Exception {
 		List<Location> models = new ArrayList<>(Arrays.asList(testData));
 		Location toBeDeleted = createLocation();
-		List<String> results = createResults(toBeDeleted);
-		results.add(models.get(0).getUuid());
+		List<EntityUuid> results = createResults(toBeDeleted);
+		EntityUuid resultToAdd = new EntityUuid();
+		resultToAdd.setUuid(models.get(0).getUuid());
+		results.add(resultToAdd);
 
 		ArgumentCaptor<SQLOperator> captor = ArgumentCaptor.forClass(SQLOperator.class);
 
-		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class))).thenReturn(results);
+		when(repo.queryCustom(eq(EntityUuid.class), any(), any(IProperty.class), isNull(SQLOperator.class)))
+				.thenReturn(results);
 
 		databaseHelper.diffDelete(Location.class, models);
 
-		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
+		verify(repo).queryCustom(eq(EntityUuid.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, times(1)).deleteAll(any(), captor.capture());
 
 		SQLOperator op = captor.getValue();
@@ -136,16 +140,19 @@ public class DatabaseHelperTest {
 				createLocation(),
 				createLocation()
 		};
-		List<String> results = createResults(toBeDeleted);
-		results.add(models.get(0).getUuid());
+		List<EntityUuid> results = createResults(toBeDeleted);
+		EntityUuid resultToAdd = new EntityUuid();
+		resultToAdd.setUuid(models.get(0).getUuid());
+		results.add(resultToAdd);
 
 		ArgumentCaptor<SQLOperator> captor = ArgumentCaptor.forClass(SQLOperator.class);
 
-		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class))).thenReturn(results);
+		when(repo.queryCustom(eq(EntityUuid.class), any(), any(IProperty.class), isNull(SQLOperator.class)))
+				.thenReturn(results);
 
 		databaseHelper.diffDelete(Location.class, models);
 
-		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
+		verify(repo).queryCustom(eq(EntityUuid.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, times(1)).deleteAll(any(), captor.capture());
 
 		SQLOperator op = captor.getValue();
@@ -167,12 +174,13 @@ public class DatabaseHelperTest {
 	@Test
 	public void diffDelete_shouldNotDeleteWhenAllTableRecordsAreFoundInExpectedRecords() throws Exception {
 		List<Location> models = new ArrayList<>(Arrays.asList(testData));
-		List<String> results = createResults(models.toArray(new Location[models.size()]));
-		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class))).thenReturn(results);
+		List<EntityUuid> results = createResults(models.toArray(new Location[models.size()]));
+		when(repo.queryCustom(eq(EntityUuid.class), any(), any(IProperty.class), isNull(SQLOperator.class)))
+				.thenReturn(results);
 
 		databaseHelper.diffDelete(Location.class, models);
 
-		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
+		verify(repo).queryCustom(eq(EntityUuid.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, never()).deleteAll(any(), any(SQLOperator.class));
 	}
 
@@ -183,11 +191,13 @@ public class DatabaseHelperTest {
 		return location;
 	}
 
-	private List<String> createResults(Location... locations) {
-		List<String> results = new ArrayList<>(locations.length);
+	private List<EntityUuid> createResults(Location... locations) {
+		List<EntityUuid> results = new ArrayList<>(locations.length);
 
 		for (Location location : locations) {
-			results.add(location.getUuid());
+			EntityUuid uuid = new EntityUuid();
+			uuid.setUuid(location.getUuid());
+			results.add(uuid);
 		}
 
 		return results;

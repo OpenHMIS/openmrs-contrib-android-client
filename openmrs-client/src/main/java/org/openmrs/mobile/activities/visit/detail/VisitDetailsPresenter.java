@@ -13,11 +13,10 @@
  */
 package org.openmrs.mobile.activities.visit.detail;
 
-import android.util.Log;
 import android.widget.TextView;
 
 import org.openmrs.mobile.activities.visit.VisitContract;
-import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
+import org.openmrs.mobile.activities.visit.BaseVisitPresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -26,32 +25,31 @@ import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.rest.RestConstants;
-import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.ToastUtil;
+import org.openmrs.mobile.utilities.ToastUtil.ToastType;
 
 import java.util.List;
 
-public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitContract.VisitDetailsPresenter {
+public class VisitDetailsPresenter extends BaseVisitPresenter implements VisitContract.VisitDetailsPresenter {
 
 	VisitContract.VisitDetailsView visitDetailsView;
 	private VisitAttributeTypeDataService visitAttributeTypeDataService;
 	private VisitDataService visitDataService;
 	private ConceptDataService conceptDataService;
-	private String patientUUID, visitUUID, providerUuid, visitStopDate;
+	private String patientUUID, providerUuid, visitStopDate;
 
 	private ConceptAnswerDataService conceptAnswerDataService;
 
 	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid,
 			String visitStopDate, VisitContract.VisitDetailsView visitDetailsView) {
-		super();
+		super(visitUuid, visitDetailsView);
 
-		this.visitDetailsView = visitDetailsView;
-		this.visitDetailsView.setPresenter(this);
-		this.visitUUID = visitUuid;
+		visitDashboardPageView = visitDetailsView;
+
 		this.providerUuid = providerUuid;
 		this.patientUUID = patientUuid;
 		this.visitStopDate = visitStopDate;
@@ -60,6 +58,8 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 		this.conceptDataService = dataAccess().concept();
 		this.conceptAnswerDataService = dataAccess().conceptAnswer();
 		this.visitAttributeTypeDataService = dataAccess().visitAttributeType();
+
+		this.visitDetailsView = (VisitContract.VisitDetailsView) visitDashboardPageView;
 	}
 
 	@Override
@@ -90,30 +90,10 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 						visitDetailsView.showTabSpinner(false);
 						visitDetailsView
 								.showToast(ApplicationConstants.entityName.VISITS + ApplicationConstants.toastMessages
-										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+										.fetchErrorMessage, ToastType.ERROR);
 					}
 				};
-		visitDataService.getByUuid(visitUUID, QueryOptions.FULL_REP, getSingleCallback);
-	}
-
-	@Override
-	public void getConcept(String name) {
-		DataService.GetCallback<List<Concept>> getCallback = new DataService.GetCallback<List<Concept>>() {
-
-			@Override
-			public void onCompleted(List<Concept> concepts) {
-				if (!concepts.isEmpty()) {
-					visitDetailsView.setConcept(concepts.get(0));
-				}
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				Log.e("error", t.getLocalizedMessage());
-			}
-		};
-		conceptDataService.getByConceptName(name, QueryOptions.FULL_REP, getCallback);
-
+		visitDataService.getByUuid(visitUuid, QueryOptions.FULL_REP, getSingleCallback);
 	}
 
 	@Override
@@ -123,7 +103,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	@Override
 	public void getVisitUUID() {
-		visitDetailsView.setVisitUUID(visitUUID);
+		visitDetailsView.setVisitUUID(visitUuid);
 	}
 
 	@Override
@@ -137,7 +117,6 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	}
 
 	private void loadVisitAttributeTypes() {
-		visitDetailsView.showTabSpinner(true);
 
 		QueryOptions options = new QueryOptions.Builder()
 				.cacheKey(ApplicationConstants.CacheKays.VISIT_ATTRIBUTE_TYPE)
@@ -145,7 +124,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 				.build();
 
 		visitAttributeTypeDataService
-				.getAll(options, new PagingInfo(0, 100),
+				.getAll(options, PagingInfo.ALL,
 						new DataService.GetCallback<List<VisitAttributeType>>() {
 							@Override
 							public void onCompleted(List<VisitAttributeType> entities) {
@@ -156,7 +135,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 							@Override
 							public void onError(Throwable t) {
 								visitDetailsView.showTabSpinner(false);
-								ToastUtil.error(t.getMessage());
+								visitDetailsView.showToast(t.getMessage(), ToastType.ERROR);
 							}
 						});
 	}
@@ -175,8 +154,14 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 			@Override
 			public void onError(Throwable t) {
-				ToastUtil.error(t.getMessage());
+				visitDetailsView.showToast(t.getMessage(), ToastType.ERROR);
 			}
 		});
+	}
+
+	@Override
+	protected void refreshDependentData() {
+		// No dependent data
+		visitDetailsView.displayRefreshingData(false);
 	}
 }

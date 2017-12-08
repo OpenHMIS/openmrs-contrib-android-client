@@ -281,17 +281,17 @@
 							android:layout_height="wrap_content"
 							android:layout_weight="1"
 							android:layout_marginTop="5dp">
-					
-					<android.support.design.widget.TextInputEditText
-							android:id="@+id/estyr"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:focusable="true"
-							android:imeOptions="actionNext"
-							android:hint="@string/estyr"
-							android:inputType="number"
-							android:maxLines="1"
-							android:textSize="14sp" />
+						
+						<android.support.design.widget.TextInputEditText
+								android:id="@+id/estyr"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:focusable="true"
+								android:imeOptions="actionNext"
+								android:hint="@string/estyr"
+								android:inputType="number"
+								android:maxLines="1"
+								android:textSize="14sp" />
 					</android.support.design.widget.TextInputLayout>
 					
 					<android.support.design.widget.TextInputLayout
@@ -299,18 +299,18 @@
 							android:layout_height="wrap_content"
 							android:layout_weight="1"
 							android:layout_marginTop="5dp">
-					
-					<EditText
-							android:id="@+id/estmonth"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_weight="1"
-							android:focusable="true"
-							android:imeOptions="actionNext"
-							android:hint="@string/estmonth"
-							android:inputType="number"
-							android:maxLines="1"
-							android:textSize="14sp" />
+						
+						<EditText
+								android:id="@+id/estmonth"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_weight="1"
+								android:focusable="true"
+								android:imeOptions="actionNext"
+								android:hint="@string/estmonth"
+								android:inputType="number"
+								android:maxLines="1"
+								android:textSize="14sp" />
 					</android.support.design.widget.TextInputLayout>
 				
 				</LinearLayout>
@@ -336,6 +336,19 @@
 						android:textColor="@color/primary"
 						android:textSize="20sp"
 						android:textStyle="bold" />
+				
+				<TextView
+						android:id="@+id/attributesError"
+						android:layout_width="wrap_content"
+						android:layout_height="0dp"
+						android:layout_marginLeft="20dp"
+						android:layout_marginStart="20dp"
+						android:layout_weight="1"
+						android:padding="2dp"
+						android:textColor="@color/red"
+						android:textSize="14sp"
+						android:textStyle="bold"
+						android:visibility="gone" />
 			
 			</LinearLayout>
 			

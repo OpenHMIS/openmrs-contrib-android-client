@@ -17,7 +17,10 @@ public class ConceptSet extends BaseOpenmrsObject {
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "memberConcepts", isVariablePrivate = true)
 	List<ConceptSetMember> loadMemberConcepts() {
-		return loadRelatedObject(ConceptSetMember.class, memberConcepts, () -> ConceptAnswer_Table.concept_uuid.eq(getUuid()));
+		memberConcepts = loadRelatedObject(ConceptSetMember.class, memberConcepts,
+				() -> ConceptAnswer_Table.concept_uuid.eq(getUuid()));
+
+		return memberConcepts;
 	}
 
 	public Concept getConcept() {

@@ -10,7 +10,7 @@ public class CustomExclusionStrategy implements ExclusionStrategy {
 	public boolean shouldSkipField(FieldAttributes f) {
 		SerializedName clazz = f.getAnnotation(SerializedName.class);
 		if(clazz != null)
-			if(clazz.value() == "display" || clazz.value() == "links")
+			if(clazz.value() == "display" || clazz.value() == "links" || clazz.value() == "uuid")
 				return true;
 
 		return false;

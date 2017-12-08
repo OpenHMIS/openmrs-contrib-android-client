@@ -1,5 +1,7 @@
 package org.openmrs.mobile.data.rest.impl;
 
+import static org.openmrs.mobile.data.rest.RestConstants.Representations.PATIENT_LIST_PATIENTS;
+
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.rest.BaseRestService;
@@ -29,11 +31,15 @@ public class PatientListContextRestServiceImpl extends BaseRestService<PatientLi
 	public Call<Results<PatientListContext>> getListPatients(String patientListUuid, QueryOptions options, PagingInfo pagingInfo) {
 		// If no paging is specified then override the server defaults to return all records
 		if (pagingInfo == null) {
-			pagingInfo = new PagingInfo(1, 10000);
+			pagingInfo = PagingInfo.ALL;
+		}
+		String representation = QueryOptions.getRepresentation(options);
+		if (options == null) {
+			representation = PATIENT_LIST_PATIENTS;
 		}
 
 		return restService.getAll(buildRestRequestPath(), patientListUuid,
-				QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
+				representation, QueryOptions.getIncludeInactive(options),
 				PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo));
 	}
 }

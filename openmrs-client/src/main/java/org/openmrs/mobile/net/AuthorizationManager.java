@@ -52,7 +52,7 @@ public class AuthorizationManager {
 	}
 
 	public boolean isUserLoggedIn() {
-		return !ApplicationConstants.EMPTY_STRING.equals(openMRS.getSessionToken());
+		return openMRS.isUserLoggedOnline();
 	}
 
 	public void moveToLoginActivity() {

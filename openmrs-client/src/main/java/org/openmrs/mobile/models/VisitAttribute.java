@@ -17,7 +17,8 @@ public class VisitAttribute extends BaseOpenmrsEntity {
 
 	@SerializedName("value")
 	@Expose
-	private Object value;
+	@Column
+	private String value;
 
 	@SerializedName("valueReference")
 	@Expose
@@ -26,7 +27,7 @@ public class VisitAttribute extends BaseOpenmrsEntity {
 
 	@SerializedName("attributeType")
 	@Expose
-	@ForeignKey
+	@ForeignKey(stubbedRelationship = true)
 	private VisitAttributeType attributeType;
 
 	public Visit getVisit() {
@@ -53,11 +54,11 @@ public class VisitAttribute extends BaseOpenmrsEntity {
 		this.attributeType = attributeType;
 	}
 
-	public Object getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(Object value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 }

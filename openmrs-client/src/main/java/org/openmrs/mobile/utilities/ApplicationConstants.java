@@ -26,14 +26,16 @@ public abstract class ApplicationConstants {
 	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	//public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://sandbox.openhmisafrica.org/openmrs/";
+	public static final String DEFAULT_OPEN_MRS_URL = EMPTY_STRING;
+	//public static final String DEFAULT_OPEN_MRS_URL = "http://demo.openhmisafrica.org/openmrs/";
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
-	public static final String CIVIL_STATUS = "Civil Status";
-	public static final String KIN_RELATIONSHIP = "Kin Relationship";
+	public static final String CIVIL_STATUS_DISPLAY = "Civil Status";
+	public static final String CIVIL_STATUS = "Select Civil Status";
+	public static final String KIN_RELATIONSHIP = "Select Kin Relationship";
 
-	public abstract static class OpenMRSSharedPreferenceNames {
+	public abstract static class Preferences {
 		public static final String SHARED_PREFERENCES_NAME = "shared_preferences";
+		public static final String LAST_TRIM_DATE = "last_trim_date";
 	}
 
 	public abstract static class API {
@@ -47,6 +49,7 @@ public abstract class ApplicationConstants {
 		public static final String PASSWORD = "password";
 		public static final String USER_PERSON_NAME = "userDisplay";
 		public static final String USER_UUID = "userUUID";
+		public static final String LOGIN_USER_UUID = "loginUserUUID";
 		public static final String LOGIN = "login";
 	}
 
@@ -71,6 +74,8 @@ public abstract class ApplicationConstants {
 		public static final String ADD_VISIT_TASK_DIALOG_TAG = "addVisitTaskDialogTag";
 		public static final String VISIT_NOTE_TAG = "visitNoteTag";
 		public static final String PENDING_VISIT_NOTE_CHANGES_TAG = "pendingVisitNoteChangesTag";
+		public static final String MERGE_PATIENT_SUMMARY_TAG = "mergePatientSummaryTag";
+		public static final String SELECT_PATIENT_LISTS_TO_SYNC_DIALOG_TAG = "selectPatientListsToSyncDialogTag";
 	}
 
 	public abstract static class RegisterPatientRequirements {
@@ -112,13 +117,45 @@ public abstract class ApplicationConstants {
 	}
 
 	public abstract static class ObservationLocators {
-		public static final String CLINICAL_NOTE = "Text of encounter note";
+		public static final String YES = "Yes";
+		public static final String NO = "No";
+		public static final String UNKNOWN = "Unknown";
+		public static final String AUDIT_DATA_COMPLETE = "Audit Data Complete: ";
+		public static final String TYPE_OF_INPATIENT_SERVICE = "Type of inpatient service: ";
+		public static final String HOSPITAL_DEATH = "Hospital Death: ";
+		public static final String PALLIATIVE_CARE_CONSULT = "Palliative Care consult?: ";
+		public static final String HIV_INFECTED = "HIV INFECTED: ";
+		public static final String WARD_STAY_DURING_ADMISSION = "Ward stay during admission: ";
+		public static final String PREOP_RISK_ASSESSMENT = "PRE-OP Risk Assessment Only: ";
+		public static final String ICU_STAY_DURING_ADMISSION = "ICU stay during admission: ";
+		public static final String HDU_STAY_DURING_ADMISSION = "HDU stay during admission: ";
+		public static final String GLYCOSYLATED_HEMOGLOBIN = "glycosylated hemoglobin A measurement: ";
+		public static final String HDU_COMGMT = "HDU CO-MGMT Only: ";
+		public static final String FIRST_MAP = "1st MAP in ICU <= 65?: ";
+		public static final String FIRST_SBP_ICU = "1st SBP in ICU <= 90?: ";
+		public static final String FIRST_GCS_SCORE = "1st GCS score at ICU admission (#): ";
+		public static final String FIRST_HEART_RATE = "1st heart rate in ICU: ";
+		public static final String FIRST_RESPIRATORY_RATE = "Respiratory rate: ";
+		public static final String MECHANICAL_VENTILATION = "Mechanical ventilation: ";
+		public static final String PATIENT_DIABETIC = "Patient diabetic?: ";
+		public static final String RECEIVED_VAOSPRESSORS = "Received vaospressors during hospital stay?: ";
+		public static final String SURGERY_DURING_HOSPITAL_STAY = "Surgery during hospital stay: ";
+		public static final String INFECTION_CONFIRMED_SUSPECTED = "Suspected or confirmed infection within 24 hours of ICU admission (e.g Abx ordered): ";
+		public static final String SEDETION_PRIOR_FIRST_GCS_SCORE_ICU =
+				"had patient received any sedation prior to 1st GCS score at ICU admission?: ";
+		public static final String CLINICAL_NOTE = "Text of encounter note: ";
+		public static final String CD4_COUNT = "CD4 COUNT: ";
 		public static final String DIAGNOSES = "Visit Diagnoses";
 		public static final String PRIMARY_DIAGNOSIS = "Primary";
 		public static final String SECONDARY_DIAGNOSIS = "Secondary";
 		public static final String PRESUMED_DIAGNOSIS = "Presumed diagnosis";
 		public static final String CONFIRMED_DIAGNOSIS = "Confirmed diagnosis";
 		public static final String CHIEF_COMPLAINT = "Chief complaint";
+		public static final String VISIT_DOCUMENT_UUID = "7cac8397-53cd-4f00-a6fe-028e8d743f8e,"
+				+ "42ed45fd-f3f6-44b6-bfc2-8bde1bb41e00";
+		public static final String SCHEDULED_IN_CLINIC = "Yes - scheduled in clinic";
+		public static final String NOT_SCHEDULED_IN_CLINIC = "Yes - not scheduled in clinic";
+		public static final String INTUBATION_ON_FIRST_GCS = "Patient intubated at time of 1st GCS?: ";
 	}
 
 	public abstract static class DiagnosisStrings {
@@ -153,6 +190,8 @@ public abstract class ApplicationConstants {
 
 	public static class ConceptSets {
 		public static final String ICPC_DIAGNOSES = "160167AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String VISIT_DOCUMENT_UUID =
+				"7cac8397-53cd-4f00-a6fe-028e8d743f8e,42ed45fd-f3f6-44b6-bfc2-8bde1bb41e00";
 	}
 
 	public static class toastMessages {
@@ -165,6 +204,10 @@ public abstract class ApplicationConstants {
 		public static final String fetchErrorMessage = " could not be fetched";
 		public static final String fetchWarningMessage = " could not be fetched";
 		public static final String fetchSuccessMessage = " were loaded successfully";
+		public static final String dataCouldNotBeRefreshed = "data could not be refreshed";
+		public static final String imageUploadError = "Unable to upload image";
+		public static final String imageDownloadError = "Error downloading visit images";
+		public static final String notConnected = "Not connected";
 	}
 
 	public static class entityName {
@@ -186,10 +229,12 @@ public abstract class ApplicationConstants {
 		public static final String BIRTH_PLACE_UUID = "8d8718c2-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String HEALTH_CENTER_UUID = "8d87236c-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String HEALTH_DISTRICT_UUID = "8d872150-c2cc-11de-8d13-0010c6dffd0f";
-		public static final String MOTHER_NAME_UUID = "8d871d18-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String RACE_UUID = "8d871386-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String UNKNOWN_PATIENT_UUID = "8b56eac7-5c76-4b9c-8c6f-1deab8d3fc47";
 		public static final String TEST_PATIENT_UUID = "4f07985c-88a5-4abd-aa0c-f3ec8324d8e7";
+		public static final String IS_DECEASED_UUID = "072a51fd-ef9c-4cdf-a50c-329125213d73";
+		public static final String FUNDING_SPONSOR_UUID = "69de9f94-f638-4b18-a3bb-c47ae4ae8f91";
+		public static final String FIRST_LANGUAGE_UUID = "9080b86a-3a1f-4682-a0d3-8b9ccc9520ba";
 	}
 
 	public abstract static class FORM_UUIDS {
@@ -203,9 +248,6 @@ public abstract class ApplicationConstants {
 		public static final String ANSWER_YES = "yes";
 		public static final String ANSWER_NO = "no";
 		public static final String ANSWER_UNKNOWN = "unknown";
-		public static final String ANSWER_NA = "Not applicable";
-		public static final String ANSWER_PLANNED = "Planned (scheduled in clinic)";
-		public static final String ANSWER_UNPLANNED = "Unplanned (not scheduled in clinic)";
 		public static final String ANSWER_NEGATIVE = "NEGATIVE";
 		public static final String ANSWER_POSITIVE = "POSITIVE";
 	}
@@ -214,7 +256,7 @@ public abstract class ApplicationConstants {
 		public static final String CONCEPT_ANSWER_YES = "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_ANSWER_NO = "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_ANSWER_UNKNOWN = "1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-		public static final String CONCEPT_ANSWER_PLANNED = "1d8dc2abe-d5a5-44b1-9dc6-809a993a8dbc";
+		public static final String CONCEPT_ANSWER_PLANNED = "d8dc2abe-d5a5-44b1-9dc6-809a993a8dbc";
 		public static final String CONCEPT_ANSWER_UNPLANNED = "1680114c-72b9-44d7-a292-f2c981322587";
 		public static final String CONCEPT_ANSWER_NA = "1175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_ANSWER_NEGATIVE = "664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
@@ -237,10 +279,12 @@ public abstract class ApplicationConstants {
 		public static final String CONCEPT_FIRST_SBP_ICU = "8f7ad9c2-aca6-458e-9362-963b4d391a7c";
 		public static final String CONCEPT_FIRST_MAP_ICU = "0b19946c-63a6-41e8-b3af-a87fc6addab4";
 		public static final String CONCEPT_FIRST_HEART_RATE_ICU = "9360b4f4-4456-4bc2-97fd-68e661a19d78";
+		public static final String CONCEPT_FIRST_RESPIRATORY_RATE_ICU = "5242AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_FIRST_GCS_SCORE_ICU = "99659fa6-fe39-41d7-ac6b-f183d9231310";
 		public static final String CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU = "7cccf308-edca-4c3e-afde-e7a3f1155ec6";
 		public static final String CONCEPT_PATIENT_DIABETIC = "a424ed50-5f94-4296-a91c-73ebbc1ccca1";
 		public static final String CONCEPT_WARD_STAY_DURING_ADMISSION = "59073230-e0d9-4cbc-bebc-4bf91a42f3bb";
+		public static final String CONCEPT_INTUBATION_AT_GCS = "8b6e4154-006b-4991-ab18-96c1c5357bf3";
 	}
 
 	public abstract static class VITALSFormConcepts {
@@ -286,6 +330,15 @@ public abstract class ApplicationConstants {
 
 		public static int VITALS_BLOOD_OXYGEN_MIN = 0;
 		public static int VITALS_BLOOD_OXYGEN_MAX = 100;
+
+		public static int AUDIT_GCS_SCORE_MIN = 3;
+		public static int AUDIT_GCS_SCORE_MAX = 15;
+
+		public static int AUDIT_HBA1C_MIN = 4;
+		public static int AUDIT_HBA1C_MAX = 25;
+
+		public static int AUDIT_1ST_RESPIRATORY_RATE_MIN = 0;
+		public static int AUDIT_1ST_RESPIRATORY_RATE_MAX = 100;
 	}
 
 	public static class CacheKays {
@@ -310,5 +363,63 @@ public abstract class ApplicationConstants {
 
 	public static class ConceptSource {
 		public static final String ICD_10_WHO = "ICD-10-WHO";
+	}
+
+	public static class Request {
+		public static int PATIENT_VISIT_COUNT = 5;
+  }
+
+  public static class EventMessages {
+		public static class Sync {
+			public static final String CANT_SYNC_NO_NETWORK = "cantSyncNoNetwork";
+
+			public static class Push {
+				public static final String TOTAL_RECORDS = "totalRecords";
+				public static final String RECORD_REMOTE_PUSH_STARTING = "recordRemotePushStarting";
+				public static final String RECORD_REMOTE_PUSH_COMPLETE = "recordRemotePushComplete";
+			}
+
+			public static class Pull {
+				public static final String TOTAL_SUBSCRIPTIONS = "totalSubscriptions";
+				public static final String SUBSCRIPTION_REMOTE_PULL_STARTING = "subscriptionRemotePullStarting";
+				public static final String SUBSCRIPTION_REMOTE_PULL_COMPLETE = "subscriptionRemotePullComplete";
+				public static final String ENTITY_REMOTE_PULL_STARTING = "entityRemotePullStarting";
+				public static final String ENTITY_REMOTE_PULL_COMPLETE = "entityRemotePullComplete";
+				public static final String TRIM_STARTING = "trimStarting";
+				public static final String TRIM_COMPLETE = "trimComplete";
+			}
+
+			public static class SyncType {
+				public static final String SUBSCRIPTION = "subscription";
+				public static final String RECORD = "record";
+				public static final String TRIM = "trim";
+			}
+		}
+
+		public static class DataRefresh {
+
+			public static final String REFRESH = "Refresh";
+			public static final String DATA_RETRIEVED = "Data Retrieved";
+			public static final String REFRESH_UNAVAILABLE = "Refresh Unavailable";
+
+			public static class VisitDashboard {
+
+				public static final String REFRESHING_BASE_DATA = "Refreshing Base Data";
+				public static final String REFRESH_DEPENDENT_DATA = "Refresh Dependent Data";
+				public static final String REFRESH_ERROR = "Refresh Error";
+			}
+		}
+	}
+
+	public static class PatientSummary {
+		public static final String SEARCH_PATIENT_SUMMARY_CONFLICT = "[Last updated";
+	}
+
+	public static class RequiredPersonAttributes{
+		public static final String TELEPHONE_NUMBER_UUID = "14d4f066-15f5-102d-96e4-000c29c2a5d7";
+	}
+
+	public static class TimeConstants {
+		public final static long SAVE_DIAGNOSES_DELAY = 3500;
 	}
 }

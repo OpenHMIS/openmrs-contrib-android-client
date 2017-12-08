@@ -36,7 +36,6 @@
 				android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
-
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
@@ -58,8 +57,12 @@
 				android:screenOrientation="portrait"/>
 		<activity android:name=".activities.login.LoginActivity"
 				android:screenOrientation="portrait"/>
+		<activity android:name=".activities.loginsync.LoginSyncActivity"
+		          android:screenOrientation="portrait"/>
 		<activity android:name=".activities.addeditvisit.AddEditVisitActivity"
 				android:screenOrientation="portrait"/>
+		<activity android:name=".activities.syncselection.SyncSelectionActivity"
+		          android:screenOrientation="portrait"/>
 		<activity android:name=".activities.auditdata.AuditDataActivity"
 				android:screenOrientation="portrait"/>
 		<activity

@@ -16,16 +16,16 @@ package org.openmrs.mobile.activities.patientdashboard;
 
 import android.content.Context;
 
-import org.openmrs.mobile.activities.BaseDiagnosisPresenter;
-import org.openmrs.mobile.activities.IBaseDiagnosisView;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
+import org.openmrs.mobile.activities.IBaseDiagnosisView;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public interface PatientDashboardContract {
@@ -34,7 +34,11 @@ public interface PatientDashboardContract {
 
 		void patientContacts(Patient patient);
 
-		void patientVisits(List<Visit> visits);
+		void setPatientVisits(LinkedList<Visit> visits);
+
+		void addPatientVisits(LinkedList<Visit> visits);
+
+		void notifyAllPatientVisitsFetched();
 
 		Patient getPatient();
 
@@ -50,32 +54,29 @@ public interface PatientDashboardContract {
 
 		void showNoVisits(boolean visibility);
 
-		void updateClinicVisitNote(Observation observation, String encounterUuid);
+		void updateClinicVisitNote(Observation observation, Encounter encounter);
 
+		void showNoPatientData(boolean visible);
+
+		void navigateBack();
+
+		void alertOfflineAndPatientNotFound();
+
+		void displayRefreshingData(boolean visible);
 	}
 
 	interface Presenter extends BasePresenterContract {
 
-		void fetchPatientData(final String patientId);
-
-		void fetchVisits(Patient patient, int startIndex);
+		void fetchPatientData();
 
 		Patient getPatient();
-
-		void setLimit(int limit);
-
-		void setStartIndex(int startIndex);
 
 		boolean isLoading();
 
 		void setLoading(boolean loading);
 
-		int getStartIndex();
+		void loadResults();
 
-		int getLimit();
-
-		void loadResults(Patient patient, boolean loadNextResults);
-
-		void setTotalNumberResults(int totalNumberResults);
+		void dataRefreshWasRequested();
 	}
 }

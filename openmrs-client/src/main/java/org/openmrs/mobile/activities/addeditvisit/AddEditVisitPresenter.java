@@ -122,7 +122,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	private void loadPatient() {
-		if(patient != null){
+		if (patient != null) {
 			return;
 		}
 
@@ -195,20 +195,20 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 				.build();
 		visitAttributeTypeDataService
 				.getAll(options, null, new DataService.GetCallback<List<VisitAttributeType>>() {
-							@Override
-							public void onCompleted(List<VisitAttributeType> entities) {
-								visitAttributeTypes.addAll(entities);
-								addEditVisitView.loadVisitAttributeTypeFields(visitAttributeTypes);
-								setProcessing(false);
-								addEditVisitView.showPageSpinner(false);
-							}
+					@Override
+					public void onCompleted(List<VisitAttributeType> entities) {
+						visitAttributeTypes.addAll(entities);
+						addEditVisitView.loadVisitAttributeTypeFields(visitAttributeTypes);
+						setProcessing(false);
+						addEditVisitView.showPageSpinner(false);
+					}
 
-							@Override
-							public void onError(Throwable t) {
-								addEditVisitView.showPageSpinner(false);
-								ToastUtil.error(t.getMessage());
-							}
-						});
+					@Override
+					public void onError(Throwable t) {
+						addEditVisitView.showPageSpinner(false);
+						ToastUtil.error(t.getMessage());
+					}
+				});
 
 		return visitAttributeTypes;
 	}
@@ -280,8 +280,8 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	@Override
 	public void startVisit(List<VisitAttribute> attributes) {
-		visit.setAttributes(attributes);
-		if (null != location) {
+		updateExistingAttributes(attributes);
+		if (location != null) {
 			visit.setLocation(location.getParentLocation());
 		}
 
@@ -307,6 +307,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	@Override
 	public void updateVisit(List<VisitAttribute> attributes) {
 		Visit updatedVisit = new Visit();
+		updatedVisit.setUuid(visit.getUuid());
 		updatedVisit.setAttributes(attributes);
 		updatedVisit.setVisitType(visit.getVisitType());
 		updatedVisit.setStartDatetime(visit.getStartDatetime());
@@ -315,8 +316,10 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			updatedVisit.setStopDatetime(visit.getStopDatetime());
 		}
 
+		updateExistingAttributes(attributes);
+
 		setProcessing(true);
-		visitDataService.updateVisit(visit.getUuid(), updatedVisit, new DataService.GetCallback<Visit>() {
+		visitDataService.updateVisit(visit, updatedVisit, new DataService.GetCallback<Visit>() {
 			@Override
 			public void onCompleted(Visit entity) {
 				setProcessing(false);
@@ -331,30 +334,33 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		});
 	}
 
+	private void updateExistingAttributes(List<VisitAttribute> attributes) {
+		// void existing attributes
+		for (VisitAttribute visitAttribute : visit.getAttributes()) {
+			visitAttribute.setVoided(true);
+		}
+
+		// append new attributes
+		visit.getAttributes().addAll(attributes);
+	}
+
 	@Override
-	public void endVisit(Visit visit) {
-		if (visit.getUuid() == null) {
-			return;
-		} else {
-			if(visit.getStopDatetime() == null) {
-				visit.setStopDatetime(new Date());
+	public void endVisit() {
+		if (visit.getStopDatetime() == null) {
+			visit.setStopDatetime(new Date());
+		}
+
+		visitDataService.endVisit(visit.getUuid(), visit, new DataService.GetCallback<Visit>() {
+			@Override
+			public void onCompleted(Visit entity) {
+				addEditVisitView.showPatientDashboard();
 			}
 
-			visit.setPatient(null);
-
-			visitDataService.endVisit(visit.getUuid(), visit, null, new DataService.GetCallback<Visit>() {
-				@Override
-				public void onCompleted(Visit entity) {
-					addEditVisitView.showPatientDashboard();
-				}
-
-				@Override
-				public void onError(Throwable t) {
-					System.out.println(t.getLocalizedMessage());
-					ToastUtil.error(t.getMessage());
-				}
-			});
-		}
+			@Override
+			public void onError(Throwable t) {
+				ToastUtil.error(t.getMessage());
+			}
+		});
 	}
 
 	@Override
@@ -376,6 +382,10 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	public <T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType) {
 		if (getVisit() != null && getVisit().getAttributes() != null) {
 			for (VisitAttribute visitAttribute : getVisit().getAttributes()) {
+				if(visitAttribute.getVoided() != null && visitAttribute.getVoided()) {
+					continue;
+				}
+
 				if (visitAttribute.getAttributeType().getUuid().equalsIgnoreCase(visitAttributeType.getUuid())) {
 					return (T)visitAttribute.getValue();
 				}

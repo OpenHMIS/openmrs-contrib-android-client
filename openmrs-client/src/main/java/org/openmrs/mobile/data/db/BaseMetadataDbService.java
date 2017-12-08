@@ -14,7 +14,8 @@ public abstract class BaseMetadataDbService<E extends BaseOpenmrsMetadata> exten
 
 	@Override
 	public List<E> getByNameFragment(String name, QueryOptions options, PagingInfo pagingInfo) {
-		return executeQuery(options, pagingInfo, (w) -> w.where(getEntityTable().getProperty("name").like(name + "%")));
+		return executeQuery(options, pagingInfo,
+				(f) -> f.where(getEntityTable().getProperty("name").like(name + "%")));
 	}
 }
 

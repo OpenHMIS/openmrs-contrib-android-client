@@ -27,6 +27,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.utilities.strategy.ObservationExclusionStrategy;
@@ -45,6 +46,8 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 		Gson myGson = getGson();
 		Gson obsGson = getObsGson();
 		JsonObject srcJson = new JsonObject();
+		isLocalUuid(src);
+
 		Field[] declaredFields = src.getClass().getDeclaredFields();
 		for (Field field : declaredFields) {
 			if (field.getAnnotation(Expose.class) != null) {
@@ -52,6 +55,7 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 				if (Resource.class.isAssignableFrom(field.getType())) {
 					try {
 						if (field.get(src) != null) {
+							isLocalUuid((Resource)field.get(src));
 							srcJson.add(field.getName(), serializeField((Resource)field.get(src), context));
 						}
 					} catch (IllegalAccessException e) {
@@ -64,7 +68,8 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 							if (isResourceCollection(collection)) {
 								JsonArray jsonArray = new JsonArray();
 								for (Object resource : collection) {
-									if (null == ((Resource)resource).getUuid()) {
+									isLocalUuid((Resource)resource);
+									if (((Resource)resource).getUuid() == null) {
 										jsonArray.add(serializeField((Resource)resource, context));
 									} else {
 										if (!(resource instanceof Observation)) {
@@ -136,5 +141,12 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 
 	private boolean isResourceCollection(Collection collection) {
 		return Resource.class.isAssignableFrom(collection.toArray()[0].getClass());
+	}
+
+	private void isLocalUuid(Resource src) {
+		if (Resource.isLocalUuid(src.getUuid()) && OpenMRS.getInstance().getNetworkUtils().isConnectedOrConnecting()) {
+			src.setUuid(null);
+			src.setDisplay(null);
+		}
 	}
 }

@@ -9,7 +9,9 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
+import org.openmrs.mobile.data.sync.impl.ConceptAnswerSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.ConceptClassSubscriptionProvider;
+import org.openmrs.mobile.data.sync.impl.ConceptSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.DiagnosisConceptSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.EncounterTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.LocationSubscriptionProvider;
@@ -19,6 +21,7 @@ import org.openmrs.mobile.data.sync.impl.PersonAttributeTypeSubscriptionProvider
 import org.openmrs.mobile.data.sync.impl.VisitAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPredefinedTaskSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitTypeSubscriptionProvider;
+import org.openmrs.mobile.models.EntitySyncInfo;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.utilities.TimeConstants;
 
@@ -29,7 +32,7 @@ import java.util.List;
 public class AppDatabase {
 	public static final String NAME = "BandaHealth"; // Will get added with a .db extension
 
-	public static final int VERSION = 2;
+	public static final int VERSION = 3;
 
 	@Migration(version = 2, database = AppDatabase.class, priority = 10)
 	public static class RecreateDbMigration extends BaseMigration {
@@ -46,11 +49,18 @@ public class AppDatabase {
 
 	@Migration(version = 2, database = AppDatabase.class, priority = 0)
 	public static class CreateSubscriptionsMigration extends BaseMigration {
-		private final static Integer INT_SECONDS_PER_DAY = (int) TimeConstants.SECONDS_PER_DAY;
-		private final static Integer MAX_INCREMENTAL_COUNT = 25;
-
 		@Override
 		public void migrate(@NonNull DatabaseWrapper database) {
+			Initialization.initializePullSubscriptions(database);
+		}
+	}
+
+	@Migration(version = 0, database = AppDatabase.class)
+	public static class Initialization extends BaseMigration {
+		private final static Integer INT_SECONDS_PER_DAY = (int)TimeConstants.SECONDS_PER_DAY;
+		private final static Integer MAX_INCREMENTAL_COUNT = 25;
+
+		public static void initializePullSubscriptions(@NonNull DatabaseWrapper database) {
 			List<PullSubscription> pullSubscriptions = new ArrayList<>();
 
 			pullSubscriptions.add(
@@ -93,12 +103,22 @@ public class AppDatabase {
 					newPullSub(VisitTypeSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
 							INT_SECONDS_PER_DAY)
 			);
-
+			pullSubscriptions.add(
+					newPullSub(ConceptAnswerSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
+							INT_SECONDS_PER_DAY));
+			pullSubscriptions.add(
+					newPullSub(ConceptSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
+							INT_SECONDS_PER_DAY));
 
 			FlowManager.getModelAdapter(PullSubscription.class).saveAll(pullSubscriptions, database);
 		}
 
-		private PullSubscription newPullSub(String cls, Integer maxIncCount, Integer minInterval) {
+		@Override
+		public void migrate(@NonNull DatabaseWrapper database) {
+			initializePullSubscriptions(database);
+		}
+
+		private static PullSubscription newPullSub(String cls, Integer maxIncCount, Integer minInterval) {
 			PullSubscription sub = new PullSubscription();
 			sub.setForceSyncAfterPush(false);
 			sub.setSubscriptionClass(cls);
@@ -107,6 +127,17 @@ public class AppDatabase {
 			sub.setMinimumInterval(minInterval);
 
 			return sub;
+		}
+	}
+
+	@Migration(version = 3, database = AppDatabase.class)
+	public static class AddEntitySyncTables extends BaseMigration {
+		@Override
+		public void migrate(@NonNull DatabaseWrapper database) {
+			ModelAdapter modelAdapter = FlowManager.getModelAdapter(EntitySyncInfo.class);
+			database.execSQL("DROP TABLE IF EXISTS " + modelAdapter.getTableName());
+
+			database.execSQL(modelAdapter.getCreationQuery());
 		}
 	}
 }

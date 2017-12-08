@@ -39,7 +39,9 @@ public class Section extends Resource implements Serializable {
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "questions", isVariablePrivate = true)
 	List<Question> loadQuestions() {
-		return loadRelatedObject(Question.class, questions, () -> Question_Table.section_uuid.eq(getUuid()));
+		questions = loadRelatedObject(Question.class, questions, () -> Question_Table.section_uuid.eq(getUuid()));
+
+		return questions;
 	}
 
 	@Override

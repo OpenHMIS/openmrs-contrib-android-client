@@ -145,14 +145,6 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	}
 
 	@Override
-	public void showToast(String message, ToastUtil.ToastType toastType) {
-		Context context = getContext();
-		if (context != null) {
-			ToastUtil.showShortToast(getContext(), toastType, message);
-		}
-	}
-
-	@Override
 	public void showRegistration() {
 		Intent intent = new Intent(openMRS.getApplicationContext(), AddEditPatientActivity.class);
 		openMRS.getApplicationContext().startActivity(intent);

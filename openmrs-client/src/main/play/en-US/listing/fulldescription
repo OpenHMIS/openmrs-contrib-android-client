@@ -1,2 +1,14 @@
-OpenMRS Android Client is a mobile version of OpenMRS - customized medical records system with no programming knowledge.
-Mobile client will cover most of the functionality of the web application including registering patients, taking visit notes, capturing vitals, etc.
+Banda Health Inpatient Medicine is a mobile version of a customized OpenMRS inpatient management tool. It is built upon OpenMRS and allows users to view Patient Lists, assign Visit Tasks, and Find Patients. The app also allows users to capture specific audit data on patients for research and further analysis.
+This app is meant to be used with an OpenMRS installation.
+Users can also create patient records, start visits, assign patients to patient lists, and view visit history.
+
+Specific Installation Requirements:
+-OpenMRS v1.11.5
+-Reference Application 2.3.1
+Modules:
+-OpenHMIS Commons v3.5.0-SNAPSHOT
+-OpenHMIS Visit Tasks v1.0.0-SNAPSHOT
+-OpenHMIS Backbone Forms v2.4.0
+-OpenHMIS Patient List v1.0.0-SNAPSHOT
+-Visit Documents UI v1.0
+-Custom REST Services v1.0.0-SNAPSHOT

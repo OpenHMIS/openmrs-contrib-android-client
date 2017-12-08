@@ -18,6 +18,7 @@ import org.openmrs.mobile.BuildConfig;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.dagger.DaggerTestReceiverComponent;
 import org.openmrs.mobile.data.dagger.TestReceiverComponent;
+import org.openmrs.mobile.data.db.impl.PatientListContextDbService;
 import org.openmrs.mobile.receivers.SyncReceiver;
 import org.openmrs.mobile.sync.SyncManager;
 import org.openmrs.mobile.utilities.NetworkUtils;
@@ -45,6 +46,9 @@ public class SyncManagerTest {
 	@Mock
 	SyncService syncService;
 
+	@Mock
+	PatientListContextDbService patientListContextDbService;
+
 	private SyncManager syncManager;
 	private TestReceiverComponent testReceiverComponent;
 
@@ -56,7 +60,8 @@ public class SyncManagerTest {
 		Mockito.when(openMRS.getSystemService(openMRS.ALARM_SERVICE)).thenReturn(alarmManager);
 
 		testReceiverComponent = DaggerTestReceiverComponent.create();
-		syncManager = new SyncManager(openMRS, testReceiverComponent.syncReceiver(), syncService);
+		syncManager = new SyncManager(openMRS, testReceiverComponent.syncReceiver(), syncService,
+				patientListContextDbService);
 	}
 
 	@Test

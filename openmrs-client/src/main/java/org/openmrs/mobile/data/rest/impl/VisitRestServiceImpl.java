@@ -8,8 +8,12 @@ import org.openmrs.mobile.data.rest.retrofit.VisitRestService;
 import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -30,13 +34,26 @@ public class VisitRestServiceImpl extends BaseEntityRestService<Visit, VisitRest
 		return "visit";
 	}
 
-	public Call<Visit> endVisit(String uuid, Visit visit, QueryOptions options) {
-		return restService.endVisit(buildRestRequestPath(), uuid, visit);
+	public Call<Visit> endVisit(String uuid, Visit visit) {
+		return restService.endVisit(buildRestRequestPath(), uuid, new Visit(visit.getStopDatetime()));
 	}
 
-	public Call<Visit> updateVisit(String visitUuid, Visit updatedVisit) {
+	public Call<Visit> updateVisit(Visit updatedVisit) {
 		final String stopDateTime;
-		if (null != updatedVisit.getStopDatetime()) {
+		final String visitUuid = updatedVisit.getUuid();
+		// remove voided attributes
+		if(!updatedVisit.getAttributes().isEmpty()) {
+			List<VisitAttribute> attributes = new ArrayList<>();
+			for (VisitAttribute visitAttribute : updatedVisit.getAttributes()) {
+				if (visitAttribute.getVoided() == false) {
+					attributes.add(visitAttribute);
+				}
+			}
+
+			updatedVisit.setAttributes(attributes);
+		}
+
+		if (updatedVisit.getStopDatetime() != null) {
 			stopDateTime = DateUtils.convertTime(
 					updatedVisit.getStopDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT);
 		} else

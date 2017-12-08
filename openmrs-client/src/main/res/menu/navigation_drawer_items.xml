@@ -21,5 +21,11 @@
 				android:id="@+id/navLogout"
 				android:icon="@drawable/ic_logout"
 				android:title="@string/action_logout" />
+		<item
+				android:id="@+id/footerSpacer1"
+				android:checkable="false"
+				android:enabled="false"
+				android:orderInCategory="200"
+				android:title="" />
 	</group>
 </menu>

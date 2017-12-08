@@ -85,7 +85,7 @@ public class AuditDataActivity extends ACBaseActivity {
 			}
 
 		}
-		mPresenter = new AuditDataPresenter(auditDataFragment);
+		mPresenter = new AuditDataPresenter(auditDataFragment, visitUuid);
 
 	}
 

@@ -3,7 +3,6 @@ package org.openmrs.mobile.data.sync;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,7 +49,7 @@ public class SyncReceiverTest {
 
 	@Test
 	public void connectivityReceiver_whenReceiveBroadcastWithoutNetworkSyncIsNotCalled() {
-		Mockito.when(networkUtils.hasNetwork()).thenReturn(false);
+		Mockito.when(networkUtils.isConnectedOrConnecting()).thenReturn(false);
 
 		syncReceiver.onReceive(openMRS, intent);
 
@@ -59,7 +58,7 @@ public class SyncReceiverTest {
 
 	@Test
 	public void connectivityReceiver_whenReceiveBroadcastAndNetworkAvailableSyncIsCalled() {
-		Mockito.when(networkUtils.hasNetwork()).thenReturn(true);
+		Mockito.when(networkUtils.isConnectedOrConnecting()).thenReturn(true);
 
 		syncReceiver.onReceive(openMRS, intent);
 

@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visit.VisitContract;
-import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.DateUtils;
 
@@ -67,20 +67,10 @@ public class VisitPhotoRecyclerViewAdapter
 			return;
 		}
 
-		view.downloadImage(visitPhoto.getObservation().getUuid(), new DataService.GetCallback<byte[]>() {
-			@Override
-			public void onCompleted(byte[] entity) {
-				visitPhoto.setDownloadedImage(entity);
-				holder.image.setImageBitmap(BitmapFactory.decodeByteArray(entity, 0, entity.length));
-				holder.image.invalidate();
-				map.put(holder.image, visitPhoto);
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				holder.image.setVisibility(View.GONE);
-			}
-		});
+		byte[] photoBytes = visitPhoto.getImageColumn().getBlob();
+		holder.image.setImageBitmap(BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length));
+		holder.image.invalidate();
+		map.put(holder.image, visitPhoto);
 
 		holder.image.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -98,12 +88,20 @@ public class VisitPhotoRecyclerViewAdapter
 					expandImage.setLayoutParams(layoutParams);
 					expandImage.setImageBitmap(
 							BitmapFactory.decodeByteArray(
-									visitPhoto.getDownloadedImage(), 0, visitPhoto.getDownloadedImage().length));
+									visitPhoto.getImageColumn().getBlob(), 0,
+									visitPhoto.getImageColumn().getBlob().length));
 
 					TextView descriptionView = new TextView(context);
+					String uploadedBy;
+					if (visitPhoto.getCreator() != null) {
+						uploadedBy = visitPhoto.getCreator().getDisplay();
+					} else {
+						// must have been uploaded locally
+						uploadedBy = OpenMRS.getInstance().getUserPersonName();
+					}
+
 					descriptionView.setText(view.formatVisitImageDescription(visitPhoto.getFileCaption(),
-							DateUtils.calculateRelativeDate(visitPhoto.getDateCreated()),
-							visitPhoto.getCreator().getPerson().getDisplay()));
+							DateUtils.calculateRelativeDate(visitPhoto.getDateCreated()), uploadedBy));
 					descriptionView.setPadding(10, 10, 10, 10);
 
 					linearLayout.addView(descriptionView);
@@ -127,7 +125,7 @@ public class VisitPhotoRecyclerViewAdapter
 
 	@Override
 	public int getItemCount() {
-		return visitPhotos.size();
+		return visitPhotos != null ? visitPhotos.size() : 0;
 	}
 
 	class DownloadVisitPhotoViewHolder extends RecyclerView.ViewHolder {

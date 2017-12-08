@@ -12,7 +12,7 @@
 			layout="@layout/toolbar_base_activity"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent" />
-	
+
 	<android.support.design.widget.NavigationView
 			android:id="@+id/nav_view"
 			android:layout_width="wrap_content"
@@ -20,6 +20,24 @@
 			android:layout_gravity="start"
 			android:fitsSystemWindows="true"
 			app:headerLayout="@layout/navigation_drawer_header"
-			app:menu="@menu/navigation_drawer_items" />
+			app:menu="@menu/navigation_drawer_items">
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="bottom"
+				android:clickable="true"
+				android:orientation="vertical"
+				android:background="@drawable/nav_footer_border_top">
+
+			<TextView
+					android:id="@+id/privacyPolicy"
+					android:layout_width="match_parent"
+					android:layout_height="48dp"
+					android:gravity="left|center"
+					android:text="@string/nav_privacy_policy"
+					android:paddingLeft="@dimen/labels_text_size"/>
+		</LinearLayout>
+	</android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

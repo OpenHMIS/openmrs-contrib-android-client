@@ -12,6 +12,10 @@ public class LocaleTypeConverter extends TypeConverter<String, Locale> {
 
 	@Override
 	public Locale getModelValue(String data) {
+		if (StringUtils.isNullOrEmpty(data)) {
+			return Locale.getDefault();
+		}
+
 		String parts[] = data.split("_", -1);
 		if (parts.length == 1) return new Locale(parts[0]);
 		else if (parts.length == 2

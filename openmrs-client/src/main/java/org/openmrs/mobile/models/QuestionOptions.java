@@ -58,7 +58,9 @@ public class QuestionOptions extends Resource implements Serializable {
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "answers", isVariablePrivate = true)
 	List<Answer> loadAnswers() {
-		return loadRelatedObject(Answer.class, answers, () -> Answer_Table.questionOptions_uuid.eq(getUuid()));
+		answers = loadRelatedObject(Answer.class, answers, () -> Answer_Table.questionOptions_uuid.eq(getUuid()));
+
+		return answers;
 	}
 
 	@Override

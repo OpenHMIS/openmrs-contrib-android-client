@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.text.InputType;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -40,7 +42,8 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
-import org.openmrs.mobile.activities.patientlist.PatientListActivity;
+import org.openmrs.mobile.activities.loginsync.LoginSyncActivity;
+import org.openmrs.mobile.activities.syncselection.SyncSelectionActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.listeners.watcher.LoginValidatorWatcher;
@@ -50,7 +53,6 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.ImageUtils;
 import org.openmrs.mobile.utilities.StringUtils;
-import org.openmrs.mobile.utilities.ToastUtil;
 import org.openmrs.mobile.utilities.URLValidator;
 
 import java.lang.reflect.Type;
@@ -76,6 +78,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	private TextInputLayout loginUrlTextLayout;
 	private View viewsContainer;
 	private AuthorizationManager authorizationManager;
+	private CheckBox showPassword;
 
 	public static LoginFragment newInstance() {
 		return new LoginFragment();
@@ -113,7 +116,12 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		loadingProgressBar = (ProgressBar)mRootView.findViewById(R.id.locationLoadingProgressBar);
 		changeUrlIcon = (TextView)mRootView.findViewById(R.id.changeUrlIcon);
 		loginUrlTextLayout = (TextInputLayout)mRootView.findViewById(R.id.loginUrlTextLayout);
+		showPassword = (CheckBox)mRootView.findViewById(R.id.checkboxShowPassword);
 		url.setText(loginUrl);
+
+		if (StringUtils.isNullOrEmpty(loginUrl)) {
+			showEditUrlEditField(true);
+		}
 	}
 
 	private void loadLocations() {
@@ -127,9 +135,9 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 			locationsList = gson.fromJson(locationsStr, type);
 		}
 
-		if (locationsList.isEmpty()) {
+		if (locationsList.isEmpty() && !StringUtils.isNullOrEmpty(loginUrl)) {
 			mPresenter.loadLocations(loginUrl);
-		} else {
+		} else if (!StringUtils.isNullOrEmpty(loginUrl)) {
 			updateLocationsSpinner(locationsList, loginUrl);
 		}
 
@@ -147,16 +155,13 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		loginValidatorWatcher = new LoginValidatorWatcher(url, username, password, dropdownLocation, loginButton);
 
 		url.setOnFocusChangeListener((view, b1) -> {
-			if (StringUtils.notEmpty(url.getText().toString())
-					&& !view.isFocused()
-					&& loginValidatorWatcher.isUrlChanged()
-					|| (loginValidatorWatcher.isUrlChanged() && !view.isFocused()
-					&& loginValidatorWatcher.isLocationErrorOccurred())
-					|| (!loginValidatorWatcher.isUrlChanged() && !view.isFocused())) {
-				((LoginFragment)getActivity()
-						.getSupportFragmentManager()
-						.findFragmentById(R.id.loginContentFrame))
-						.setUrl(url.getText().toString());
+			boolean isViewFocused = view.isFocused();
+			boolean isUrlEntered = StringUtils.notEmpty(url.getText().toString());
+			boolean isUrlChanged = loginValidatorWatcher.isUrlChanged();
+			boolean isLocationErrorOccurred = loginValidatorWatcher.isLocationErrorOccurred();
+
+			if (!isViewFocused && (!isUrlChanged || isUrlChanged && (isUrlEntered || isLocationErrorOccurred))) {
+				setUrl(url.getText().toString());
 				loginValidatorWatcher.setUrlChanged(false);
 			}
 		});
@@ -164,9 +169,18 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		loginButton.setOnClickListener(v -> mPresenter.login(username.getText().toString(),
 				password.getText().toString(),
 				url.getText().toString(),
-				loginUrl));
+				openMRS.getLastLoginServerUrl()));
+
+		showPassword.setOnCheckedChangeListener((buttonView, isChecked) -> {
+			if (isChecked) {
+				password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+			} else {
+				password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+			}
+		});
 	}
 
+	@Override
 	public void login(boolean wipeDatabase) {
 		mPresenter.authenticateUser(username.getText().toString(),
 				password.getText().toString(),
@@ -191,7 +205,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 			}
 			mPresenter.loadLocations(url);
 
-		} else {
+		} else if (!StringUtils.isNullOrEmpty(url)) {
 			showMessage(INVALID_URL);
 		}
 	}
@@ -219,9 +233,14 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	@Override
-	public void userAuthenticated() {
+	public void userAuthenticated(boolean isFirstAccessOfNewUrl) {
 		mPresenter.saveLocationsInPreferences(locationsList, dropdownLocation.getSelectedItemPosition());
-		Intent intent = new Intent(openMRS.getApplicationContext(), PatientListActivity.class);
+		Intent intent;
+		if (isFirstAccessOfNewUrl) {
+			intent = new Intent(openMRS.getApplicationContext(), SyncSelectionActivity.class);
+		} else {
+			intent = new Intent(openMRS.getApplicationContext(), LoginSyncActivity.class);
+		}
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		openMRS.getApplicationContext().startActivity(intent);
 		getActivity().finish();
@@ -234,14 +253,6 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		// re-login
 		authorizationManager.trackUserInteraction();
 		getActivity().finish();
-	}
-
-	public void showToast(String message, ToastUtil.ToastType toastType) {
-		ToastUtil.showShortToast(getContext(), toastType, message);
-	}
-
-	public void showToast(int textId, ToastUtil.ToastType toastType) {
-		ToastUtil.showShortToast(getContext(), toastType, getResources().getString(textId));
 	}
 
 	@Override
@@ -334,12 +345,14 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 
 	private List<HashMap<String, String>> getLocationStringList(List<Location> locationList) {
 		List<HashMap<String, String>> locations = new ArrayList<>();
-		for (Location loc : locationList) {
-			HashMap<String, String> location = new HashMap<>();
-			location.put("uuid", loc.getUuid());
-			location.put("display", loc.getName());
-			location.put("parentlocationuuid", loc.getParentLocation().getUuid());
-			locations.add(location);
+		for (Location location : locationList) {
+			HashMap<String, String> locationHashMap = new HashMap<>();
+			locationHashMap.put("uuid", location.getUuid());
+			locationHashMap.put("display", location.getName());
+			locationHashMap.put("parentlocationuuid", location.getParentLocation() == null ?
+					ApplicationConstants.EMPTY_STRING :
+					location.getParentLocation().getUuid());
+			locations.add(locationHashMap);
 		}
 
 		return locations;

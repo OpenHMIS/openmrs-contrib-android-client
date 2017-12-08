@@ -12,12 +12,13 @@ import javax.inject.Inject;
 
 public class ObsDataService extends BaseDataService<Observation, ObsDbService, ObsRestServiceImpl> {
 	@Inject
-	public ObsDataService() { }
+	public ObsDataService() {
+	}
 
-	public void getVisitDocumentsObsByPatientAndConceptList(String patientUuid, QueryOptions options,
+	public void getVisitPhotoObservations(String visitUuid, QueryOptions options,
 			GetCallback<List<Observation>> callback) {
 		executeMultipleCallback(callback, options, null,
-				() -> dbService.getVisitDocumentsObsByPatientAndConceptList(patientUuid, options),
-				() -> restService.getVisitDocumentsObsByPatientAndConceptList(patientUuid, options));
+				() -> dbService.getVisitPhotoObservations(visitUuid, options),
+				() -> restService.getVisitPhotoObservations(visitUuid));
 	}
 }

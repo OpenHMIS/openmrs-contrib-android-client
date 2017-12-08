@@ -1,0 +1,126 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center">
+	
+	<ProgressBar
+			android:visibility="gone"
+			android:id="@+id/locationLoadingProgressBar"
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="30dp"
+			android:layout_marginTop="-20dp"
+			android:indeterminate="false" />
+	
+	<ScrollView
+			android:id="@+id/viewsContainer"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_alignTop="@+id/locationLoadingProgressBar"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true">
+		
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:layout_gravity="center"
+				android:paddingLeft="24dp"
+				android:paddingRight="24dp">
+			
+			<ImageView
+					android:id="@+id/bandaHealthLogo"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:adjustViewBounds="true"
+					android:scaleType="fitCenter"
+					android:layout_marginBottom="24dp"
+					android:contentDescription="@string/app_name"
+					android:src="@drawable/banda_logo" />
+
+			<TextView
+					android:text="Data Sync"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/pageTitle"
+					android:textAlignment="center"
+					android:textSize="30sp"
+					android:layout_marginBottom="@dimen/toolbar_text_size"/>
+
+			<android.support.design.widget.TextInputLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="8dp"
+					android:layout_marginTop="8dp">
+
+			</android.support.design.widget.TextInputLayout>
+
+			<ProgressBar
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/pushProgressBar"
+					android:visibility="visible"
+					style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"/>
+
+			<android.support.design.widget.TextInputLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="8dp"
+					android:layout_marginTop="8dp">
+
+			</android.support.design.widget.TextInputLayout>
+
+			<TextView
+					android:text="TextView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/pushProgressText"
+					android:visibility="visible"
+					android:maxLines="2"
+					android:minLines="2"/>
+
+			<TextView
+					android:text="TextView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/pushDurationText"
+					android:visibility="visible"/>
+
+			<ProgressBar
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/pullProgressBar"
+					android:visibility="visible"
+					style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+					android:layout_marginTop="@dimen/fab_size_mini"
+					tools:layout_marginTop="@dimen/mth_tab_bottom_padding"/>
+
+			<android.support.design.widget.TextInputLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="8dp"
+					android:layout_marginTop="8dp">
+
+			</android.support.design.widget.TextInputLayout>
+
+			<TextView
+					android:text="TextView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/pullProgressText"
+					android:visibility="visible"
+					android:minLines="2"
+					android:maxLines="2"/>
+
+			<TextView
+					android:text="TextView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/pullDurationText"
+					android:visibility="visible"/>
+
+		</LinearLayout>
+	</ScrollView>
+
+</RelativeLayout>

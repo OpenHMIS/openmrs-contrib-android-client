@@ -29,7 +29,7 @@ public interface LoginContract {
 
 		void showWarningDialog();
 
-		void userAuthenticated();
+		void userAuthenticated(boolean isFirstAccessOfNewUrl);
 
 		void finishLoginActivity();
 
@@ -40,6 +40,8 @@ public interface LoginContract {
 		void showMessage(String message);
 
 		void showMessage(int errorCode);
+
+		void login(boolean wipeDatabase);
 	}
 
 	interface Presenter extends BasePresenterContract {

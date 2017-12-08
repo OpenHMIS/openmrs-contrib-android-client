@@ -2,6 +2,7 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
 import org.openmrs.mobile.data.db.AppDatabase;
@@ -23,6 +24,9 @@ public class EncounterDiagnosis extends BaseOpenmrsObject {
 	@Expose
 	@Column
 	private String existingObs;
+
+	@ForeignKey(stubbedRelationship = true)
+	private VisitNote visitNote;
 
 	public String getCertainty() {
 		return certainty;
@@ -54,5 +58,13 @@ public class EncounterDiagnosis extends BaseOpenmrsObject {
 
 	public void setExistingObs(String existingObs) {
 		this.existingObs = existingObs;
+	}
+
+	public VisitNote getVisitNote() {
+		return visitNote;
+	}
+
+	public void setVisitNote(VisitNote visitNote) {
+		this.visitNote = visitNote;
 	}
 }

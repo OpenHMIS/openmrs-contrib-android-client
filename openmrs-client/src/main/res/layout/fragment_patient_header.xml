@@ -28,7 +28,6 @@
 				android:paddingEnd="10dp"
 				android:background="@color/white">
 
-
 			<RelativeLayout
 					android:id="@+id/patientHeader"
 					android:layout_marginTop="10dp"
@@ -61,12 +60,12 @@
 
 			</RelativeLayout>
 
-
 			<LinearLayout
 					android:layout_below="@id/patientHeader"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:orientation="horizontal">
+					android:orientation="horizontal"
+					android:id="@+id/patientAgeLayout">
 
 				<ImageView
 						android:layout_marginStart="5dp"
@@ -74,7 +73,7 @@
 						android:id="@+id/fetchedPatientGender"
 						android:layout_width="18dp"
 						android:layout_height="match_parent"
-						android:src="@drawable/male" />
+						android:src="@drawable/male"/>
 
 				<TextView
 						android:layout_marginStart="5dp"
@@ -83,7 +82,7 @@
 						android:layout_marginRight="10dp"
 						android:id="@+id/fetchedPatientBirthDate"
 						android:layout_width="wrap_content"
-						android:layout_height="wrap_content" />
+						android:layout_height="wrap_content"/>
 
 				<TextView
 						android:layout_width="wrap_content"
@@ -91,15 +90,33 @@
 						android:layout_marginEnd="5dp"
 						android:layout_marginRight="5dp"
 						android:text="@string/label_age"
-						android:textStyle="italic" />
+						android:textStyle="italic"/>
 
 				<TextView
 						android:id="@+id/fetchedPatientAge"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_marginEnd="10dp"
-						android:layout_marginRight="10dp" />
+						android:layout_marginRight="10dp"/>
 			</LinearLayout>
+
+			<RelativeLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/patientSyncAgeLayout"
+					android:layout_below="@+id/patientAgeLayout"
+					android:visibility="gone">
+
+				<TextView
+						android:text="TextView"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:id="@+id/patientSyncAge"
+						android:layout_marginLeft="5dp"
+						android:textStyle="italic"
+						android:textColor="@color/openmrs_color_grey"
+						android:layout_marginTop="2dp"/>
+			</RelativeLayout>
 
 		</RelativeLayout>
 

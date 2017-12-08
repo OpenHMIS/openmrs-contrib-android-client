@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.Resource;
+import org.openmrs.mobile.models.queryModel.EntityUuid;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,7 +95,8 @@ public class DatabaseHelper {
 			repository.deleteAll(table, array);
 		} else {
 			// Get the uuid's of the current source records
-			List<String> existingRecords = repository.queryCustom(String.class, table, table.getProperty("uuid"), array);
+			List<String> existingRecords = EntityUuid.getUuids(repository.queryCustom(EntityUuid.class, table,
+					table.getProperty("uuid"), array));
 			if (existingRecords == null || existingRecords.isEmpty()) {
 				// There are no records so there is nothing to delete
 				return;
@@ -119,5 +121,20 @@ public class DatabaseHelper {
 				repository.deleteAll(table, table.getProperty("uuid").in(deletes));
 			}
 		}
+	}
+
+	/**
+	 * Takes a list of entities and returns there UUIDs as a list
+	 * @param entities
+	 * @return
+	 */
+	public List<String> getEntityUuids(@NonNull List<? extends Resource> entities) {
+		checkNotNull(entities);
+
+		List<String> uuids = new ArrayList<>();
+		for (Resource entity : entities) {
+			uuids.add(entity.getUuid());
+		}
+		return uuids;
 	}
 }

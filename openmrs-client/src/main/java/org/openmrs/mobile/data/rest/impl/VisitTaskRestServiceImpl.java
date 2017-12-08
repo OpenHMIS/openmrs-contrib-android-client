@@ -3,12 +3,12 @@ package org.openmrs.mobile.data.rest.impl;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.rest.BaseEntityRestService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.retrofit.VisitTaskRestService;
+import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-
-import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -16,7 +16,8 @@ import retrofit2.Call;
 
 public class VisitTaskRestServiceImpl extends BaseEntityRestService<VisitTask, VisitTaskRestService> {
 	@Inject
-	public VisitTaskRestServiceImpl() { }
+	public VisitTaskRestServiceImpl() {
+	}
 
 	@Override
 	protected String getRestPath() {
@@ -35,7 +36,9 @@ public class VisitTaskRestServiceImpl extends BaseEntityRestService<VisitTask, V
 				PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo));
 	}
 
-	public Call<Results<VisitTask>> getAllSince(String visitUuid, Date since, QueryOptions options, PagingInfo pagingInfo) {
-		return null;
+	public Call<Results<RecordInfo>> getRecordInfoByVisit(String visitUuid, QueryOptions options, PagingInfo pagingInfo) {
+		return restService.getRecordInfoByVisit(buildRestRequestPath(), visitUuid,
+				RestConstants.Representations.RECORD_INFO, QueryOptions.getIncludeInactive(options),
+				PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo));
 	}
 }

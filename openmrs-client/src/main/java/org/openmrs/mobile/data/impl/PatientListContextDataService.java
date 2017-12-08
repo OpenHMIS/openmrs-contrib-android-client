@@ -15,11 +15,13 @@ package org.openmrs.mobile.data.impl;
 
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.PatientListContextDbService;
 import org.openmrs.mobile.data.rest.impl.PatientListContextRestServiceImpl;
 import org.openmrs.mobile.models.PatientListContext;
+import org.openmrs.mobile.models.PatientListContext_Table;
 
 import java.util.List;
 
@@ -28,13 +30,24 @@ import javax.inject.Inject;
 public class PatientListContextDataService
 		extends BaseDataService<PatientListContext, PatientListContextDbService, PatientListContextRestServiceImpl>
 		implements DataService<PatientListContext> {
+
+	private DatabaseHelper databaseHelper;
+
 	@Inject
-	public PatientListContextDataService() { }
+	public PatientListContextDataService(DatabaseHelper databaseHelper) {
+		this.databaseHelper = databaseHelper;
+	}
 
 	public void getListPatients(String patientListUuid, QueryOptions options, PagingInfo pagingInfo,
 			GetCallback<List<PatientListContext>> callback) {
 		executeMultipleCallback(callback, options, pagingInfo,
 				() -> dbService.getListPatients(patientListUuid, options, pagingInfo),
-				() -> restService.getListPatients(patientListUuid, options, pagingInfo));
+				() -> restService.getListPatients(patientListUuid, options, pagingInfo),
+				(patientListContextsFromServer) -> {
+					dbService.saveAll(patientListContextsFromServer);
+
+					databaseHelper.diffDelete(PatientListContext.class,
+							PatientListContext_Table.patientList_uuid.eq(patientListUuid), patientListContextsFromServer);
+				});
 	}
 }
