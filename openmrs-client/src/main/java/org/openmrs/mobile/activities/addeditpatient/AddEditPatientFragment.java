@@ -17,10 +17,6 @@ package org.openmrs.mobile.activities.addeditpatient;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.appcompat.widget.AppCompatRadioButton;
-import androidx.appcompat.widget.AppCompatSpinner;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +34,11 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.appcompat.widget.AppCompatSpinner;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.internal.LinkedTreeMap;
 
 import org.joda.time.DateTime;
@@ -65,6 +66,7 @@ import org.openmrs.mobile.models.PersonName;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.utilities.ToastUtil;
 import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.io.File;
@@ -77,10 +79,9 @@ import java.util.Map;
 public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContract.Presenter>
 		implements AddEditPatientContract.View {
 
-	private OnFragmentInteractionListener listener;
-
 	private final static int IMAGE_REQUEST = 1;
 	private static LinearLayout.LayoutParams marginParams;
+	private OnFragmentInteractionListener listener;
 	private LocalDate birthdate, patientEncounterDate;
 	private DateTime bdt;
 	private EditText edfname, edmname, edlname, eddob, edyr, edmonth, fileNumber;
@@ -89,7 +90,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private String patientName;
 	private File output = null;
 	/*
-	*TextViews defination
+	 *TextViews defination
 	 *  */
 	private TextView fileNumberError, attributesError, fnameerror, lnameerror, doberror, gendererror, addrerror;
 	private PatientIdentifierType patientIdentifierType;
@@ -107,29 +108,29 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	}
 
 	private void resolveViews(View v) {
-		linearLayout = (LinearLayout)v.findViewById(R.id.addEditLinearLayout);
-		edfname = (EditText)v.findViewById(R.id.firstname);
-		edmname = (EditText)v.findViewById(R.id.middlename);
-		edlname = (EditText)v.findViewById(R.id.surname);
-		eddob = (EditText)v.findViewById(R.id.dob);
-		edyr = (EditText)v.findViewById(R.id.estyr);
-		edmonth = (EditText)v.findViewById(R.id.estmonth);
-		fileNumber = (EditText)v.findViewById(R.id.fileNumber);
+		linearLayout = (LinearLayout) v.findViewById(R.id.addEditLinearLayout);
+		edfname = (EditText) v.findViewById(R.id.firstname);
+		edmname = (EditText) v.findViewById(R.id.middlename);
+		edlname = (EditText) v.findViewById(R.id.surname);
+		eddob = (EditText) v.findViewById(R.id.dob);
+		edyr = (EditText) v.findViewById(R.id.estyr);
+		edmonth = (EditText) v.findViewById(R.id.estmonth);
+		fileNumber = (EditText) v.findViewById(R.id.fileNumber);
 
-		personLinearLayout = (LinearLayout)v.findViewById(R.id.personAttributeLinearLayout);
-		addPatientScrollView = (ScrollView)v.findViewById(R.id.patientAddScrollView);
+		personLinearLayout = (LinearLayout) v.findViewById(R.id.personAttributeLinearLayout);
+		addPatientScrollView = (ScrollView) v.findViewById(R.id.patientAddScrollView);
 
-		gen = (RadioGroup)v.findViewById(R.id.gender);
+		gen = (RadioGroup) v.findViewById(R.id.gender);
 
-		fnameerror = (TextView)v.findViewById(R.id.fnameerror);
-		lnameerror = (TextView)v.findViewById(R.id.lnameerror);
-		doberror = (TextView)v.findViewById(R.id.doberror);
-		gendererror = (TextView)v.findViewById(R.id.gendererror);
-		fileNumberError = (TextView)v.findViewById(R.id.fileNumberError);
-		attributesError = (TextView)v.findViewById(R.id.attributesError);
+		fnameerror = (TextView) v.findViewById(R.id.fnameerror);
+		lnameerror = (TextView) v.findViewById(R.id.lnameerror);
+		doberror = (TextView) v.findViewById(R.id.doberror);
+		gendererror = (TextView) v.findViewById(R.id.gendererror);
+		fileNumberError = (TextView) v.findViewById(R.id.fileNumberError);
+		attributesError = (TextView) v.findViewById(R.id.attributesError);
 
-		submitConfirm = (Button)v.findViewById(R.id.submitConfirm);
-		addEditPatientProgressBar = (RelativeLayout)v.findViewById(R.id.addEditPatientProgressBar);
+		submitConfirm = (Button) v.findViewById(R.id.submitConfirm);
+		addEditPatientProgressBar = (RelativeLayout) v.findViewById(R.id.addEditPatientProgressBar);
 	}
 
 	@Override
@@ -150,7 +151,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	                         Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_add_edit_patient, container, false);
 
 		resolveViews(root);
@@ -224,7 +225,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		person.setNames(names);
 
 		// Add gender
-		String[] genderChoices = { "M", "F" };
+		String[] genderChoices = {"M", "F"};
 		int index = gen.indexOfChild(context.findViewById(gen.getCheckedRadioButtonId()));
 		if (index != -1) {
 			person.setGender(genderChoices[index]);
@@ -354,6 +355,12 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 					viewPersonAttributeTypeMap.put(booleanType, personAttributeType);
 				} else if (datatypeClass.equalsIgnoreCase("org.openmrs.Concept")) {
 					// get coded concept uuid
+					if (personAttributeType.getConcept() == null) {
+						logger.e("Concept Answer UUID empty on Add/Edit Patient");
+						showToast(ApplicationConstants.entityName.CONCEPT_ANSWER + ApplicationConstants.toastMessages.fetchErrorMessage,
+								ToastUtil.ToastType.ERROR);
+						continue;
+					}
 					String conceptUuid = personAttributeType.getConcept().getUuid();
 					AppCompatSpinner conceptAnswersDropdown = new AppCompatSpinner(context);
 					conceptAnswersDropdown.setLayoutParams(marginParams);
@@ -413,7 +420,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			// set existing patient attribute if any
 			try {
 				LinkedTreeMap personAttribute = presenter.searchPersonAttributeValueByType(personAttributeType);
-				String conceptUuid = (String)personAttribute.get("uuid");
+				String conceptUuid = (String) personAttribute.get("uuid");
 				if (conceptUuid != null) {
 					setDefaultDropdownSelection(conceptNameArrayAdapter, conceptUuid, conceptNamesDropdown);
 				}
@@ -599,8 +606,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		edyr.addTextChangedListener(textWatcher);
 	}
 
-	private <T extends BaseOpenmrsObject> void setDefaultDropdownSelection(ArrayAdapter<T> arrayAdapter, String searchUuid,
-			Spinner dropdown) {
+	private <T extends BaseOpenmrsObject> void setDefaultDropdownSelection(ArrayAdapter<T> arrayAdapter,
+	                                                                       String searchUuid,
+	                                                                       Spinner dropdown) {
 		for (int count = 0; count < arrayAdapter.getCount(); count++) {
 			if (arrayAdapter.getItem(count).getUuid().equalsIgnoreCase(searchUuid)) {
 				dropdown.setSelection(count);
@@ -615,9 +623,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			personAttribute.setAttributeType(set.getValue());
 
 			if (componentType instanceof RadioButton) {
-				personAttribute.setValue(((RadioButton)componentType).isChecked());
+				personAttribute.setValue(((RadioButton) componentType).isChecked());
 			} else if (componentType instanceof EditText) {
-				personAttribute.setValue(ViewUtils.getInput((EditText)componentType));
+				personAttribute.setValue(ViewUtils.getInput((EditText) componentType));
 			}
 
 			if (personAttribute.getValue() != null) {

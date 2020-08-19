@@ -64,6 +64,7 @@ import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
+import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.TabUtil;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -113,6 +114,12 @@ public class VisitActivity extends ACBaseActivity
 		if (extras != null) {
 			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 			visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
+			if (StringUtils.isNullOrEmpty(visitUuid)) {
+				logger.e("Visit UUID NULL on the Visit Activity");
+				showToast(ApplicationConstants.entityName.VISITS +
+						ApplicationConstants.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+				return;
+			}
 			presenter.getVisit(visitUuid);
 
 			handleViewPager(patientUuid, visitUuid);
@@ -131,7 +138,6 @@ public class VisitActivity extends ACBaseActivity
 
 				patientHeaderPresenter = new PatientHeaderPresenter(headerFragment, patientUuid);
 			}
-
 		}
 
 		refreshVisitButton = (FloatingActionButton)findViewById(R.id.refresh_visit);

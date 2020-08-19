@@ -40,162 +40,162 @@ import static org.mockito.Mockito.verify;
 @PrepareForTest({OpenMRS.class})
 public class AddEditVisitPresenterTest extends ACUnitTestBase {
 
-    private VisitDataService visitDataService;
-    private VisitTypeDataService visitTypeDataService;
-    private VisitAttributeTypeDataService visitAttributeTypeDataService;
-    private PatientDataService patientDataService;
-    private ConceptAnswerDataService conceptAnswerDataService;
-    private LocationDataService locationDataService;
-    @Mock
-    private OpenMRS openMRS;
-    @Mock
-    private CrashlyticsLogger logger;
-    @Mock
-    private AddEditVisitContract.View view;
-    private AddEditVisitPresenter presenter;
-    private String patientUuid = "11-22-33-44", visitUuid = "24-65-9";
-    private Patient patient;
-    private Visit visit;
-    private Location location;
-    private List<Visit> visits = new ArrayList<>();
-    private List<VisitType> visitTypes = new ArrayList<>();
+	private VisitDataService visitDataService;
+	private VisitTypeDataService visitTypeDataService;
+	private VisitAttributeTypeDataService visitAttributeTypeDataService;
+	private PatientDataService patientDataService;
+	private ConceptAnswerDataService conceptAnswerDataService;
+	private LocationDataService locationDataService;
+	@Mock
+	private OpenMRS openMRS;
+	@Mock
+	private CrashlyticsLogger logger;
+	@Mock
+	private AddEditVisitContract.View view;
+	private AddEditVisitPresenter presenter;
+	private String patientUuid = "11-22-33-44", visitUuid = "24-65-9";
+	private Patient patient;
+	private Visit visit;
+	private Location location;
+	private List<Visit> visits = new ArrayList<>();
+	private List<VisitType> visitTypes = new ArrayList<>();
 
-    @Before
-    public void setUp(){
-	    visitDataService = dataAccessComponent.visit();
-	    visitTypeDataService = dataAccessComponent.visitType();
-	    visitAttributeTypeDataService = dataAccessComponent.visitAttributeType();
-	    patientDataService = dataAccessComponent.patient();
-	    conceptAnswerDataService = dataAccessComponent.conceptAnswer();
-	    locationDataService = dataAccessComponent.location();
+	@Before
+	public void setUp() {
+		visitDataService = dataAccessComponent.visit();
+		visitTypeDataService = dataAccessComponent.visitType();
+		visitAttributeTypeDataService = dataAccessComponent.visitAttributeType();
+		patientDataService = dataAccessComponent.patient();
+		conceptAnswerDataService = dataAccessComponent.conceptAnswer();
+		locationDataService = dataAccessComponent.location();
 
-	    PowerMockito.mockStatic(OpenMRS.class);
-	    PowerMockito.when(OpenMRS.getInstance()).thenReturn(openMRS);
-	    PowerMockito.when(openMRS.getLogger()).thenReturn(logger);
+		PowerMockito.mockStatic(OpenMRS.class);
+		PowerMockito.when(OpenMRS.getInstance()).thenReturn(openMRS);
+		PowerMockito.when(openMRS.getLogger()).thenReturn(logger);
 
-        presenter = new AddEditVisitPresenter(view, patientUuid, null, false, dataAccessComponent);
+		presenter = new AddEditVisitPresenter(view, patientUuid, null, false, dataAccessComponent);
 
-        patient = new Patient();
-        patient.setUuid(patientUuid);
-        Person person = new Person();
-        person.setUuid("654321");
-        person.setGender("Female");
-        person.setBirthdate("2000-02-21");
-        patient.setPerson(person);
+		patient = new Patient();
+		patient.setUuid(patientUuid);
+		Person person = new Person();
+		person.setUuid("654321");
+		person.setGender("Female");
+		person.setBirthdate("2000-02-21");
+		patient.setPerson(person);
 
-        location = new Location();
-        location.setName("Ward");
-        location.setUuid("location-123");
-        Location parentLocation = new Location();
-        parentLocation.setName("Kijabe");
-        parentLocation.setUuid("kijabe-123");
-        location.setParentLocation(parentLocation);
+		location = new Location();
+		location.setName("Ward");
+		location.setUuid("location-123");
+		Location parentLocation = new Location();
+		parentLocation.setName("Kijabe");
+		parentLocation.setUuid("kijabe-123");
+		location.setParentLocation(parentLocation);
 
-        visit = new Visit();
-        visit.setStartDatetime(new Date(2017, 5, 1));
-        visit.setPatient(patient);
-        visit.setVisitType(new VisitType("Inpatient Kijabe", "547874"));
-        visit.setLocation(location);
-        visits.add(visit);
+		visit = new Visit();
+		visit.setStartDatetime(new Date(2017, 5, 1));
+		visit.setPatient(patient);
+		visit.setVisitType(new VisitType("Inpatient Kijabe", "547874"));
+		visit.setLocation(location);
+		visits.add(visit);
 
-        visitTypes.add(new VisitType("Inpatient Kijabe", "547874"));
+		visitTypes.add(new VisitType("Inpatient Kijabe", "547874"));
 
-        openMRS.getCurrentLoggedInUserInfo().put(ApplicationConstants.UserKeys.USER_UUID, "654321");
-        openMRS.setLocation(location.getUuid());
+		openMRS.getCurrentLoggedInUserInfo().put(ApplicationConstants.UserKeys.USER_UUID, "654321");
+		openMRS.setLocation(location.getUuid());
 
-        mockCallbacks();
-    }
+		mockCallbacks();
+	}
 
-    private void mockCallbacks(){
-        // load patient callback
-        doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback<Patient>) invocation.getArguments()[2]).onCompleted(patient);
-                return null;
-            }
-        }).when(patientDataService).getByUuid(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
+	private void mockCallbacks() {
+		// load patient callback
+		doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				((DataService.GetCallback<Patient>) invocation.getArguments()[2]).onCompleted(patient);
+				return null;
+			}
+		}).when(patientDataService).getByUuid(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
 
-        // load visit callback
-        doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback<Visit>) invocation.getArguments()[2]).onCompleted(visit);
-                return null;
-            }
-        }).when(visitDataService).getByUuid(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
+		// load visit callback
+		doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				((DataService.GetCallback<Visit>) invocation.getArguments()[2]).onCompleted(visit);
+				return null;
+			}
+		}).when(visitDataService).getByUuid(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
 
-        // load visit types callback
-        doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback<List<VisitType>>) invocation.getArguments()[2]).onCompleted(visitTypes);
-                return null;
-            }
-        }).when(visitTypeDataService).getAll(any(QueryOptions.class), any(PagingInfo.class),
-                any(DataService.GetCallback.class));
+		// load visit types callback
+		doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				((DataService.GetCallback<List<VisitType>>) invocation.getArguments()[2]).onCompleted(visitTypes);
+				return null;
+			}
+		}).when(visitTypeDataService).getAll(any(QueryOptions.class), any(PagingInfo.class),
+				any(DataService.GetCallback.class));
 
-        // load location callback
-        doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback<Location>) invocation.getArguments()[2]).onCompleted(location);
-                return null;
-            }
-        }).when(locationDataService).getByUuid(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
+		// load location callback
+		doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				((DataService.GetCallback<Location>) invocation.getArguments()[2]).onCompleted(location);
+				return null;
+			}
+		}).when(locationDataService).getByUuid(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
 
-        // create visit callback
-        doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                visit.setUuid(visitUuid);
-                ((DataService.GetCallback<Visit>) invocation.getArguments()[1]).onCompleted(visit);
-                return null;
-            }
-        }).when(visitDataService).create(any(Visit.class), any(DataService.GetCallback.class));
+		// create visit callback
+		doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				visit.setUuid(visitUuid);
+				((DataService.GetCallback<Visit>) invocation.getArguments()[1]).onCompleted(visit);
+				return null;
+			}
+		}).when(visitDataService).create(any(Visit.class), any(DataService.GetCallback.class));
 
 
-        // update visit callback
-        doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback<Visit>) invocation.getArguments()[1]).onCompleted(visit);
-                return null;
-            }
-        }).when(visitDataService).update(any(Visit.class), any(DataService.GetCallback.class));
+		// update visit callback
+		doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				((DataService.GetCallback<Visit>) invocation.getArguments()[1]).onCompleted(visit);
+				return null;
+			}
+		}).when(visitDataService).update(any(Visit.class), any(DataService.GetCallback.class));
 
-        // end visit callback
-        doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback<Visit>) invocation.getArguments()[2]).onCompleted(visit);
-                return null;
-            }
-        }).when(visitDataService).endVisit(anyString(), any(Visit.class), any(DataService.GetCallback.class));
+		// end visit callback
+		doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				((DataService.GetCallback<Visit>) invocation.getArguments()[2]).onCompleted(visit);
+				return null;
+			}
+		}).when(visitDataService).endVisit(anyString(), any(Visit.class), any(DataService.GetCallback.class));
 
-    }
+	}
 
-    @Test
-    public void shouldInitializePage() throws Exception {
-        presenter.subscribe();
-        verify(view).initView(false);
-        verify(view).updateVisitTypes(visitTypes);
-    }
+	@Test
+	public void shouldInitializePage() throws Exception {
+		presenter.subscribe();
+		verify(view).initView(false);
+		verify(view).updateVisitTypes(visitTypes);
+	}
 
-    @Test
-    public void shouldStartVisit(){
-        presenter.startVisit(new ArrayList<>());
-        verify(view).setSpinnerVisibility(false);
-        verify(view).startVisitComplete("24-65-9");
-    }
+	@Test
+	public void shouldStartVisit() {
+		presenter.startVisit(new ArrayList<>());
+		verify(view).setSpinnerVisibility(false);
+		verify(view).startVisitComplete("24-65-9");
+	}
 
-    //@Test
-    public void shouldUpdateVisit_success(){
+	//@Test
+	public void shouldUpdateVisit_success() {
 
-    }
+	}
 
-    //@Test
-    public void shouldEndVisit(){
+	//@Test
+	public void shouldEndVisit() {
 
-    }
+	}
 }

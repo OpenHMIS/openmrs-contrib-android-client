@@ -78,7 +78,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.mCounties = counties;
 		this.patient = patient;
 		this.patientToUpdateUuid = patientToUpdateUuid;
-		this.mCounties = counties;
 
 	}
 
@@ -175,6 +174,14 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void subscribe() {
+		// If this variable is null, it probably means the activity has been disposed of already,
+		// so just return and don't do anything
+		if (patientToUpdateUuid == null) {
+			logger.e("Patient to update UUID empty on Add/Edit Patient");
+			patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS +
+					ApplicationConstants.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+			return;
+		}
 		if (!patientToUpdateUuid.isEmpty()) {
 			getPatientToUpdate(patientToUpdateUuid);
 		} else {
@@ -274,6 +281,12 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	}
 
 	public void findSimilarPatients(Patient patient) {
+		if (patient.getIdentifier() == null || patient.getIdentifier().getIdentifier() == null) {
+			logger.e("Data error: patient identifier not defined.");
+			patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
+					.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+			return;
+		}
 		PagingInfo pagingInfo = PagingInfo.DEFAULT.getInstance();
 		DataService.GetCallback<List<Patient>> callback = new DataService.GetCallback<List<Patient>>() {
 			@Override
@@ -404,8 +417,15 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void getLoginLocation() {
-		if (!instance.getLocation().equalsIgnoreCase(null)) {
+		if (!StringUtils.isNullOrEmpty(instance.getLocation())) {
 			locationUuid = instance.getLocation();
+		}
+		if (StringUtils.isNullOrEmpty(locationUuid)) {
+			logger.e("Location isn't set.");
+			patientRegistrationView
+					.showToast(ApplicationConstants.entityName.LOCATION + ApplicationConstants
+							.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+			return;
 		}
 		DataService.GetCallback<Location> getSingleCallback =
 				new DataService.GetCallback<Location>() {

@@ -43,6 +43,8 @@ import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
+import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,12 +123,14 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 		resolveViews(root);
 
 		//We start by fetching by location, required for creating encounters
-		String locationUuid = "";
-		if (!instance.getLocation().equalsIgnoreCase(null)) {
-			locationUuid = instance.getLocation();
+		String locationUuid = instance.getLocation();
+		if (StringUtils.isNullOrEmpty(locationUuid)) {
+			logger.e("Location UUID is missing on Capture Vitals.");
+			showToast(ApplicationConstants.entityName.LOCATION +
+					ApplicationConstants.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+		} else {
+			presenter.fetchLocation(locationUuid);
 		}
-
-		presenter.fetchLocation(locationUuid);
 
 		// Font config
 		FontsUtil.setFont(context.findViewById(android.R.id.content));

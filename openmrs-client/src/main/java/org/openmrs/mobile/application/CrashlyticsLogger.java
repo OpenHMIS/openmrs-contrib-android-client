@@ -67,8 +67,8 @@ public class CrashlyticsLogger implements Logger {
 	@Override
 	public void v(String tag, String msg, Throwable throwable) {
 		try {
-			crashlytics.recordException(throwable);
 			crashlytics.log(constructLogString(Log.VERBOSE, tag, msg));
+			crashlytics.recordException(throwable);
 		} catch(IllegalStateException ex) {
 			// crashlytics not initialized.
 		}
@@ -96,8 +96,8 @@ public class CrashlyticsLogger implements Logger {
 	@Override
 	public void d(String tag, String msg, Throwable throwable) {
 		try {
-			crashlytics.recordException(throwable);
 			crashlytics.log(constructLogString(Log.DEBUG, tag, msg));
+			crashlytics.recordException(throwable);
 		} catch(IllegalStateException ex) {
 			// crashlytics not initialized.
 		}
@@ -125,8 +125,8 @@ public class CrashlyticsLogger implements Logger {
 	@Override
 	public void i(String tag, String msg, Throwable throwable) {
 		try {
-			crashlytics.recordException(throwable);
 			crashlytics.log(constructLogString(Log.INFO, tag, msg));
+			crashlytics.recordException(throwable);
 		} catch(IllegalStateException ex) {
 			// crashlytics not initialized.
 		}
@@ -154,8 +154,8 @@ public class CrashlyticsLogger implements Logger {
 	@Override
 	public void w(String tag, String msg, Throwable throwable) {
 		try {
-			crashlytics.recordException(throwable);
 			crashlytics.log(constructLogString(Log.WARN, tag, msg));
+			crashlytics.recordException(throwable);
 		} catch(IllegalStateException ex) {
 			// crashlytics not initialized.
 		}
@@ -170,6 +170,8 @@ public class CrashlyticsLogger implements Logger {
 	public void e(String tag, String msg) {
 		try {
 			crashlytics.log(constructLogString(Log.ERROR, tag, msg));
+			// Even though no exception was thrown, let's log this as a non-fatal crash to make sure we see errors in the app
+			crashlytics.recordException(new Throwable(msg));
 		} catch(IllegalStateException ex) {
 			// crashlytics not initialized.
 		}
@@ -183,8 +185,8 @@ public class CrashlyticsLogger implements Logger {
 	@Override
 	public void e(String tag, String msg, Throwable throwable) {
 		try {
-			crashlytics.recordException(throwable);
 			crashlytics.log(constructLogString(Log.ERROR, tag, msg));
+			crashlytics.recordException(throwable);
 		} catch(IllegalStateException ex) {
 			// crashlytics not initialized.
 		}

@@ -85,6 +85,7 @@ public final class ToastUtil {
 				toastImage.getLayoutParams().width,
 				toastImage.getLayoutParams().height);
 		toastImage.setImageBitmap(bitmap);
+		logToast(text, type);
 
 		logger.d("Decode bitmap: " + bitmap.toString());
 		Toast toast = new Toast(context);
@@ -98,6 +99,24 @@ public final class ToastUtil {
 			thread.start();
 		}
 		toastQueue.add(thread);
+	}
+
+	private static void logToast(String text, ToastType type) {
+		switch (type) {
+			case NOTICE:
+				logger.i(text);
+				break;
+			case SUCCESS:
+				logger.i(text);
+				break;
+			case WARNING:
+				logger.w(text);
+				break;
+			case ERROR:
+			default:
+				logger.e(text);
+				break;
+		}
 	}
 
 	private static int getImageResId(ToastType type) {

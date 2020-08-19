@@ -214,8 +214,10 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			};
 
 			locationDataService.getByUuid(locationUuid, QueryOptions.FULL_REP, locationDataServiceCallback);
+		} else {
+			patientDashboardView.showToast(ApplicationConstants.entityName.LOCATION +
+					ApplicationConstants.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 		}
-
 	}
 
 	@Override

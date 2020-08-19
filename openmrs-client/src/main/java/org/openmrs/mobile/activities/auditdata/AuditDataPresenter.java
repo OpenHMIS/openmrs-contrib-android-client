@@ -79,6 +79,8 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 	public void fetchVisit(String visitUuid) {
 		if (visitUuid == null) {
 			logger.e("Visit UUID empty on Audit Data");
+			auditDataView.showToast(ApplicationConstants.entityName.VISITS +
+					ApplicationConstants.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 			return;
 		}
 		auditDataView.showPageSpinner(true);
@@ -113,6 +115,8 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 	private void fetchEncounter(String uuid) {
 		if (uuid == null) {
 			logger.e("Encounter UUID empty on Audit Data");
+			auditDataView.showToast(ApplicationConstants.entityName.ENCOUNTER +
+					ApplicationConstants.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 			return;
 		}
 		auditDataView.showPageSpinner(true);

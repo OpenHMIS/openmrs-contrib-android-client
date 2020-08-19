@@ -28,6 +28,7 @@ import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 public class PatientDashboardActivity extends ACBaseActivity
 		implements PatientDashboardFragment.OnFragmentInteractionListener {
@@ -67,6 +68,8 @@ public class PatientDashboardActivity extends ACBaseActivity
 
 				new PatientHeaderPresenter(headerFragment, patientUuid);
 				headerFragment.showLastSyncInformation();
+			} else {
+				ToastUtil.error(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages.fetchErrorMessage);
 			}
 		}
 

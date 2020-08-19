@@ -3,8 +3,7 @@ package org.openmrs.mobile.data;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.openmrs.mobile.models.BaseOpenmrsAuditableObject;
 import org.openmrs.mobile.models.BaseOpenmrsEntity;
 import org.openmrs.mobile.models.BaseOpenmrsMetadata;
@@ -50,7 +49,7 @@ public class ModelAsserters {
 	public static void assertListContainsUuid(List<? extends BaseOpenmrsObject> list, String uuid) {
 		Assert.assertNotNull(list);
 		Assert.assertNotNull(uuid);
-		Assert.assertFalse("List is empty", list.size() == 0);
+		Assert.assertNotEquals("List is empty", 0, list.size());
 		Assert.assertFalse("Uuid is empty", uuid.isEmpty());
 
 		for (BaseOpenmrsObject obj : list) {

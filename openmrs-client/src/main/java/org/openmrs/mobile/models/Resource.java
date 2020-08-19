@@ -20,6 +20,7 @@ import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.openmrs.mobile.utilities.Consumer;
+import org.openmrs.mobile.utilities.DataUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.Serializable;
@@ -28,10 +29,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class Resource implements Serializable {
-	private static final long serialVersionUID = 1;
-
 	public static final int LOCAL_UUID_LENGTH = 35;
-
+	private static final long serialVersionUID = 1;
 	@SerializedName("uuid")
 	@Expose
 	@PrimaryKey
@@ -44,6 +43,7 @@ public class Resource implements Serializable {
 
 	/**
 	 * Returns {@code true} if the specified uuid is a local uuid (based on the string length); otherwise, false.
+	 *
 	 * @param uuid The uuid to check
 	 * @return True if the uuid is a local uuid, otherwise; false.
 	 */
@@ -56,9 +56,11 @@ public class Resource implements Serializable {
 	}
 
 	/**
-	 * Generates a uuid with the last character trimmed off so that the uuid can be differentiated from a server-generated
+	 * Generates a uuid with the last character trimmed off so that the uuid can be differentiated from a
+	 * server-generated
 	 * uuid. Note the while this does reduce the uniqueness of the id, these uuids are intended to only be used until the
 	 * resource is saved to the server, at which point this local uuid will be replaced.
+	 *
 	 * @return The local uuid.
 	 */
 	public static String generateLocalUuid() {
@@ -95,14 +97,18 @@ public class Resource implements Serializable {
 		this.display = display;
 	}
 
-	public void processRelationships() { }
+	public void processRelationships() {
+	}
 
 	protected <R extends Resource> void processRelatedObjects(@Nullable List<R> resources) {
 		processRelatedObjects(resources, null);
 	}
 
-	protected <R extends Resource> void processRelatedObjects(@Nullable List<R> resources, @Nullable Consumer<R> process) {
+	protected <R extends Resource> void processRelatedObjects(@Nullable List<R> resources,
+	                                                          @Nullable Consumer<R> process) {
 		if (resources != null && !resources.isEmpty()) {
+			// TODO: Not sure if all resources or just each resource needs to be validated. Add it if invalid data is winding
+			// up on the objects
 			for (R r : resources) {
 				if (process != null) {
 					process.accept(r);
@@ -113,17 +119,28 @@ public class Resource implements Serializable {
 		}
 	}
 
+	/**
+	 * Typically used to load OneToMany relationships, this calls the DB and pulls related data to add to a field
+	 *
+	 * @param cls   The class being fetched
+	 * @param field The field to assign the data to
+	 * @param op    A SQL query that contains the where clause of the data to fetch
+	 * @param <E>   The type of the data being fetched
+	 * @return A list of entities that were fetched
+	 */
 	protected <E> List<E> loadRelatedObject(Class<E> cls, List<E> field, Supplier<SQLOperator> op) {
 		if (field == null) {
 			field = new ArrayList<>();
 		}
 
 		if (field.isEmpty()) {
-			field.addAll(
+			List<E> data =
 					SQLite.select()
 							.from(cls)
-							.where(op.get()).queryList()
-			);
+							.where(op.get()).queryList();
+			if (DataUtil.isValid(data)) {
+				field.addAll(data);
+			}
 		}
 
 		return field;

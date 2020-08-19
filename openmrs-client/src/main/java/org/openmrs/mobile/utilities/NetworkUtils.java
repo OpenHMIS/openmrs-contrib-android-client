@@ -73,8 +73,7 @@ public class NetworkUtils {
 	public boolean isConnected() {
 		try {
 			NetworkInfo activeNetworkInfo = getNetworkInfo();
-			return activeNetworkInfo != null && activeNetworkInfo.isConnected()
-					&& currentConnectionSpeed != ConnectionQuality.POOR;
+			return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 		} catch (Exception e) {
 			logger.e(e);
 		}

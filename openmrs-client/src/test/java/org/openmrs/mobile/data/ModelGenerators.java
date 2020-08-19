@@ -23,6 +23,8 @@ import org.openmrs.mobile.models.VisitType;
 import org.openmrs.mobile.utilities.DateUtils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class ModelGenerators {
@@ -390,8 +392,8 @@ public class ModelGenerators {
 			type.setUuid(CoreTestData.Constants.VisitType.INPATIENT_MEDICINE_UUID);
 
 			visit.setVisitType(type);
-			visit.setStartDatetime(new Date(2017, 2, 3, 10, 30, 0));
-			visit.setStopDatetime(new Date(2017, 2, 3, 13, 00, 0));
+			visit.setStartDatetime(Date.from(LocalDateTime.of(2017, 2, 3, 10, 30, 0).atZone(ZoneId.systemDefault()).toInstant()));
+			visit.setStopDatetime(Date.from(LocalDateTime.of(2017, 2, 3, 13, 0, 0).atZone(ZoneId.systemDefault()).toInstant()));
 
 			if (patient == null) {
 				patient = PATIENT.generate(false);

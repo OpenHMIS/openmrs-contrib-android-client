@@ -13,6 +13,7 @@
  */
 package org.openmrs.mobile.activities.addeditvisit;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeDisplays.AUDITDATA;
 import static org.openmrs.mobile.utilities.ApplicationConstants.toastMessages.SAVE_VISIT_END_DATE_ERROR;
 
@@ -108,31 +109,35 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		}
 
 		addEditVisitView.showPageSpinner(true);
-		if (StringUtils.notEmpty(patientUuid)) {
-			patientDataService
-					.getByUuid(patientUuid, QueryOptions.FULL_REP, new DataService.GetCallback<Patient>() {
-						@Override
-						public void onCompleted(Patient entity) {
-							if (visitUuid != null && visitUuid.equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
-								// start visit
-								visit.setPatient(entity);
-								visit.setStartDatetime(new Date());
-								addEditVisitView.initView(true);
-								loadVisitTypes();
-								loadVisitAttributeTypes();
-							} else {
-								// edit visit
-								loadVisit();
-							}
-						}
-
-						@Override
-						public void onError(Throwable t) {
-							addEditVisitView.showPageSpinner(false);
-							ToastUtil.error(t.getMessage());
-						}
-					});
+		if (StringUtils.isNullOrEmpty(patientUuid)) {
+			logger.e("Patient UUID is NULL on Add/Edit Visit Presenter");
+			addEditVisitView.showToast(ApplicationConstants.entityName.PATIENTS +
+					ApplicationConstants.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+			return;
 		}
+		patientDataService
+				.getByUuid(patientUuid, QueryOptions.FULL_REP, new DataService.GetCallback<Patient>() {
+					@Override
+					public void onCompleted(Patient entity) {
+						if (visitUuid != null && visitUuid.isEmpty()) {
+							// start visit
+							visit.setPatient(entity);
+							visit.setStartDatetime(new Date());
+							addEditVisitView.initView(true);
+							loadVisitTypes();
+							loadVisitAttributeTypes();
+						} else {
+							// edit visit
+							loadVisit();
+						}
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						addEditVisitView.showPageSpinner(false);
+						ToastUtil.error(t.getMessage());
+					}
+				});
 	}
 
 	private void loadVisit() {
@@ -348,7 +353,11 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 									&& (obs.getDisplay().equalsIgnoreCase("Audit Data Complete: Yes")
 									|| obs.getDisplay().equalsIgnoreCase("Audit Data Complete: No"))) {
 								auditDataFormCompleted = true;
+								break;
 							}
+						}
+						if (auditDataFormCompleted) {
+							break;
 						}
 					}
 				}

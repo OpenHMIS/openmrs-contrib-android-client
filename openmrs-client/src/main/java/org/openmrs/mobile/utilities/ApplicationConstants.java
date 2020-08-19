@@ -241,6 +241,8 @@ public abstract class ApplicationConstants {
 		public static final String COUNTY = "county";
 		public static final String SUBCOUNTY = "sub-county";
 		public static final String TELEPHONE = "telephone";
+		public static final String CONCEPT_ANSWER = "Concept Answer";
+		public static final String ENCOUNTER = "Encounter";
 	}
 
 	public static class unwantedPersonAttributes {
